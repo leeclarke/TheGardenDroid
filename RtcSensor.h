@@ -6,11 +6,12 @@
 #ifndef RtcSensor_h
 #define RtcSensor_h
 
+#include "PollEvent.h"
 #include "Sensor.h"
 
 class RtcSensor : public Sensor {
 public:
-  RtcSensor(int sensorId, String name, int pollInterval);
+  RtcSensor(int sensorId, String name, unsigned long pollInterval);
   void setDateDs1307(byte second, byte minute, byte hour, byte dayOfWeek, byte dayOfMonth, byte month, byte year);
   String getTimestamp();
   int getSensorValue();

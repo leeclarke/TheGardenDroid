@@ -16,7 +16,7 @@ Sensor::Sensor(int sensorId, String name){
   _name = name;
 }
 
-Sensor::Sensor(int sensorId, String name, int pollInterval){
+Sensor::Sensor(int sensorId, String name, unsigned long pollInterval){
   _id = sensorId;
   _name = name;
   _pollInterval = pollInterval;
@@ -31,11 +31,11 @@ void Sensor::setHighThreshold(int value){
   _highThresh = value;
 }
 
-void Sensor::setPollInterval(int mills){
+void Sensor::setPollInterval(unsigned long mills){
   _pollInterval  = mills;
 }
 
-int Sensor::getPollInterval(){
+unsigned long Sensor::getPollInterval(){
   return _pollInterval;
 }
  

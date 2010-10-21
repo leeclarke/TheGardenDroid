@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
 #include "RtcSensor.h"
+//TODO: Test Sensor functionality.
 
 //IC2 notes 
 // SDA pin is Analog4

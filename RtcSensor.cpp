@@ -3,15 +3,16 @@
   Created by Lee Clarke, Oct 21, 2010.
   Released into the public domain.
 */
+
 #include <Wire.h>
+#include "PollEvent.h"
 #include "Sensor.h"
 #include "RtcSensor.h"
 
 #define RTC_ID     0x68
 
-RtcSensor::RtcSensor(int sensorId, String name, int pollInterval)
+RtcSensor::RtcSensor(int sensorId, String name, unsigned long pollInterval)
   :Sensor(sensorId, name, pollInterval){
-
 }
 
 /**
@@ -34,30 +35,39 @@ String RtcSensor::getTimestamp(){
   return resp;
 }
 
+//To call inherited methods  Sensor::getPollInterval()
+
 /**
- * Retrieves the Time values and sets to public vars. returns 1 if successful, -1 if failed to connenct.
+ * Retrieves the Time values and sets to public vars but only if it is time to execute a polling request.
  * 
- * Return 1 for success, -1 for fail.
+ * Return 1 for success, 0 if data was not due for update, -1 for fail.
  */
 int RtcSensor::getSensorValue() {
   int resp = 1;
-    // Reset the register pointer
-  Wire.beginTransmission(RTC_ID);
-  Wire.send(0);
-  Wire.endTransmission();
-  Wire.requestFrom(RTC_ID, 7);
-  // A few of these need masks because certain bits are control bits
-  second     = bcdToDec(Wire.receive() & 0x7f);
-  minute     = bcdToDec(Wire.receive());
-  hour       = bcdToDec(Wire.receive() & 0x3f);  // Need to change this if 12 hour am/pm
-  dayOfWeek  = bcdToDec(Wire.receive());
-  dayOfMonth = bcdToDec(Wire.receive());
-  month      = bcdToDec(Wire.receive());
-  year       = bcdToDec(Wire.receive());
-  // Error check, if all values or at least the date bytes are ==0 then read failed.
-  if(year == 0 || month == 0 || dayOfMonth == 0)
+  if(this->poll.check())
   {
-    resp = -1;
+    // Reset the register pointer
+    Wire.beginTransmission(RTC_ID);
+    Wire.send(0);
+    Wire.endTransmission();
+    Wire.requestFrom(RTC_ID, 7);
+    // A few of these need masks because certain bits are control bits
+    second     = bcdToDec(Wire.receive() & 0x7f);
+    minute     = bcdToDec(Wire.receive());
+    hour       = bcdToDec(Wire.receive() & 0x3f);  // Need to change this if 12 hour am/pm
+    dayOfWeek  = bcdToDec(Wire.receive());
+    dayOfMonth = bcdToDec(Wire.receive());
+    month      = bcdToDec(Wire.receive());
+    year       = bcdToDec(Wire.receive());
+    // Error check, if all values or at least the date bytes are ==0 then read failed.
+    if(year == 0 || month == 0 || dayOfMonth == 0)
+    {
+      resp = -1;
+    }
+  }
+  else
+  {
+    resp = 0;
   }
   return resp;
 }
