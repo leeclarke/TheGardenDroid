@@ -1,0 +1,56 @@
+/*
+  Sensore.cppp - Library for modeling Sensors attached to the Arduino.
+  When impleemnting, override getSensorValue() and getSensorState()
+  Created by Lee Clarke, Oct 20, 2010.
+  Released into the public domain.
+*/
+#include "WProgram.h"
+#include "Sensor.h"
+
+Sensor::Sensor(){
+
+}
+
+Sensor::Sensor(int sensorId, String name){
+  _id = sensorId;
+  _name = name;
+}
+
+Sensor::Sensor(int sensorId, String name, int pollInterval){
+  _id = sensorId;
+  _name = name;
+  _pollInterval = pollInterval;
+}
+
+void Sensor::setLowThreshold(int value){
+  _lowThresh = value;
+
+}
+
+void Sensor::setHighThreshold(int value){
+  _highThresh = value;
+}
+
+void Sensor::setPollInterval(int mills){
+  _pollInterval  = mills;
+}
+
+int Sensor::getPollInterval(){
+  return _pollInterval;
+}
+ 
+int Sensor::getSensorValue(){
+  return -1;
+}
+
+int Sensor::getSensorState(){
+  return 0;
+}
+
+int Sensor::getSensorID(){
+  return _id;
+}
+
+String Sensor::getSensorName(){
+  return _name;
+} 
