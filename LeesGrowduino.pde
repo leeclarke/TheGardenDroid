@@ -68,6 +68,7 @@ void setup()
   //TODO: Add Flash management or config.
   //Test writing to Flash
   value = EEPROM.read(0);
+  Serial.print("EEPROM TEst ");
   Serial.print(0);
   Serial.print("\t");
   Serial.print(value);
@@ -75,7 +76,6 @@ void setup()
   EEPROM.write(0,69);
 }
 
-//TODO: Add Metro for polling Sensors, consider puttign Sensors into a map/array
 void loop()
 {
   Serial.println("In Loop");
@@ -86,7 +86,7 @@ void loop()
     ledState = LOW;
   // set the LED with the ledState of the variable:
   digitalWrite(ledPin, ledState);
-  int tC, tFrac;
+/*  int tC, tFrac;
   tC = temp.getHrTemp();                             // read high-resolution temperature
   if (tC < 0) {
     tC = -tC;                                   // fix for integer division if negitive
@@ -100,31 +100,21 @@ void loop()
   Serial.print(" C / ");
   Serial.print(tempF);
   Serial.println(" F");
-  if(digitalRead(PIN2))
-    Serial.println("** PIN2 == true **");
-  else
-    Serial.println("** PIN@ == false **");
+  */
+  Serial.println( temp.toString());
+ // if(digitalRead(PIN2))
+ //   Serial.println("** PIN2 == true **");
+ // else
+ //   Serial.println("** PIN@ == false **");
     
   delay(1000);
   
   //Check the RTC
-  //byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
- //TODO:  getDateDs1307(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);
-  Serial.println(rtc.getTimestamp()); 
+ rtc.getSensorValue();
  
-//  Serial.print(hour, DEC);
-//  Serial.print(":");
-//  Serial.print(minute, DEC);
-//  Serial.print(":");
-//  Serial.print(second, DEC);
-//  Serial.print("  ");
-//  Serial.print(month, DEC);
-//  Serial.print("/");
-//  Serial.print(dayOfMonth, DEC);
-//  Serial.print("/");
-//  Serial.print(year, DEC);
-//  Serial.print("  Day_of_week:");
-//  Serial.println(dayOfWeek, DEC); 
+  //Serial.println(rtc.getTimestamp()); 
+//TODO: Figure out how to convert to ASCII so getTimestamp() will work!! 
+  printTimestamp();
   delay(2000); //wait 2 sec
   
   
@@ -132,6 +122,23 @@ void loop()
   delay(2000); //Turn on the Grow Light for 2 sec
   digitalWrite(relayPin, LOW);
  }
+
+void printTimestamp()
+{
+ Serial.print(rtc.hour, DEC);
+  Serial.print(":");
+  Serial.print(rtc.minute, DEC);
+  Serial.print(":");
+  Serial.print(rtc.second, DEC);
+  Serial.print("  ");
+  Serial.print(rtc.month, DEC);
+  Serial.print("/");
+  Serial.print(rtc.dayOfMonth, DEC);
+  Serial.print("/");
+  Serial.print(rtc.year, DEC);
+  Serial.print("  Day_of_week:");
+  Serial.println(rtc.dayOfWeek, DEC); 
+}
 
 void tempThresholdTripped()
 {

@@ -7,6 +7,7 @@
 #include "PollEvent.h"
 #include "Sensor.h"
 #include <Wire.h> 
+#include "PString.h"
 
 #define DEV_TYPE   0x90 >> 1                    // shift required by wire.h
 #define DEV_ADDR   0x00                         // DS1621 address is 0
@@ -150,4 +151,36 @@ void TempSensor::tempThresholdTripped()
    * freeze alarm.
    */
   Serial.println("");
+}
+
+String TempSensor::toString()
+{
+  String resp = "";
+  int tC, tFrac;
+  tC = getHrTemp();                             // read high-resolution temperature
+  if (tC < 0) {
+    tC = -tC;                                   // fix for integer division if negitive
+    resp += "-";                          // indicate negative
+  }
+  tFrac = tC % 100;                             // extract fractional part
+  tC /= 100;                                    // extract whole part
+  double tmpC = tC + (tFrac*.01);
+  double tempF = (tmpC*9/5)+32;
+  
+  char buf1[4];
+  char buf2[4];
+  
+  //fmtDouble(tmpC, 2, buf1);
+  //fmtDouble(tempF, 2, buf2);
+  PString(buf1, sizeof(buf1), tmpC);
+  PString(buf2, sizeof(buf2), tempF);
+  resp += buf1;
+  resp += " C / ";
+  resp += buf2;
+  resp += " F";
+//  Serial.print(tmpC);
+//  Serial.print(" C / ");
+//  Serial.print(tempF);
+//  Serial.println(" F"); 
+return resp;
 }

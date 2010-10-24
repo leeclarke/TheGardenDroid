@@ -21,6 +21,7 @@ public:
   void startConversion(boolean start);
   void setThresh(byte reg, int tC);
   void setConfig(byte cfg);
+  String toString();
 private:
  
 };

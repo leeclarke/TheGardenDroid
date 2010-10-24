@@ -8,6 +8,7 @@
 #include "PollEvent.h"
 #include "Sensor.h"
 #include "RtcSensor.h"
+#include "PString.h"
 
 #define RTC_ID     0x68
 
@@ -17,21 +18,29 @@ RtcSensor::RtcSensor(int sensorId, String name, unsigned long pollInterval)
 
 /**
  * Returns a human readable timestamp in format yyyy-MM-dd HH:mm:ss
+ --Doesnt work, the chars need to be converted to ASCII
  */
 String RtcSensor::getTimestamp(){
   String resp = "";
-   resp += year;
+  char buffYear[8];
+  char buffMo[8];
+  char buffDay[8];
+      
+  PString(buffYear, sizeof(buffYear), year);
+  PString(buffMo, sizeof(buffMo), month);
+  PString(buffDay, sizeof(buffDay), dayOfMonth);
+  resp += buffYear;
   resp += "-";
-  resp += month;
+  resp += buffMo;
   resp += "-";
-  resp += dayOfMonth;  
-  resp += "  ";
-  resp += hour;
+  resp += buffDay;  
+/*  resp += "  ";
+  resp += this->hour;
   resp += ":";
-  resp += minute;
+  resp += this->minute;
   resp += ":";
-  resp += second;
-
+  resp += this->second;
+*/
   return resp;
 }
 
@@ -52,13 +61,13 @@ int RtcSensor::getSensorValue() {
     Wire.endTransmission();
     Wire.requestFrom(RTC_ID, 7);
     // A few of these need masks because certain bits are control bits
-    second     = bcdToDec(Wire.receive() & 0x7f);
-    minute     = bcdToDec(Wire.receive());
-    hour       = bcdToDec(Wire.receive() & 0x3f);  // Need to change this if 12 hour am/pm
-    dayOfWeek  = bcdToDec(Wire.receive());
-    dayOfMonth = bcdToDec(Wire.receive());
-    month      = bcdToDec(Wire.receive());
-    year       = bcdToDec(Wire.receive());
+    this->second     = bcdToDec(Wire.receive() & 0x7f);
+    this->minute     = bcdToDec(Wire.receive());
+    this->hour       = bcdToDec(Wire.receive() & 0x3f);  // Need to change this if 12 hour am/pm
+    this->dayOfWeek  = bcdToDec(Wire.receive());
+    this->dayOfMonth = bcdToDec(Wire.receive());
+    this->month      = bcdToDec(Wire.receive());
+    this->year = bcdToDec(Wire.receive());
     // Error check, if all values or at least the date bytes are ==0 then read failed.
     if(year == 0 || month == 0 || dayOfMonth == 0)
     {
@@ -73,7 +82,7 @@ int RtcSensor::getSensorValue() {
 }
 
 /**
- *
+ * TODO:
  */
 int RtcSensor::getSensorState(){
   int resp = -1;
@@ -81,12 +90,12 @@ int RtcSensor::getSensorState(){
 }
 
 // Convert normal decimal numbers to binary coded decimal
-byte decToBcd(byte val)
+byte RtcSensor::decToBcd(byte val)
 {
   return ( (val/10*16) + (val%10) );
 }
 // Convert binary coded decimal to normal decimal numbers
-byte bcdToDec(byte val)
+byte RtcSensor::bcdToDec(byte val)
 {
   return ( (val/16*10) + (val%16) );
 }
