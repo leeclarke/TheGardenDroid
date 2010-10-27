@@ -88,14 +88,14 @@ void TempSensor::setThresh(byte reg, int tC)
   }
 }
 // Start/Stop DS1621 temperature conversion
-void TempSensor::startConversion(boolean start)
+byte TempSensor::startConversion(boolean start)
 {
   Wire.beginTransmission(SLAVE_ID);
   if (start == true)
     Wire.send(START_CNV);
   else
     Wire.send(STOP_CNV);
-  Wire.endTransmission();
+  return Wire.endTransmission();
 }
 // Reads temperature or threshold
 // -- whole degrees C only

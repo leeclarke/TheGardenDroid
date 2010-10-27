@@ -49,7 +49,12 @@ void setup()
   digitalWrite(PIN2, HIGH);
   attachInterrupt(PIN2_INTERRUPT, tempThresholdTripped, CHANGE);
   Wire.begin();                                 // connect I2C
-  temp.startConversion(false);                       // stop if presently set to continuous
+  byte tempStart = temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
+  if(tempStart >0) {
+     Serial.print("TempSensor is not responding code:");
+     Serial.println(tempStart);
+  }
+  
   temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
   temp.setThresh(ACCESS_TH, 23);                     // high temp threshold = 80F
   temp.setThresh(ACCESS_TL, 20);                     // low temp threshold = 75F

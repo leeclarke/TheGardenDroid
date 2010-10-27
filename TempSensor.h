@@ -18,7 +18,7 @@ public:
   void tempThresholdTripped();
   int getHrTemp();
   int getTemp(byte reg);
-  void startConversion(boolean start);
+  byte startConversion(boolean start);
   void setThresh(byte reg, int tC);
   void setConfig(byte cfg);
   String toString();
