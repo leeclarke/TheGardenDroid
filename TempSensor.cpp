@@ -5,7 +5,7 @@
  */
 #include "TempSensor.h"
 #include "PollEvent.h"
-#include "PString.h:
+#include "PString.h"
 #include "Sensor.h"
 
 #include <Wire.h> 
@@ -50,28 +50,30 @@ int TempSensor::getSensorState(){
   int resp = 0;
   if (this->sendStatus > 0)
   {
-    switch ( this->sendStatus ) {
-
-    case B00000001 : 
-      // Process for test = 1
-      resp = 1;
-      break;
-    case B00000010 : 
-      // Process for test = 5
-      resp = 2;
-      break;
-    case B00000011 : 
-      // Process for test = 5
-      resp = 3;
-      break;
-    case B0000100 : 
-      // Process for test = 5
-      resp = 4;
-      break;      
-    default : 
-      // No idea what happened
-      resp = 5;
-    }
+    resp = (int)this->sendStatus;
+    //TODO: Remove after testing, simple cast should work for making a byte to int.
+//    switch ( this->sendStatus ) {
+//
+//    case B00000001 : 
+//      // Process for test = 1
+//      resp = 1;
+//      break;
+//    case B00000010 : 
+//      // Process for test = 5
+//      resp = 2;
+//      break;
+//    case B00000011 : 
+//      // Process for test = 5
+//      resp = 3;
+//      break;
+//    case B0000100 : 
+//      // Process for test = 5
+//      resp = 4;
+//      break;      
+//    default : 
+//      // No idea what happened
+//      resp = 5;
+//    }
     
   }
   return resp; 
