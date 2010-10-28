@@ -2,7 +2,7 @@
 #include <EEPROM.h>
 #include "RtcSensor.h"
 #include "TempSensor.h"
-//TODO: Test Sensor functionality.
+#include "PString.h"
 
 //IC2 notes 
 // SDA pin is Analog4
@@ -30,6 +30,7 @@
 #define POL        B00000010                    // output polarity (1 = high, 0 = low)
 #define ONE_SHOT   B00000001                    // 1 = one conversion; 0 = continuous conversion
 
+
 //Setting Constants to remind me which interupt is on which pin.. aka: self-doucmenting code ;)
 const int PIN2_INTERRUPT = 0;
 const int PIN3_INTERRUPT = 1;
@@ -37,6 +38,7 @@ const int ledPin =  13;      // the number of the LED pin
 const int relayPin =  12;      // the number of the Relay which drives the Grow Light
 int ledState = LOW;             // ledState used to set the LED
 int value;
+byte tempStart = 0;
 
 RtcSensor rtc(0,"RTC", 1000);
 TempSensor temp(0,"TEMP", 1000);
@@ -49,19 +51,28 @@ void setup()
   digitalWrite(PIN2, HIGH);
   attachInterrupt(PIN2_INTERRUPT, tempThresholdTripped, CHANGE);
   Wire.begin();                                 // connect I2C
-  byte tempStart = temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
-  if(tempStart >0) {
+  
+  Serial.begin(9600);
+  delay(5);
+  Serial.println("DS1621 Test");
+  
+  temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
+  if(temp.sendStatus > B00000000) {
+ 
      Serial.print("TempSensor is not responding code:");
-     Serial.println(tempStart);
+     Serial.println( temp.getSensorState());
+  }
+  else {
+    Serial.print("TempSensor OK:");
+     Serial.println(temp.sendStatus);
   }
   
   temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
   temp.setThresh(ACCESS_TH, 23);                     // high temp threshold = 80F
   temp.setThresh(ACCESS_TL, 20);                     // low temp threshold = 75F
   
-  Serial.begin(9600);
-  delay(5);
-  Serial.println("DS1621 Test");
+  
+  
   int tHthresh = temp.getTemp(ACCESS_TH);
   
   Serial.print("High threshold = ");
@@ -73,7 +84,7 @@ void setup()
   //TODO: Add Flash management or config.
   //Test writing to Flash
   value = EEPROM.read(0);
-  Serial.print("EEPROM TEst ");
+  Serial.print("EEPROM TEst1 ");
   Serial.print(0);
   Serial.print("\t");
   Serial.print(value);
@@ -126,6 +137,14 @@ void loop()
   digitalWrite(relayPin, HIGH);
   delay(2000); //Turn on the Grow Light for 2 sec
   digitalWrite(relayPin, LOW);
+  
+  //EEPROM Test
+  value = EEPROM.read(0);
+  Serial.print("EEPROM TEst2 ");
+  Serial.print(0);
+  Serial.print("\t");
+  Serial.print(value);
+  Serial.println();
  }
 
 void printTimestamp()

@@ -5,9 +5,10 @@
  */
 #include "TempSensor.h"
 #include "PollEvent.h"
+#include "PString.h:
 #include "Sensor.h"
+
 #include <Wire.h> 
-#include "PString.h"
 
 #define DEV_TYPE   0x90 >> 1                    // shift required by wire.h
 #define DEV_ADDR   0x00                         // DS1621 address is 0
@@ -47,6 +48,32 @@ int TempSensor::getSensorValue() {
 
 int TempSensor::getSensorState(){
   int resp = 0;
+  if (this->sendStatus > 0)
+  {
+    switch ( this->sendStatus ) {
+
+    case B00000001 : 
+      // Process for test = 1
+      resp = 1;
+      break;
+    case B00000010 : 
+      // Process for test = 5
+      resp = 2;
+      break;
+    case B00000011 : 
+      // Process for test = 5
+      resp = 3;
+      break;
+    case B0000100 : 
+      // Process for test = 5
+      resp = 4;
+      break;      
+    default : 
+      // No idea what happened
+      resp = 5;
+    }
+    
+  }
   return resp; 
 }
 
@@ -88,14 +115,14 @@ void TempSensor::setThresh(byte reg, int tC)
   }
 }
 // Start/Stop DS1621 temperature conversion
-byte TempSensor::startConversion(boolean start)
+void TempSensor::startConversion(boolean start)
 {
   Wire.beginTransmission(SLAVE_ID);
   if (start == true)
     Wire.send(START_CNV);
   else
     Wire.send(STOP_CNV);
-  return Wire.endTransmission();
+  this->sendStatus = Wire.endTransmission();
 }
 // Reads temperature or threshold
 // -- whole degrees C only

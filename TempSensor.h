@@ -18,11 +18,13 @@ public:
   void tempThresholdTripped();
   int getHrTemp();
   int getTemp(byte reg);
-  byte startConversion(boolean start);
+  void startConversion(boolean start);
   void setThresh(byte reg, int tC);
   void setConfig(byte cfg);
   String toString();
+  byte sendStatus;
 private:
+  
  
 };
 #endif
