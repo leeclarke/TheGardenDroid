@@ -16,6 +16,18 @@ RtcSensor::RtcSensor(int sensorId, String name, unsigned long pollInterval)
   :Sensor(sensorId, name, pollInterval){
 }
 
+int RtcSensor::getSensorState(){
+  int resp = 0;
+  if (this->sendStatus > 0)
+  {
+    resp = (int)this->sendStatus;    
+  }
+  else {
+    //TODO: decide if want to add additional codes or return 0
+  }
+  return resp; 
+}
+
 /**
  * Returns a human readable timestamp in format yyyy-MM-dd HH:mm:ss
  --Doesnt work, the chars need to be converted to ASCII
@@ -58,7 +70,7 @@ int RtcSensor::getSensorValue() {
     // Reset the register pointer
     Wire.beginTransmission(RTC_ID);
     Wire.send(0);
-    Wire.endTransmission();
+    this->sendStatus = Wire.endTransmission();
     Wire.requestFrom(RTC_ID, 7);
     // A few of these need masks because certain bits are control bits
     this->second     = bcdToDec(Wire.receive() & 0x7f);
@@ -78,14 +90,6 @@ int RtcSensor::getSensorValue() {
   {
     resp = 0;
   }
-  return resp;
-}
-
-/**
- * TODO:
- */
-int RtcSensor::getSensorState(){
-  int resp = -1;
   return resp;
 }
 

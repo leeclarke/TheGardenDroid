@@ -32,5 +32,6 @@ class Sensor
     int _id;
     String _name;
     unsigned long _pollInterval;
+    byte sendStatus;
 };
 #endif

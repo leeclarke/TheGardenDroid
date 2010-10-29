@@ -57,29 +57,28 @@ void setup()
   Serial.println("DS1621 Test");
   
   temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
-  if(temp.sendStatus > B00000000) {
+  if(temp.getSensorState() > 0) {
  
      Serial.print("TempSensor is not responding code:");
      Serial.println( temp.getSensorState());
   }
   else {
     Serial.print("TempSensor OK:");
-     Serial.println(temp.sendStatus);
-  }
-  
-  temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
-  temp.setThresh(ACCESS_TH, 23);                     // high temp threshold = 80F
-  temp.setThresh(ACCESS_TL, 20);                     // low temp threshold = 75F
-  
-  
-  
-  int tHthresh = temp.getTemp(ACCESS_TH);
-  
-  Serial.print("High threshold = ");
+    Serial.println(temp.sendStatus);
+    temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
+    temp.setThresh(ACCESS_TH, 23);                     // high temp threshold = 80F
+    temp.setThresh(ACCESS_TL, 20);                     // low temp threshold = 75F
+     int tHthresh = temp.getTemp(ACCESS_TH);
+      Serial.print("High threshold = ");
   Serial.println(tHthresh);
   int tLthresh = temp.getTemp(ACCESS_TL);
   Serial.print("Low threshold = ");
   Serial.println(tLthresh);
+  }
+   
+ 
+  //TODO:  Add check on RTC to ensure status ok, if OK and time == 0 then set the time!
+ 
   
   //TODO: Add Flash management or config.
   //Test writing to Flash
@@ -102,22 +101,14 @@ void loop()
     ledState = LOW;
   // set the LED with the ledState of the variable:
   digitalWrite(ledPin, ledState);
-/*  int tC, tFrac;
-  tC = temp.getHrTemp();                             // read high-resolution temperature
-  if (tC < 0) {
-    tC = -tC;                                   // fix for integer division if negitive
-    Serial.print("-");                          // indicate negative
+
+//Output temp
+  if(temp.getSensorState() == 0) {
+    Serial.println( temp.toString());
   }
-  tFrac = tC % 100;                             // extract fractional part
-  tC /= 100;                                    // extract whole part
-  double tmpC = tC + (tFrac*.01);
-  double tempF = (tmpC*9/5)+32;
-  Serial.print(tmpC);
-  Serial.print(" C / ");
-  Serial.print(tempF);
-  Serial.println(" F");
-  */
-  Serial.println( temp.toString());
+  else {
+    Serial.println("Temprature Sensor is returning an error.");
+  }
  // if(digitalRead(PIN2))
  //   Serial.println("** PIN2 == true **");
  // else
@@ -126,14 +117,20 @@ void loop()
   delay(1000);
   
   //Check the RTC
- rtc.getSensorValue();
- 
-  //Serial.println(rtc.getTimestamp()); 
-//TODO: Figure out how to convert to ASCII so getTimestamp() will work!! 
-  printTimestamp();
+  rtc.getSensorValue();
+  if(rtc.getSensorState()>0) {
+    Serial.print("RTC Error= ");
+    Serial.println(rtc.getSensorState());
+  }
+  else{
+    //TODO: Figure out how to convert to ASCII so getTimestamp() will work!! 
+    //Serial.println(rtc.getTimestamp()); 
+    printTimestamp();
+  }
+
+
+  
   delay(2000); //wait 2 sec
-  
-  
   digitalWrite(relayPin, HIGH);
   delay(2000); //Turn on the Grow Light for 2 sec
   digitalWrite(relayPin, LOW);
