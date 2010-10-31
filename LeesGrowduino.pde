@@ -2,21 +2,12 @@
 #include <EEPROM.h>
 #include "RtcSensor.h"
 #include "TempSensor.h"
+#include "MoistureSensor.h"
 #include "PString.h"
 
-//IC2 notes 
-// SDA pin is Analog4
-// SCL pin is Analog5
-// DS1621 has A2, A1, and A0 pins connected to GND
-// device ID and address
-
-//#define RTC_ID     0x68                         //Set like example
 // DS1621 Registers & Commands
-//#define RD_TEMP    0xAA                         // read temperature register
 #define ACCESS_TH  0xA1                         // access high temperature register
 #define ACCESS_TL  0xA2                         // access low temperature register
-//#define ACCESS_CFG 0xAC                         // access configuration register
-/*#define RD_CNTR    0xA8                         // read counter register
 #define RD_SLOPE   0xA9                         // read slope register
 #define START_CNV  0xEE                         // start temperature conversion
 #define STOP_CNV   0X22                         // stop temperature conversion
@@ -26,7 +17,6 @@
 #define THF        B01000000                    // high temp flag
 #define TLF        B00100000                    // low temp flag
 #define NVB        B00010000                    // non-volatile memory is busy
-*/
 #define POL        B00000010                    // output polarity (1 = high, 0 = low)
 #define ONE_SHOT   B00000001                    // 1 = one conversion; 0 = continuous conversion
 
@@ -34,14 +24,20 @@
 //Setting Constants to remind me which interupt is on which pin.. aka: self-doucmenting code ;)
 const int PIN2_INTERRUPT = 0;
 const int PIN3_INTERRUPT = 1;
-const int ledPin =  13;      // the number of the LED pin
-const int relayPin =  12;      // the number of the Relay which drives the Grow Light
+const int LED_D_PIN =  13;           // the number of the LED pin
+const int LITE_RELAY_D_PIN =  0;     // the number of the Relay which drives the Grow Light
+const int I2C_SDA_DPIN = 4;          //Managed by the Sensor object but noted here for ref.
+const int I2C_SCL_DPIN = 5;
+const int VEGI_A_PIN = 0;            //Analog read for Vegitronix
+
+
 int ledState = LOW;             // ledState used to set the LED
 int value;
 byte tempStart = 0;
 
 RtcSensor rtc(0,"RTC", 1000);
 TempSensor temp(0,"TEMP", 1000);
+MoistureSensor moist(0,"MOIST", 1000, VEGI_A_PIN);
 
 
 void setup()
@@ -68,18 +64,14 @@ void setup()
     temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
     temp.setThresh(ACCESS_TH, 23);                     // high temp threshold = 80F
     temp.setThresh(ACCESS_TL, 20);                     // low temp threshold = 75F
-     int tHthresh = temp.getTemp(ACCESS_TH);
-      Serial.print("High threshold = ");
-  Serial.println(tHthresh);
-  int tLthresh = temp.getTemp(ACCESS_TL);
-  Serial.print("Low threshold = ");
-  Serial.println(tLthresh);
+    int tHthresh = temp.getTemp(ACCESS_TH);
+    Serial.print("High threshold = ");
+    Serial.println(tHthresh);
+    int tLthresh = temp.getTemp(ACCESS_TL);
+    Serial.print("Low threshold = ");
+    Serial.println(tLthresh);
   }
-   
- 
-  //TODO:  Add check on RTC to ensure status ok, if OK and time == 0 then set the time!
- 
-  
+    
   //TODO: Add Flash management or config.
   //Test writing to Flash
   value = EEPROM.read(0);
@@ -100,7 +92,7 @@ void loop()
   else
     ledState = LOW;
   // set the LED with the ledState of the variable:
-  digitalWrite(ledPin, ledState);
+  digitalWrite(LED_D_PIN, ledState);
 
 //Output temp
   if(temp.getSensorState() == 0) {
@@ -128,12 +120,14 @@ void loop()
     printTimestamp();
   }
 
-
+  //read moisture sensor
+  Serial.print("MoistureVal= ");
+  Serial.prinln(moist.getSensorValue());
   
   delay(2000); //wait 2 sec
-  digitalWrite(relayPin, HIGH);
+  digitalWrite(LITE_RELAY_D_PIN, HIGH);
   delay(2000); //Turn on the Grow Light for 2 sec
-  digitalWrite(relayPin, LOW);
+  digitalWrite(LITE_RELAY_D_PIN, LOW);
   
   //EEPROM Test
   value = EEPROM.read(0);
@@ -161,8 +155,10 @@ void printTimestamp()
   Serial.println(rtc.dayOfWeek, DEC); 
 }
 
+//Send alert through RF connection and light up Red led on pin 12
 void tempThresholdTripped()
 {
+  
   Serial.print("###  Temp Thresholds Exceeded!   ####");
   Serial.print("** PIN2 == true **");
   /* I plan to use this as a freeze warning indicator to trigger heat, I wonder if it would work
@@ -174,5 +170,4 @@ void tempThresholdTripped()
    * alarm value such as 0C this would enable a trigger when the temp drops low like a 
    * freeze alarm.
    */
-  Serial.println("");
 }
