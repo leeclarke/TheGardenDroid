@@ -32,9 +32,10 @@
 #define POL        B00000010                    // output polarity (1 = high, 0 = low)
 #define ONE_SHOT   B00000001                    // 1 = one conversion; 0 = continuous conversion
 
-TempSensor::TempSensor(int sensorId, String name, unsigned long pollInterval)
+TempSensor::TempSensor(int sensorId, String name, unsigned long pollInterval)                                                                                                      
   :Sensor(sensorId, name, pollInterval){
-}
+
+  }
 
 /**
  * Retrieves the Temp value if it is time to execute a polling request.
@@ -61,6 +62,17 @@ int TempSensor::getSensorState(){
 
 /* --------Temp support-----------*/
 
+// Start/Stop DS1621 temperature conversion
+void TempSensor::startConversion(boolean start)
+{
+  Wire.beginTransmission(SLAVE_ID);
+  if (start == true)
+    Wire.send(START_CNV);
+  else
+    Wire.send(STOP_CNV);
+  this->sendStatus = Wire.endTransmission();
+}
+
 // Set configuration register
 void TempSensor::setConfig(byte cfg)
 {
@@ -80,7 +92,16 @@ byte getReg(byte reg)
   Wire.requestFrom(SLAVE_ID, 1);
   byte regVal = Wire.receive();
   return regVal;
+} 
+
+void TempSensor::setHighThresh(int tC) {
+  setThresh(ACCESS_TH,tC);
 }
+
+void TempSensor::setLowThresh(int tC) {
+  setThresh(ACCESS_TL,tC);
+}
+
 // Sets temperature threshold
 // -- whole degrees C only
 // -- works only with ACCESS_TL and ACCESS_TH
@@ -95,16 +116,7 @@ void TempSensor::setThresh(byte reg, int tC)
     delay(15);
   }
 }
-// Start/Stop DS1621 temperature conversion
-void TempSensor::startConversion(boolean start)
-{
-  Wire.beginTransmission(SLAVE_ID);
-  if (start == true)
-    Wire.send(START_CNV);
-  else
-    Wire.send(STOP_CNV);
-  this->sendStatus = Wire.endTransmission();
-}
+
 // Reads temperature or threshold
 // -- whole degrees C only
 // -- works only with RD_TEMP, ACCESS_TL, and ACCESS_TH
@@ -123,6 +135,7 @@ int TempSensor::getTemp(byte reg)
   }
   return 0;                                     // bad reg, return 0
 }
+
 // Read high resolution temperature
 // -- returns temperature in 1/100ths degrees
 // -- DS1620 must be in 1-shot mode

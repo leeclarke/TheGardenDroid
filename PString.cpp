@@ -16,34 +16,34 @@
 //  License along with this library; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //*/
-//
-//#include "PString.h"
-//
-//void PString::begin()
-//{
-//  _cur = _buf;
-//  if (_size > 0)
-//    _buf[0] = '\0';
-//}
-//
-//void PString::write(uint8_t b)
-//{
-//  if (_cur + 1 < _buf + _size)
-//  {
-//    *_cur++ = (char)b;
-//    *_cur = '\0';
-//  }
-//}
-//
-//int PString::format(char *str, ...) 
-//{ 
-//  va_list argptr;  
-//  va_start(argptr, str); 
-//  int ret = vsnprintf(_cur, _size - (_cur - _buf), str, argptr);
-//  if (_size)
-//     while (*_cur) 
-//        ++_cur;
-//  return ret;
-//}
-//
+
+#include "PString.h"
+
+void PString::begin()
+{
+  _cur = _buf;
+  if (_size > 0)
+    _buf[0] = '\0';
+}
+
+void PString::write(uint8_t b)
+{
+  if (_cur + 1 < _buf + _size)
+  {
+    *_cur++ = (char)b;
+    *_cur = '\0';
+  }
+}
+
+int PString::format(char *str, ...) 
+{ 
+  va_list argptr;  
+  va_start(argptr, str); 
+  int ret = vsnprintf(_cur, _size - (_cur - _buf), str, argptr);
+  if (_size)
+     while (*_cur) 
+        ++_cur;
+  return ret;
+}
+
 

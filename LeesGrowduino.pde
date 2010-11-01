@@ -5,18 +5,7 @@
 #include "MoistureSensor.h"
 #include "PString.h"
 
-// DS1621 Registers & Commands
-#define ACCESS_TH  0xA1                         // access high temperature register
-#define ACCESS_TL  0xA2                         // access low temperature register
-#define RD_SLOPE   0xA9                         // read slope register
-#define START_CNV  0xEE                         // start temperature conversion
-#define STOP_CNV   0X22                         // stop temperature conversion
-
-// DS1621 configuration bits
-#define DONE       B10000000                    // conversion is done
-#define THF        B01000000                    // high temp flag
-#define TLF        B00100000                    // low temp flag
-#define NVB        B00010000                    // non-volatile memory is busy
+// DS1621 configuration bits for ooutputting results
 #define POL        B00000010                    // output polarity (1 = high, 0 = low)
 #define ONE_SHOT   B00000001                    // 1 = one conversion; 0 = continuous conversion
 
@@ -47,31 +36,31 @@ void setup()
   digitalWrite(PIN2, HIGH);
   attachInterrupt(PIN2_INTERRUPT, tempThresholdTripped, CHANGE);
   Wire.begin();                                 // connect I2C
-  
+
   Serial.begin(9600);
   delay(5);
   Serial.println("DS1621 Test");
-  
+
   temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
   if(temp.getSensorState() > 0) {
- 
-     Serial.print("TempSensor is not responding code:");
-     Serial.println( temp.getSensorState());
+
+    Serial.print("TempSensor is not responding code:");
+    Serial.println( temp.getSensorState());
   }
   else {
     Serial.print("TempSensor OK:");
     Serial.println(temp.sendStatus);
     temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
-    temp.setThresh(ACCESS_TH, 23);                     // high temp threshold = 80F
-    temp.setThresh(ACCESS_TL, 20);                     // low temp threshold = 75F
-    int tHthresh = temp.getTemp(ACCESS_TH);
-    Serial.print("High threshold = ");
-    Serial.println(tHthresh);
-    int tLthresh = temp.getTemp(ACCESS_TL);
-    Serial.print("Low threshold = ");
-    Serial.println(tLthresh);
+    temp.setHighThresh(23);                     // high temp threshold = 80F
+    temp.setLowThresh(20);                     // low temp threshold = 75F
+//    int tHthresh = temp.getTemp(ACCESS_TH);
+//    Serial.print("High threshold = ");
+//    Serial.println(tHthresh);
+//    int tLthresh = temp.getTemp(ACCESS_TL);
+//    Serial.print("Low threshold = ");
+//    Serial.println(tLthresh);
   }
-    
+
   //TODO: Add Flash management or config.
   //Test writing to Flash
   value = EEPROM.read(0);
@@ -94,20 +83,20 @@ void loop()
   // set the LED with the ledState of the variable:
   digitalWrite(LED_D_PIN, ledState);
 
-//Output temp
+  //Output temp
   if(temp.getSensorState() == 0) {
     Serial.println( temp.toString());
   }
   else {
     Serial.println("Temprature Sensor is returning an error.");
   }
- // if(digitalRead(PIN2))
- //   Serial.println("** PIN2 == true **");
- // else
- //   Serial.println("** PIN@ == false **");
-    
+  // if(digitalRead(PIN2))
+  //   Serial.println("** PIN2 == true **");
+  // else
+  //   Serial.println("** PIN@ == false **");
+
   delay(1000);
-  
+
   //Check the RTC
   rtc.getSensorValue();
   if(rtc.getSensorState()>0) {
@@ -122,13 +111,13 @@ void loop()
 
   //read moisture sensor
   Serial.print("MoistureVal= ");
-  Serial.prinln(moist.getSensorValue());
-  
+  Serial.println(moist.getSensorValue());
+
   delay(2000); //wait 2 sec
   digitalWrite(LITE_RELAY_D_PIN, HIGH);
   delay(2000); //Turn on the Grow Light for 2 sec
   digitalWrite(LITE_RELAY_D_PIN, LOW);
-  
+
   //EEPROM Test
   value = EEPROM.read(0);
   Serial.print("EEPROM TEst2 ");
@@ -136,11 +125,11 @@ void loop()
   Serial.print("\t");
   Serial.print(value);
   Serial.println();
- }
+}
 
 void printTimestamp()
 {
- Serial.print(rtc.hour, DEC);
+  Serial.print(rtc.hour, DEC);
   Serial.print(":");
   Serial.print(rtc.minute, DEC);
   Serial.print(":");
@@ -158,7 +147,7 @@ void printTimestamp()
 //Send alert through RF connection and light up Red led on pin 12
 void tempThresholdTripped()
 {
-  
+
   Serial.print("###  Temp Thresholds Exceeded!   ####");
   Serial.print("** PIN2 == true **");
   /* I plan to use this as a freeze warning indicator to trigger heat, I wonder if it would work
@@ -171,3 +160,4 @@ void tempThresholdTripped()
    * freeze alarm.
    */
 }
+
