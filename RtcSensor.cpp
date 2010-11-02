@@ -5,7 +5,6 @@
 */
 
 #include <Wire.h>
-#include "PollEvent.h"
 #include "Sensor.h"
 #include "RtcSensor.h"
 #include "PString.h"
@@ -65,7 +64,7 @@ String RtcSensor::getTimestamp(){
  */
 int RtcSensor::getSensorValue() {
   int resp = 1;
-  if(this->poll.check())
+  if(this->check())
   {
     // Reset the register pointer
     Wire.beginTransmission(RTC_ID);

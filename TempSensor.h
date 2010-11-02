@@ -7,7 +7,6 @@
 #ifndef TempSensor_h
 #define TempSensor_h
 
-#include "PollEvent.h"
 #include "Sensor.h"
 
 class TempSensor : public Sensor {

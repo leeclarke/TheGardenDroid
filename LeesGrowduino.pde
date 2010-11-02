@@ -26,7 +26,7 @@ byte tempStart = 0;
 
 RtcSensor rtc(0,"RTC", 1000);
 TempSensor temp(0,"TEMP", 1000);
-MoistureSensor moist(0,"MOIST", 1000, VEGI_A_PIN);
+MoistureSensor moist(0,"MOIST", 10000, VEGI_A_PIN);
 
 
 void setup()
@@ -85,7 +85,8 @@ void loop()
 
   //Output temp
   if(temp.getSensorState() == 0) {
-    Serial.println( temp.toString());
+    if(temp.check() == 1)
+      Serial.println( temp.toString());
   }
   else {
     Serial.println("Temprature Sensor is returning an error.");
@@ -95,25 +96,31 @@ void loop()
   // else
   //   Serial.println("** PIN@ == false **");
 
-  delay(1000);
+//  delay(1000);
 
   //Check the RTC
-  rtc.getSensorValue();
-  if(rtc.getSensorState()>0) {
-    Serial.print("RTC Error= ");
-    Serial.println(rtc.getSensorState());
-  }
-  else{
-    //TODO: Figure out how to convert to ASCII so getTimestamp() will work!! 
-    //Serial.println(rtc.getTimestamp()); 
-    printTimestamp();
+  if(rtc.check() == 1)
+  {
+    rtc.getSensorValue();
+    if(rtc.getSensorState()>0) {
+      Serial.print("RTC Error= ");
+      Serial.println(rtc.getSensorState());
+    }
+    else{
+      //TODO: Figure out how to convert to ASCII so getTimestamp() will work!! 
+      //Serial.println(rtc.getTimestamp()); 
+      printTimestamp();
+    }
   }
 
   //read moisture sensor
-  Serial.print("MoistureVal= ");
-  Serial.println(moist.getSensorValue());
+  if(moist.check() == 1)
+  {
+    Serial.print("MoistureVal= ");
+    Serial.println(moist.getSensorValue());
+  }
 
-  delay(2000); //wait 2 sec
+  //delay(2000); //wait 2 sec
   digitalWrite(LITE_RELAY_D_PIN, HIGH);
   delay(2000); //Turn on the Grow Light for 2 sec
   digitalWrite(LITE_RELAY_D_PIN, LOW);
@@ -127,6 +134,7 @@ void loop()
   Serial.println();
 }
 
+//TODO: Test object replacement
 void printTimestamp()
 {
   Serial.print(rtc.hour, DEC);

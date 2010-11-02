@@ -4,7 +4,6 @@
  * Released into the public domain.
  */
 #include "TempSensor.h"
-#include "PollEvent.h"
 #include "PString.h"
 #include "Sensor.h"
 

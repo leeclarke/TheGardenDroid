@@ -6,7 +6,6 @@
 #ifndef MoistureSensor_h
 #define MoistureSensor_h
 
-#include "PollEvent.h"
 #include "Sensor.h"
 
 class MoistureSensor : public Sensor {

@@ -6,7 +6,6 @@
 #ifndef RtcSensor_h
 #define RtcSensor_h
 
-#include "PollEvent.h"
 #include "Sensor.h"
 
 class RtcSensor : public Sensor {

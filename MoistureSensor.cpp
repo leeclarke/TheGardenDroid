@@ -5,13 +5,13 @@
 */
 
 #include <Wire.h>
-#include "PollEvent.h"
 #include "Sensor.h"
 #include "MoistureSensor.h"
 #include "PString.h"
 
 MoistureSensor::MoistureSensor(int sensorId, String name, unsigned long pollInterval, int pinLocation)
   :Sensor(sensorId, name, pollInterval){
+
     this->pin = pinLocation;
 }
 

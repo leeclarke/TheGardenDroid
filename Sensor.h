@@ -6,26 +6,23 @@
 #ifndef Sensor_h
 #define Sensor_h
 
-#include "PollEvent.h"
 #include "WProgram.h"
 
 class Sensor
 {
   public:
-    Sensor();
-    Sensor(int sensorId, String name);
     Sensor(int sensorId, String name, unsigned long pollInterval);
     
     void setLowThreshold(int value);
     void setHighThreshold(int value);
     void setPollInterval(unsigned long mills);
-//void setInterupt(?);
     unsigned long getPollInterval();
     int getSensorValue();
     int getSensorState();
     int getSensorID();
     String getSensorName();
-    PollEvent poll;
+    char check();
+    void reset();
   protected:
     int _lowThresh;
     int _highThresh;
@@ -33,5 +30,7 @@ class Sensor
     String _name;
     unsigned long _pollInterval;
     byte sendStatus;
+    int autoreset;
+    unsigned long  previous_millis;
 };
 #endif
