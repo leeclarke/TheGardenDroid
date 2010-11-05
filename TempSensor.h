@@ -24,6 +24,9 @@ public:
   void setConfig(byte cfg);
   String toString();
   byte sendStatus;
+  boolean negTempC;
+  double tempC;
+  double tempF;
 private:
   
  
