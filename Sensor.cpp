@@ -48,7 +48,7 @@ String Sensor::getSensorName(){
 
 char Sensor::check()
 {
-  Serial.print("## NAME=");
+ /* Serial.print("## NAME=");
   Serial.print(this->getSensorName());
   Serial.print(" Mills=");
   Serial.print(millis());
@@ -56,7 +56,7 @@ char Sensor::check()
   Serial.print(this->previous_millis);
   Serial.print(" _pollInterval=");
   Serial.println(this->_pollInterval);
-  
+  */
   if (millis() - this->previous_millis >= this->_pollInterval) {
    
     if (this->_pollInterval == 0 || this->autoreset ) {

@@ -107,9 +107,7 @@ void loop()
       Serial.println(rtc.getSensorState());
     }
     else{
-      //TODO: Figure out how to convert to ASCII so getTimestamp() will work!! 
-      //Serial.println(rtc.getTimestamp()); 
-      printTimestamp();
+      Serial.println(rtc.getTimestamp()); 
     }
   }
 
@@ -132,24 +130,6 @@ void loop()
   Serial.print("\t");
   Serial.print(value);
   Serial.println();
-}
-
-//TODO: Test object replacement
-void printTimestamp()
-{
-  Serial.print(rtc.hour, DEC);
-  Serial.print(":");
-  Serial.print(rtc.minute, DEC);
-  Serial.print(":");
-  Serial.print(rtc.second, DEC);
-  Serial.print("  ");
-  Serial.print(rtc.month, DEC);
-  Serial.print("/");
-  Serial.print(rtc.dayOfMonth, DEC);
-  Serial.print("/");
-  Serial.print(rtc.year, DEC);
-  Serial.print("  Day_of_week:");
-  Serial.println(rtc.dayOfWeek, DEC); 
 }
 
 //Send alert through RF connection and light up Red led on pin 12

@@ -32,26 +32,13 @@ int RtcSensor::getSensorState(){
  --Doesnt work, the chars need to be converted to ASCII
  */
 String RtcSensor::getTimestamp(){
-  String resp = "";
-  char buffYear[8];
-  char buffMo[8];
-  char buffDay[8];
-      
-  PString(buffYear, sizeof(buffYear), year);
-  PString(buffMo, sizeof(buffMo), month);
-  PString(buffDay, sizeof(buffDay), dayOfMonth);
-  resp += buffYear;
-  resp += "-";
-  resp += buffMo;
-  resp += "-";
-  resp += buffDay;  
-/*  resp += "  ";
-  resp += this->hour;
-  resp += ":";
-  resp += this->minute;
-  resp += ":";
-  resp += this->second;
-*/
+  char buf[30];
+  PString str(buf, sizeof(buf));
+  String resp;
+  
+  str.format("20%d-%d-%d %d:%d:%d",year, month, dayOfMonth, hour, minute, second);
+
+  resp = String(buf);
   return resp;
 }
 
@@ -73,7 +60,7 @@ int RtcSensor::getSensorValue() {
     Wire.requestFrom(RTC_ID, 7);
     // A few of these need masks because certain bits are control bits
     this->second     = bcdToDec(Wire.receive() & 0x7f);
-    this->minute     = bcdToDec(Wire.receive());
+    this->minute     = bcdToDec(Wire.receive());    
     this->hour       = bcdToDec(Wire.receive() & 0x3f);  // Need to change this if 12 hour am/pm
     this->dayOfWeek  = bcdToDec(Wire.receive());
     this->dayOfMonth = bcdToDec(Wire.receive());
@@ -100,7 +87,7 @@ byte RtcSensor::decToBcd(byte val)
 // Convert binary coded decimal to normal decimal numbers
 byte RtcSensor::bcdToDec(byte val)
 {
-  return ( (val/16*10) + (val%16) );
+  return  ( (val/16*10) + (val%16) );
 }
 
 /**
