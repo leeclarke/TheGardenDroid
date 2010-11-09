@@ -77,6 +77,7 @@ int RtcSensor::getSensorValue() {
     resp = 0;
   }
   return resp;
+  //TODO: if this is -1 then the status should be updated internally!
 }
 
 // Convert normal decimal numbers to binary coded decimal
@@ -93,7 +94,7 @@ byte RtcSensor::bcdToDec(byte val)
 /**
  * Sets the date/time on the ds1307,  starts the Clock and defaults to 24Hr clock
  * Assumes you're passing in valid numbers
- *    EX.  second = 45;   minute = 17;   hour = 23;   dayOfWeek = 7;   dayOfMonth = 17;   month = 10;   year = 10;
+ *    EX.  second = 45;   minute = 17;   hour = 23;   dayOfWeek = 7;   dayOfMonth = 17;   month = 10;   year = 10; (45,17,22,1,8,11,10)
  *         setDateDs1307(second, minute, hour, dayOfWeek, dayOfMonth, month, year);
  */
 void RtcSensor::setDateDs1307(byte second,        // 0-59

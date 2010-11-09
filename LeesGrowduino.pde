@@ -14,7 +14,7 @@
 const int PIN2_INTERRUPT = 0;
 const int PIN3_INTERRUPT = 1;
 const int LED_D_PIN =  13;           // the number of the LED pin
-const int LITE_RELAY_D_PIN =  0;     // the number of the Relay which drives the Grow Light
+const int LITE_RELAY_D_PIN =  12;     // the number of the Relay which drives the Grow Light
 const int I2C_SDA_DPIN = 4;          //Managed by the Sensor object but noted here for ref.
 const int I2C_SCL_DPIN = 5;
 const int VEGI_A_PIN = 0;            //Analog read for Vegitronix
@@ -31,7 +31,9 @@ MoistureSensor moist(0,"MOIST", 10000, VEGI_A_PIN);
 
 void setup()
 {  
+  rtc.setDateDs1307(45,17,22,1,8,11,10);
   //Config Interrupt to notify if temp threshold is tripped
+  //TODO: Update with actual hardware pin #
   pinMode(PIN2, INPUT);
   digitalWrite(PIN2, HIGH);
   attachInterrupt(PIN2_INTERRUPT, tempThresholdTripped, CHANGE);
@@ -39,7 +41,7 @@ void setup()
 
   Serial.begin(9600);
   delay(5);
-  Serial.println("DS1621 Test");
+  Serial.println("Growduino Test");
 
   temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
   if(temp.getSensorState() > 0) {
@@ -71,10 +73,22 @@ void setup()
   Serial.println();
   EEPROM.write(0,69);
 }
+/*
+void checkForCommand() {  
+ if (Serial.available() > 0) {
+    // get incoming byte:
+    inByte = Serial.read();
+    // read first analog input, divide by 4 to make the range 0-255:
+    firstSensor = analogRead(A0)/4;
+    // delay 10ms to let the ADC recover:
+    delay(10);
+ } 
+}*/
 
 void loop()
 {
   Serial.println("In Loop");
+  //checkForCommand();
   // if the LED is off turn it on and vice-versa:
   if (ledState == LOW)
     ledState = HIGH;
@@ -101,7 +115,9 @@ void loop()
   //Check the RTC
   if(rtc.check() == 1)
   {
-    rtc.getSensorValue();
+    int resp = rtc.getSensorValue();
+   Serial.print("read Resp=");
+   Serial.println(resp);
     if(rtc.getSensorState()>0) {
       Serial.print("RTC Error= ");
       Serial.println(rtc.getSensorState());

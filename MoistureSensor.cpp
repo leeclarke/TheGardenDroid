@@ -1,5 +1,5 @@
 /*
-  RtcSensor.cpp - Moisture sensor interface specifically for the Vegetronix attached to the Arduino.
+  MoistureSensor.cpp - Moisture sensor interface specifically for the Vegetronix attached to the Arduino.
   Created by Lee Clarke, Oct 30, 2010.
   Released into the public domain.
 */
