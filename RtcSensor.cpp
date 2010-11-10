@@ -51,8 +51,8 @@ String RtcSensor::getTimestamp(){
  */
 int RtcSensor::getSensorValue() {
   int resp = 1;
-  if(this->check())
-  {
+//  if(this->check())
+//  {
     // Reset the register pointer
     Wire.beginTransmission(RTC_ID);
     Wire.send(0);
@@ -71,11 +71,11 @@ int RtcSensor::getSensorValue() {
     {
       resp = -1;
     }
-  }
-  else
-  {
-    resp = 0;
-  }
+  //}
+  //else
+  //{
+   // resp = 0;
+  //}
   return resp;
   //TODO: if this is -1 then the status should be updated internally!
 }

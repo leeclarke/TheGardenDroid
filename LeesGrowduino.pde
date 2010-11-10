@@ -31,7 +31,7 @@ MoistureSensor moist(0,"MOIST", 10000, VEGI_A_PIN);
 
 void setup()
 {  
-  rtc.setDateDs1307(45,17,22,1,8,11,10);
+  //rtc.setDateDs1307(45,17,22,1,8,11,10);
   //Config Interrupt to notify if temp threshold is tripped
   //TODO: Update with actual hardware pin #
   pinMode(PIN2, INPUT);
@@ -55,12 +55,12 @@ void setup()
     temp.setConfig(POL | ONE_SHOT);                    // Tout = active high; 1-shot mode
     temp.setHighThresh(23);                     // high temp threshold = 80F
     temp.setLowThresh(20);                     // low temp threshold = 75F
-//    int tHthresh = temp.getTemp(ACCESS_TH);
-//    Serial.print("High threshold = ");
-//    Serial.println(tHthresh);
-//    int tLthresh = temp.getTemp(ACCESS_TL);
-//    Serial.print("Low threshold = ");
-//    Serial.println(tLthresh);
+    //    int tHthresh = temp.getTemp(ACCESS_TH);
+    //    Serial.print("High threshold = ");
+    //    Serial.println(tHthresh);
+    //    int tLthresh = temp.getTemp(ACCESS_TL);
+    //    Serial.print("Low threshold = ");
+    //    Serial.println(tLthresh);
   }
 
   //TODO: Add Flash management or config.
@@ -76,14 +76,14 @@ void setup()
 /*
 void checkForCommand() {  
  if (Serial.available() > 0) {
-    // get incoming byte:
-    inByte = Serial.read();
-    // read first analog input, divide by 4 to make the range 0-255:
-    firstSensor = analogRead(A0)/4;
-    // delay 10ms to let the ADC recover:
-    delay(10);
+ // get incoming byte:
+ inByte = Serial.read();
+ // read first analog input, divide by 4 to make the range 0-255:
+ firstSensor = analogRead(A0)/4;
+ // delay 10ms to let the ADC recover:
+ delay(10);
  } 
-}*/
+ }*/
 
 void loop()
 {
@@ -110,14 +110,14 @@ void loop()
   // else
   //   Serial.println("** PIN@ == false **");
 
-//  delay(1000);
+  //  delay(1000);
 
   //Check the RTC
   if(rtc.check() == 1)
   {
     int resp = rtc.getSensorValue();
-   Serial.print("read Resp=");
-   Serial.println(resp);
+    Serial.print("read Resp=");
+    Serial.println(resp);
     if(rtc.getSensorState()>0) {
       Serial.print("RTC Error= ");
       Serial.println(rtc.getSensorState());
@@ -164,4 +164,5 @@ void tempThresholdTripped()
    * freeze alarm.
    */
 }
+
 
