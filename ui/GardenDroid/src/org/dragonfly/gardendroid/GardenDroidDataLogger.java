@@ -25,6 +25,8 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 1200;//9600;
 
+	StringBuilder message =  new StringBuilder();
+	
 	public void initialize() {
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -83,23 +85,41 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 	 * Handle an event on the serial port. Read the data and print it.
 	 */
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
+		
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+			try {
+				Thread.sleep(500);  //wait to get the message
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				int available = input.available();
 				byte chunk[] = new byte[available];
 				int numRead = input.read(chunk, 0, available);
 				// Displayed results are codepage dependent
+				System.out.println("** READ IN="+numRead+"\n** CHUNK=="+new String(chunk));
 				for (byte b : chunk) {
-					if(b == 0xF0 || b == 0)
-						System.out.println("");
+//					if(b == 0xF0 || b == 0)
+//					{
+//						message = new StringBuilder();
+//						//System.out.println("");
+//					}
 					if(b>33 && b<70){
 						byte[] bb = {b};
-						System.out.print(new String( bb));
+						message.append(new String( bb));
 					}
-					else
-						System.out.print(b);
+					else if(b == 0xFF | b == -1)
+					{
+						//end msg,  print and reset
+						System.out.println("EOM");
+						if(message.length()>0)
+							System.out.println("Message==["+message.toString()+"]");
+						message = new StringBuilder();
+						
+					}
 				}
-				System.out.println("|");
+				
 				
 			} catch (Exception e) {
 				System.err.println(e.toString());
