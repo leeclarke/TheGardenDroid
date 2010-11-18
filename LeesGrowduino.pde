@@ -18,7 +18,7 @@ const int I2C_SDA_DPIN = 4;          //Managed by the Sensor object but noted he
 const int I2C_SCL_DPIN = 5;
 const int VEGI_A_PIN = 0;            //Analog read for Vegitronix
 
-//char DEVICE_ID[] = "001";      //ID for RF comm
+const char DEVICE_ID[] = "001";      //ID for RF comm
 
 int ledState = LOW;             // ledState used to set the LED
 int value;
@@ -196,17 +196,11 @@ String getRFMessageID()
  */
 void transmitData(String data)
 {
-    Serial.write("001");
-    String id = getRFMessageID();
-    char ids[id.length()];
-    id.toCharArray(ids,id.length());
+    unsigned int len = data.length();
+    char buf[len];
+    data.toCharArray(buf,len);    
     
-    Serial.write(ids);
-    //TODO: Need to add this as well..  Or figure out how to overload Serial.write to take a String object!
-    Serial.write(getTimestamp());
-    Serial.write(data);
-    Serial.write(0);
-    Serial.write(0xFF);
+    transmitData(buf);
 }
 
 /** 
@@ -215,10 +209,18 @@ void transmitData(String data)
 void transmitData(char data[])
 {
     Serial.write("001");
-    Serial.write(getRFMessageID());
-    Serial.write(getTimestamp());
+    String id = getRFMessageID();
+    char ids[id.length()];
+    id.toCharArray(ids,id.length());
+    
+    Serial.write(ids);
+    String stamp = rtc.getTimestamp();
+    unsigned int len = stamp.length();
+    char buf[len];
+    stamp.toCharArray(buf,len);    
+    Serial.write(buf);
     Serial.write(data);
-    Serial.write(0);
+    //Serial.write(0);
     Serial.write(0xFF);
 }
 
@@ -227,12 +229,11 @@ void transmitData(char data[])
  */
 void transmitData(int data)
 {
-    Serial.write("001");
-    Serial.write(getRFMessageID());
-    Serial.write(getTimestamp());
-    Serial.write(data);
-    Serial.write(0);
-    Serial.write(0xFF);
+    String d = String(data);
+    unsigned int len = d.length();
+    char buf[len];
+    d.toCharArray(buf,len); 
+    transmitData(buf);
 }
 
 

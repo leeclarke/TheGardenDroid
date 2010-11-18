@@ -9,6 +9,7 @@
 #include "RtcSensor.h"
 #include "PString.h"
 
+
 #define RTC_ID     0x68
 
 RtcSensor::RtcSensor(int sensorId, String name, unsigned long pollInterval)
@@ -29,7 +30,6 @@ int RtcSensor::getSensorState(){
 
 /**
  * Returns a human readable timestamp in format yyyy-MM-dd HH:mm:ss
- --Doesnt work, the chars need to be converted to ASCII
  */
 String RtcSensor::getTimestamp(){
   char buf[30];
