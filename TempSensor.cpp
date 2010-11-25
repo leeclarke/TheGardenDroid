@@ -196,9 +196,9 @@ String TempSensor::toString()
     str.print("-");
   }
   str.print(tempC);
-  str.print(" C | ");
+  str.print("|");
   str.print(tempF);
-  str.print("F");
+//  str.print("F");
 
   resp = String(buf);
 

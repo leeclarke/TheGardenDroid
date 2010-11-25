@@ -187,7 +187,7 @@ void transmitData(char msgType, char data[])
     char buf[ts.length()];
     ts.toCharArray(buf, ts.length());
     Serial.write(buf);
-    
+    Serial.write('|');
     Serial.write(data);
     Serial.write(0x04);
     Serial.write(0x04);
