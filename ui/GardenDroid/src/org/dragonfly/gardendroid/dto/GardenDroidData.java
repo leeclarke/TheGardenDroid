@@ -5,6 +5,10 @@ import java.util.HashMap;
 
 public class GardenDroidData implements SensorData {
 
+	public static final String MOISTURE_VALUE = "MOISTURE";
+	public static final String TEMP_F_VALUE = "TEMPF";
+	public static final String TEMP_C_VALUE = "TEMPC";
+	
 	private SensorType dataType;
 	private Date timestamp;
 	protected HashMap<String, Object> dataValues = new HashMap<String, Object>();
