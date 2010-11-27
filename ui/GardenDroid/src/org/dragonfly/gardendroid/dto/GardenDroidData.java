@@ -8,6 +8,7 @@ public class GardenDroidData implements SensorData {
 	public static final String MOISTURE_VALUE = "MOISTURE";
 	public static final String TEMP_F_VALUE = "TEMPF";
 	public static final String TEMP_C_VALUE = "TEMPC";
+	public static final String ERROR = "ERROR";
 	
 	private SensorType dataType;
 	private Date timestamp;

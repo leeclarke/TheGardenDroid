@@ -7,7 +7,7 @@ public class SensorTypeTest extends TestCase {
 	
 	public void testGetByCode() {
 		SensorType typeT = SensorType.getByCode('T');
-		assertEquals(SensorType.TEMPRATURE, typeT);
+		assertEquals(SensorType.TEMPERATURE, typeT);
 	}
 
 	public void testGetByCodeInvalidType() {

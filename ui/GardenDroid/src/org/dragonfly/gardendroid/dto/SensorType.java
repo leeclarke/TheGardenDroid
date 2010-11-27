@@ -1,11 +1,12 @@
 package org.dragonfly.gardendroid.dto;
 
+
 /**
  * 
  * @author lee Clarke
  */
 public enum SensorType {
-	RTC('R'), TEMPRATURE('T'), MOISTURE('M'), HUMIDITY('H'), AMBIENT_LIGHT('A'), LOG('L'),
+	RTC('R'), TEMPERATURE('T'), MOISTURE('M'), HUMIDITY('H'), AMBIENT_LIGHT('A'), LOG('L'),
 		ERROR('E'), INVALID('X');
 
 	private char sCode = 'X';
@@ -23,7 +24,7 @@ public enum SensorType {
 		case 'R':
 			return RTC;
 		case 'T':
-			return TEMPRATURE;
+			return TEMPERATURE;
 		case 'M':
 			return MOISTURE;
 		case 'A':
