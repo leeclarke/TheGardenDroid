@@ -36,7 +36,7 @@ String RtcSensor::getTimestamp(){
   PString str(buf, sizeof(buf));
   String resp;
   
-  str.format("20%d-%d-%d %d:%d:%d",year, month, dayOfMonth, hour, minute, second);
+  str.format("20%d-%d-%dT%d:%d:%d",year, month, dayOfMonth, hour, minute, second);
 
   resp = String(buf);
   return resp;

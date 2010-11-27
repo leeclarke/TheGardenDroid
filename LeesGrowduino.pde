@@ -39,7 +39,7 @@ MoistureSensor moist(0,"MOIST", 5000, VEGI_A_PIN);
 
 void setup()
 {  
-  rtc.setDateDs1307(45,48,21,6,20,11,10);
+  rtc.setDateDs1307(45,25,19,6,20,11,26);
   //Config Interrupt to notify if temp threshold is tripped
   //TODO: Update with actual hardware pin #
  // pinMode(PIN2, INPUT);
@@ -87,7 +87,7 @@ void loop()
       transmitData(MSG_ERR, msg);
     }
     else{
-      //TODO: Dont really want to send time, its sent with other log, ust call to make sure its upto date
+      //TODO: Dont really want to send time, its sent with other log, just call to make sure its upto date
       //transmitData(MSG_TIME,rtc.getTimestamp()); 
       rtc.getTimestamp();
     }
@@ -109,10 +109,6 @@ void loop()
     //Serial.print("MoistureVal= ");
     //Serial.println(moist.getSensorValue());
     transmitData(MSG_MOIST, moist.getSensorValue());
-    Serial.write(MSG_MOIST);
-    Serial.write(" - ");
-    Serial.write(analogRead(0));
-    Serial.write(0x04);
   }
    blinkDebugLED();
    
