@@ -34,6 +34,9 @@ public class SensorDataFactory {
 			case MOISTURE:
 			case HUMIDITY:
 			case ERROR:
+			case GROW_LITE:
+			case WATER_IRRIGATION:
+			case TEMP_WARNING:
 			case LOG:
 				if (tokens.length > 1) {
 					data.dataValues.put(GardenDroidData.SINGLE_DATA_VALUE, tokens[1]);
@@ -43,7 +46,6 @@ public class SensorDataFactory {
 				break;
 				
 			case TEMPERATURE:
-	
 				if (tokens.length >= 3) {
 					data.dataValues.put(GardenDroidData.TEMP_C_VALUE, tokens[1]);
 					data.dataValues.put(GardenDroidData.TEMP_F_VALUE, tokens[2]);

@@ -7,7 +7,7 @@ package org.dragonfly.gardendroid.dto;
  */
 public enum SensorType {
 	RTC('R'), TEMPERATURE('T'), MOISTURE('M'), HUMIDITY('H'), AMBIENT_LIGHT('A'), LOG('L'),
-		ERROR('E'), INVALID('X');
+		ERROR('E'), INVALID('X'), GROW_LITE('G'), WATER_IRRIGATION('I'), TEMP_WARNING('W');
 
 	private char sCode = 'X';
 
