@@ -28,30 +28,34 @@ public class SensorDataFactory {
 			data.setTimestamp(parseTimeStamp(tokens[0]));
 		}
 
+		//Process the data value[s] in the message
 		switch (data.getSensorType()) {
-		case MOISTURE:
-			if (tokens.length > 1) {
-				data.dataValues.put(GardenDroidData.MOISTURE_VALUE, tokens[1]);
-			} else {
-				data.dataValues.put(GardenDroidData.ERROR,"Failed to recieve Data Value.");
+			case AMBIENT_LIGHT:
+			case MOISTURE:
+			case HUMIDITY:
+			case ERROR:
+			case LOG:
+				if (tokens.length > 1) {
+					data.dataValues.put(GardenDroidData.SINGLE_DATA_VALUE, tokens[1]);
+				} else {
+					data.dataValues.put(GardenDroidData.ERROR,"Failed to recieve Data Value.");
+				}
+				break;
+				
+			case TEMPERATURE:
+	
+				if (tokens.length >= 3) {
+					data.dataValues.put(GardenDroidData.TEMP_C_VALUE, tokens[1]);
+					data.dataValues.put(GardenDroidData.TEMP_F_VALUE, tokens[2]);
+				} else {
+					data.dataValues.put(GardenDroidData.ERROR,"Failed to recieve Data Value.");
+				}
+				break;
+	
+			default:
+				data.dataValues.put(GardenDroidData.ERROR,("Failed to recieve Data Value. Data Recieved:"+ dataString));
+				break;
 			}
-			break;
-		case TEMPERATURE:
-
-			if (tokens.length >= 3) {
-				data.dataValues.put(GardenDroidData.TEMP_C_VALUE, tokens[1]);
-				data.dataValues.put(GardenDroidData.TEMP_F_VALUE, tokens[2]);
-			} else {
-				data.dataValues.put(GardenDroidData.ERROR,"Failed to recieve Data Value.");
-			}
-			break;
-
-		default:
-			data.dataValues
-					.put(
-							GardenDroidData.ERROR,("Failed to recieve Data Value. Data Recieved:"+ dataString));
-			break;
-		}
 
 		return data;
 	}

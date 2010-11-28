@@ -6,11 +6,18 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener; 
+
+import java.util.Date;
 import java.util.Enumeration;
 
+import org.apache.log4j.Logger;
+import org.dragonfly.gardendroid.dto.GardenDroidData;
 import org.dragonfly.gardendroid.dto.SensorDataFactory;
 
 public class GardenDroidDataLogger implements SerialPortEventListener {
+	static final Logger log = Logger.getLogger(GardenDroidDataLogger.class);
+	
+	
 	SerialPort serialPort;
         /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
@@ -45,14 +52,13 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 		}
 
 		if (portId == null) {
-			System.out.println("Could not find COM port.");
+			log.error("Could not find COM port.");
 			return;
 		}
 
 		try {
 			// open serial port, and use class name for the appName.
-			serialPort = (SerialPort) portId.open(this.getClass().getName(),
-					TIME_OUT);
+			serialPort = (SerialPort) portId.open(this.getClass().getName(),TIME_OUT);
 
 			// set port parameters
 			serialPort.setSerialPortParams(DATA_RATE,
@@ -68,7 +74,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
 		} catch (Exception e) {
-			System.err.println(e.toString());
+			log.error(e.toString());
 		}
 	}
 
@@ -92,7 +98,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 			try {
 				Thread.sleep(500);  //wait to get the message
 			} catch (InterruptedException e1) {
-				e1.printStackTrace();
+				log.error(e1);
 			}
 			try {
 				int available = input.available();
@@ -107,16 +113,20 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 					else if(b == 0x04 | b == -1)
 					{
 						if(message.length()>0){
-							System.out.println("EOM");
-							System.out.println("Message==["+message.toString()+"]");
-//							SensorDataFactory.ParseGardenData(message.toString());
+							GardenDroidData gdata = SensorDataFactory.parseGardenData(message.toString());
+							if(log.isDebugEnabled()){
+								log.debug("EOM");
+								log.debug("Message==["+ gdata+"]");
+							}
+							//TODO: Pass Object to persistence layer and save using separate thread or queue/stack.
+							
 						}
 						message = new StringBuilder();
 					}
 				}
 				
 			} catch (Exception e) {
-				System.err.println(e.toString());
+				log.error("Error processing message. "+e.toString());
 			}
 		}
 		// Ignore all the other eventTypes, but you should consider the other ones.
@@ -125,9 +135,10 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 	public static void main(String[] args) throws Exception {
 		GardenDroidDataLogger main = new GardenDroidDataLogger();
 		try{
+			log.info("Start up: "+new Date());
 			main.initialize();
 			System.in.read();
-			System.out.println("Shutting down...");
+			System.out.println("Shutting down @ "+new Date());
 		}
 		catch (Throwable tw)
 		{

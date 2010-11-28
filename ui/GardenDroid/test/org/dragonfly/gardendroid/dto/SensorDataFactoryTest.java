@@ -45,7 +45,7 @@ public class SensorDataFactoryTest {
 		expectedDate.set(Calendar.MILLISECOND,0);
 		assertEquals(expectedDate.getTime(), resp.getTimestamp());
 		
-		assertEquals("26", (String)resp.getDataValues().get(GardenDroidData.MOISTURE_VALUE));
+		assertEquals("26", (String)resp.getSingleDataValue());
 	}
 
 	//The RTC device will return no value if the min/sec are == 0
@@ -60,7 +60,7 @@ public class SensorDataFactoryTest {
 		expectedDate.set(Calendar.MILLISECOND,0);
 		assertEquals(expectedDate.getTime(), resp.getTimestamp());
 		
-		assertEquals("26", (String)resp.getDataValues().get(GardenDroidData.MOISTURE_VALUE));
+		assertEquals("26", (String)resp.getSingleDataValue());
 	}
 	
 }
