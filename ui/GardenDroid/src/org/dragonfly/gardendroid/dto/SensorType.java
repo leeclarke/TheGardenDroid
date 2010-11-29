@@ -31,6 +31,14 @@ public enum SensorType {
 			return AMBIENT_LIGHT;
 		case 'L':
 			return LOG;
+		case 'G':
+			return GROW_LITE;
+		case 'H':
+			return HUMIDITY;
+		case 'I':
+			return WATER_IRRIGATION;
+		case 'W':
+			return TEMP_WARNING;
 		case 'E':
 			return ERROR;
 		default:

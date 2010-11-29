@@ -55,7 +55,7 @@ public class SensorDataFactory {
 				break;
 	
 			default:
-				data.dataValues.put(GardenDroidData.ERROR,("Failed to recieve Data Value. Data Recieved:"+ dataString));
+				data.dataValues.put(GardenDroidData.ERROR,("Failed to recieve Data Value. Type= "+data.getSensorType()+" Data Recieved:"+ dataString));
 				break;
 			}
 

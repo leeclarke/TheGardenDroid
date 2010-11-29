@@ -14,6 +14,7 @@
 GrowLite::GrowLite(int sensorId, String name, int pinLocation){
 
     this->pin = pinLocation; //Digital Pin for this.
+    
 }
 
 int GrowLite::getStatus() {
@@ -59,11 +60,38 @@ String GrowLite::getEndTimeStr() {
 }
 
 /**
- * Determines if its time to toggle the light and di it if needed. Returns indicator that it started or stopped if interested. 
+ * Determines if its time to toggle the light. Returns indicator that it started or stopped if interested. 
  * @return [-1, no change 0 off, 1 on]
  */
-int checkTime(int hour, int minute){
+int GrowLite::checkTime(int hour, int minute){
+  int change = -1;
+  Serial.print("sHour=");
+  Serial.print(this->startHour);
+  Serial.print(" sMin=");
+  Serial.print(this->startMin);
+  Serial.print(" eHour=");
+  Serial.print(this->endHour);
+  Serial.print(" eMin=");
+  Serial.print(this->endMin);
   
-  return -1;
+  //TODO Fix, need to compare hours then mins
+  if(hour >= this->startHour && minute >= this->startMin && hour <= this->endHour && minute <= this->endMin)
+  {
+    if(this->status != 1) {
+      digitalWrite( this->pin,HIGH);
+      this->status = 1;
+      change = 1;
+    }
+  }
+  else
+  {
+    if(this->status != 0) {
+      digitalWrite( this->pin,LOW);
+      this->status = 0;
+      change = 0;
+    }
+  }
+  
+  return change;
 }
 

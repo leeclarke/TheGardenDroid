@@ -1,8 +1,11 @@
+
+#include <Messenger.h>
 #include <Wire.h>
 #include <EEPROM.h>
 #include "RtcSensor.h"
 #include "TempSensor.h"
 #include "MoistureSensor.h"
+#include "GrowLite.h"
 
 /* DS1621 configuration bits for ooutputting results*/
 #define POL        B00000010                    // output polarity (1 = high, 0 = low)
@@ -13,11 +16,15 @@
 const int PIN2_INTERRUPT = 0;
 const int PIN3_INTERRUPT = 1;
 const int LED_D_PIN =  13;           // the number of the LED pin
-const int LED_DEBUG2 =  11;           // the number of the LED pin
+const int LED_DEBUG2 =  10;           // the number of the LED pin
 const int LITE_RELAY_D_PIN =  12;     // the number of the Relay which drives the Grow Light
 const int I2C_SDA_DPIN = 4;          //Managed by the Sensor object but noted here for ref.
 const int I2C_SCL_DPIN = 5;
 const int VEGI_A_PIN = 0;            //Analog read for Vegitronix
+
+const int TEMP_DELAY = 10000;
+const int MOIST_DELAY = 20500;
+const int HUMIDITY_DELAY = 40500;
 
 char MSG_ERR   = 'E';
 char MSG_LOG   = 'L';
@@ -28,29 +35,36 @@ char MSG_LITE  = 'G';
 char MSG_TEMP_WARN  = 'W';
 
 int ledState = LOW;             // ledState used to set the LED
+int led2State = LOW;             // ledState used to set the LED
 int value;
 byte tempStart = 0;
 int rfMessageId = 0;
 
 RtcSensor rtc(0,"RTC", 500);
-TempSensor temp(0,"TEMP", 2000);
-MoistureSensor moist(0,"MOIST", 5000, VEGI_A_PIN);
-
+TempSensor temp(0,"TEMP", TEMP_DELAY);
+MoistureSensor moist(0,"MOIST", MOIST_DELAY, VEGI_A_PIN);
+GrowLite glite(1,"GROW", LITE_RELAY_D_PIN);
+Messenger message = Messenger(); 
 
 void setup()
 {  
-  rtc.setDateDs1307(45,25,19,6,20,11,26);
+   pinMode(LITE_RELAY_D_PIN, OUTPUT);
+   digitalWrite(LITE_RELAY_D_PIN, HIGH);
+   delay(2000);
+   digitalWrite(LITE_RELAY_D_PIN, LOW);
   //Config Interrupt to notify if temp threshold is tripped
   //TODO: Update with actual hardware pin #
  // pinMode(PIN2, INPUT);
  // digitalWrite(PIN2, HIGH);
  // attachInterrupt(PIN2_INTERRUPT, tempThresholdTripped, CHANGE);
   Wire.begin();                                 // connect I2C
+  //rtc.setDateDs1307(45,32,23,7,28,11,10);
 
   Serial.begin(1200); //No rush and better distance.
-  //Serial.begin(9600);
-  delay(5);
-
+  message.attach(messageReady);
+  
+  delay(600); //waits for the RTC to update its time settings
+  
   transmitData(MSG_LOG, "[Starting GardenDroid]");
   
   temp.startConversion(false);      // start/stop returns code indicating successful contact with sensor.
@@ -68,12 +82,16 @@ void setup()
     //temp.setHighThresh(23);                     // high temp threshold = 80F
     //temp.setLowThresh(20);                     // low temp threshold = 75F
   }
+  glite.setStartTime(0,14);
+  glite.setEndTime(2,22);
 }
 
 //###########
 void loop()
 {
-  //checkForCommand();
+  while ( Serial.available() ) {
+    message.process(Serial.read () );
+  }
   toggleDebugLED();
 
   //  #### Check the RTC  ####
@@ -112,8 +130,13 @@ void loop()
   }
    blinkDebugLED();
    
-   //TODO: Build test for Actual Moisture sensor code.
    //TODO: Add check for Turning on Grow Lite.
+  int gstatus = glite.checkTime((int)rtc.hour, (int)rtc.minute);
+  Serial.print("hour=");
+  Serial.print((int)rtc.hour);
+  Serial.print(" min=");
+  Serial.println((int)rtc.minute);
+  transmitData(MSG_LITE, gstatus);
 }
 
 
@@ -131,6 +154,12 @@ void toggleDebugLED() {
     ledState = LOW;
   // set the LED with the ledState of the variable:
   digitalWrite(LED_D_PIN, ledState);
+}
+
+void blinkDebug2LED() {
+  digitalWrite(LED_DEBUG2, HIGH);
+  delay(2000);
+  digitalWrite(LED_DEBUG2, LOW);
 }
 
 String getRFMessageID()
@@ -249,7 +278,32 @@ void tempThresholdTripped()
    * freeze alarm.
    */
 }
-
+      
+// Create the callback function
+void messageReady() {
+       // Loop through all the available elements of the message
+       blinkDebug2LED();
+       if(message.available())
+       {
+          //check for command char
+          if(message.checkString("T")) {
+             while ( message.available() ) {
+               //char valIn = message.readChar();         
+               Serial.println("GOT Time Set message");
+               //rtc.setDateDs1307(45,25,19,6,20,11,26);
+             } 
+              
+          }
+          else {
+             Serial.print("Got a message:"); 
+             Serial.println(message.readChar());
+          }
+       }
+      
+}
+ 
+ 
+ 
   //TODO: Add Flash management or config.
   //Test writing to Flash
  /* value = EEPROM.read(0);
@@ -276,20 +330,6 @@ void tempThresholdTripped()
     //    Serial.print("Low threshold = ");
     //    Serial.println(tLthresh);
     
-    
-    
-/*
-void checkForCommand() {  
- if (Serial.available() > 0) {
- // get incoming byte:
- inByte = Serial.read();
- // read first analog input, divide by 4 to make the range 0-255:
- firstSensor = analogRead(A0)/4;
- // delay 10ms to let the ADC recover:
- delay(10);
- } 
- }*/
- 
  //Checking the threshold alarm pin.
          // if(digitalRead(PIN2))
         //   Serial.println("** PIN2 == true **");

@@ -1,5 +1,6 @@
 package org.dragonfly.gardendroid;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import gnu.io.CommPortIdentifier; 
@@ -13,7 +14,7 @@ public class SerialTest implements SerialPortEventListener {
         /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
-			"/dev/ttyUSB0", // Linux
+			"/dev/ttyUSB1", // Linux
 			"COM3", // Windows
 			};
 	/** Buffered input stream from the port */
@@ -112,4 +113,5 @@ public class SerialTest implements SerialPortEventListener {
 			main.close();
 		}
 	}
+
 }

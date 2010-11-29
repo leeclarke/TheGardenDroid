@@ -127,6 +127,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 				
 			} catch (Exception e) {
 				log.error("Error processing message. "+e.toString());
+				message = new StringBuilder();
 			}
 		}
 		// Ignore all the other eventTypes, but you should consider the other ones.
