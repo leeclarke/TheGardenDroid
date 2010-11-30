@@ -1,5 +1,8 @@
 package org.dragonfly.gardendroid.dto;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 /**
  * 
@@ -45,5 +48,17 @@ public enum SensorType {
 			return INVALID;
 		}
 	}
-
+	
+	/**
+	 * List valid codes for Regex pattern matching etc..
+	 * @return
+	 */
+	public static String getValidLetters(){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < SensorType.values().length; i++) {
+			sb.append(SensorType.values()[i].getCode());
+		}
+		
+		return sb.toString();
+	}
 }

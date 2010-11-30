@@ -63,4 +63,28 @@ public class SensorDataFactoryTest {
 		assertEquals("26", (String)resp.getSingleDataValue());
 	}
 	
+	@Test
+	public void cleanValidateMessage_good() throws Exception {
+		String goodMessage = "T2010-11-25T22:30:5|25.81|78.4";
+		String value = SensorDataFactory.cleanValidateMessage(goodMessage);
+		assertNotNull(value);
+		assertEquals(goodMessage, value);
+	}
+	
+	@Test
+	public void cleanValidateMessage_messy() throws Exception {
+		String messyMessage = "%j%J%x00T2010-11-25T22:30:5|25.81|78.4";
+		String goodMessage = "T2010-11-25T22:30:5|25.81|78.4";
+		String value = SensorDataFactory.cleanValidateMessage(messyMessage);
+		assertNotNull(value);
+		assertEquals(goodMessage, value);
+	}
+	
+	@Test(expected=Exception.class)
+	public void cleanValidateMessage_rotten() throws Exception {
+		String rottenMessage = "0TJKKJJ%DD0099|00";
+		String value = SensorDataFactory.cleanValidateMessage(rottenMessage);
+		
+	}
+	
 }

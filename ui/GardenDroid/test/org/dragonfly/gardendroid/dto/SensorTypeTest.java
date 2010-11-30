@@ -15,4 +15,10 @@ public class SensorTypeTest extends TestCase {
 		assertEquals(SensorType.INVALID, typeT);
 	}
 		
+	public void testGetValidLetters() {
+		String codes = SensorType.getValidLetters();
+		assertNotNull(codes);
+		assertEquals(SensorType.values().length, codes.length());
+		System.out.println(codes);
+	}
 }
