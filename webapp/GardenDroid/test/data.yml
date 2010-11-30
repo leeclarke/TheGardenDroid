@@ -1,0 +1,13 @@
+# you describe your data using the YAML notation here
+# and then load them using Fixtures.load("data.yml")
+
+ PlantData(broc):
+    created: 2010-11-25
+    name: Broccoli
+    scientificName: Brassica Oleracea
+    daysTillHarvest: 42
+    daysTillHarvestEnd: 56
+    sunlight: full sun
+    lowTemp: 44.0
+    highTemp: 82.0
+    waterFreqDays: 5
