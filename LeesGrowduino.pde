@@ -82,8 +82,8 @@ void setup()
     //temp.setHighThresh(23);                     // high temp threshold = 80F
     //temp.setLowThresh(20);                     // low temp threshold = 75F
   }
-  glite.setStartTime(0,14);
-  glite.setEndTime(2,22);
+  glite.setStartTime(20,56);
+  glite.setEndTime(20,58);
 }
 
 //###########
@@ -100,15 +100,23 @@ void loop()
       int resp = rtc.getSensorValue();
 
       if(rtc.getSensorState()>0) {
-      String msg = String("RTC:");
-      msg.concat(rtc.getSensorState());
-      transmitData(MSG_ERR, msg);
-    }
-    else{
-      //TODO: Dont really want to send time, its sent with other log, just call to make sure its upto date
-      //transmitData(MSG_TIME,rtc.getTimestamp()); 
-      rtc.getTimestamp();
-    }
+        String msg = String("RTC:");
+        msg.concat(rtc.getSensorState());
+        transmitData(MSG_ERR, msg);
+      }
+      else{
+        rtc.getTimestamp();
+        
+        //  #### Check Grow lite schedule #### 
+        //The activity is time based so no point firing if RTC hasnt updated.
+        if(glite.check() == 1)
+        {
+          int gstatus = glite.checkTime((int)rtc.hour, (int)rtc.minute);
+          if(gstatus > -1) }
+            transmitData(MSG_LITE, gstatus);
+          }
+        }
+      }
   }
 
   // #### Read temp ####
@@ -124,19 +132,10 @@ void loop()
   //   #### read moisture sensor ####
   if(moist.check() == 1)
   {
-    //Serial.print("MoistureVal= ");
-    //Serial.println(moist.getSensorValue());
     transmitData(MSG_MOIST, moist.getSensorValue());
   }
-   blinkDebugLED();
    
-   //TODO: Add check for Turning on Grow Lite.
-  int gstatus = glite.checkTime((int)rtc.hour, (int)rtc.minute);
-  Serial.print("hour=");
-  Serial.print((int)rtc.hour);
-  Serial.print(" min=");
-  Serial.println((int)rtc.minute);
-  transmitData(MSG_LITE, gstatus);
+  blinkDebugLED();   
 }
 
 

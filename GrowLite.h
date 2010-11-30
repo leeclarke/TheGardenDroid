@@ -7,7 +7,9 @@
 #ifndef GrowLite_h
 #define GrowLite_h
 
-class GrowLite  {
+#include "Sensor.h"
+
+class GrowLite  : public Sensor{
 public:
   GrowLite(int sensorId, String name, int pinLocation);
   int getStatus();

@@ -11,8 +11,9 @@
 #include "GrowLite.h"
 #include "PString.h"
 
-GrowLite::GrowLite(int sensorId, String name, int pinLocation){
-
+GrowLite::GrowLite(int sensorId, String name, int pinLocation)  
+  :Sensor(sensorId, name, 1000){
+    
     this->pin = pinLocation; //Digital Pin for this.
     
 }
@@ -65,29 +66,36 @@ String GrowLite::getEndTimeStr() {
  */
 int GrowLite::checkTime(int hour, int minute){
   int change = -1;
-  Serial.print("sHour=");
-  Serial.print(this->startHour);
-  Serial.print(" sMin=");
-  Serial.print(this->startMin);
-  Serial.print(" eHour=");
-  Serial.print(this->endHour);
-  Serial.print(" eMin=");
-  Serial.print(this->endMin);
+  //First, no reason to check more often then every min so if delay isnt past just return.
   
-  //TODO Fix, need to compare hours then mins
-  if(hour >= this->startHour && minute >= this->startMin && hour <= this->endHour && minute <= this->endMin)
-  {
-    if(this->status != 1) {
-      digitalWrite( this->pin,HIGH);
-      this->status = 1;
-      change = 1;
+  
+  int reqMins = (hour*60)+ minute;
+  int startMins = (this->startHour*60)+ this->startMin;
+  int endMins = (this->endHour*60)+ this->endMin;
+
+  
+  if(startMins > endMins){
+    if(reqMins >= startMins || reqMins <= endMins) {
+      if(this->status == 0) {
+        digitalWrite(this->pin, HIGH);
+        change = 1;
+      }
+    }
+    else if(this->status == 1) {
+        digitalWrite(this->pin, LOW);
+        change = 0;
     }
   }
-  else
-  {
-    if(this->status != 0) {
-      digitalWrite( this->pin,LOW);
-      this->status = 0;
+  else {
+    if(reqMins >= startMins && reqMins <= endMins)
+    {
+      if(this->status == 0) {
+        digitalWrite(this->pin, HIGH);
+        change = 1;
+      }
+    }
+    else if(this->status == 1) {
+      digitalWrite(this->pin, LOW);
       change = 0;
     }
   }

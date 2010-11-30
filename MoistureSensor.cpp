@@ -28,10 +28,10 @@ int MoistureSensor::getSensorState(){
 }
 
 /** 
- * Translates the sensor value into english.
+ * Not supported, left for PC app to interprete moisture values.
  */
 String MoistureSensor::getSensorValueDesc() {
-  return "Finish me";
+  return "";
 }
 
 /**
