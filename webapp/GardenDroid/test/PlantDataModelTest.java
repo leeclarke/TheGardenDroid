@@ -40,6 +40,14 @@ public class PlantDataModelTest extends UnitTest {
 	//TODO: Add test for getting planted
 	@Test
 	public void addPlant() {
+		String name = "Broccoli";
+		PlantData plantData = PlantData.find("byName", name).first();
+		assertNotNull(plantData);
+		Plant newPlanting = new Plant(new Date(), "Winter Broc", "Some notes");
+		plantData.addPlant(newPlanting);
+		
+		//Go get it
+		Plant wBroc = Plant.find("byName", name).first();
 		fail("implement test");
 	}
 
