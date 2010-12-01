@@ -2,9 +2,12 @@ import org.junit.*;
 import java.util.*;
 import play.test.*;
 import models.*;
+import org.apache.log4j.Logger;
 
 public class PlantDataModelTest extends UnitTest {
 
+	static Logger logger = Logger.getLogger(PlantDataModelTest.class);
+	
     @Test
 	public void createAndRetrievePlant() {
 	    // Create a new user and save it
@@ -36,23 +39,37 @@ public class PlantDataModelTest extends UnitTest {
 
 	}
 
-
-	//TODO: Add test for getting planted
 	@Test
 	public void addPlant() {
+		logger.debug("");
 		String name = "Broccoli";
+		String plantingName = "Winter Broc";
 		PlantData plantData = PlantData.find("byName", name).first();
 		assertNotNull(plantData);
-		Plant newPlanting = new Plant(new Date(), "Winter Broc", "Some notes");
-		plantData.addPlant(newPlanting);
+		
+		plantData.addPlant(new Date(), plantingName, "notes", true, true);
 		
 		//Go get it
-		Plant wBroc = Plant.find("byName", name).first();
-		fail("implement test");
+		Plant wBroc = Plant.find("byName", plantingName).first();
+		assertNotNull(wBroc);
 	}
 
 	@Test
 	public void addPlant_Object() {
-		fail("implement test");
+		logger.debug("add Plant");
+		String name = "Broccoli";
+		String plantingName = "Winter Broc";
+		PlantData plantData = PlantData.find("byName", name).first();
+		assertNotNull(plantData);
+		
+		Plant newPlanting = new Plant(new Date(), plantingName, "Some notes",true,true);
+		assertNotNull(newPlanting);
+		
+		plantData.addPlant(newPlanting);
+		
+		//Go get it
+		Plant wBroc = Plant.find("byName", plantingName).first();
+		assertNotNull(wBroc);
+		assertEquals(plantingName, wBroc.name);
 	}
 }

@@ -1,13 +1,18 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
+
+import org.apache.log4j.Logger;
 
 import play.db.jpa.*;
 
 @Entity
 public class PlantData extends Model {
 
+	static Logger logger = Logger.getLogger(PlantData.class);
+	
     public Date created;
     public String name;
     public String scientificName;
@@ -25,6 +30,7 @@ public class PlantData extends Model {
     public PlantData(String name) {
 		this.created = new Date();
         this.name = name;
+        this.planted = new ArrayList<Plant>();
     }
 
     public PlantData(String name, String scientificName, int daysTillHarvest, int daysTillHarvestEnd, String sunlight, double lowTemp, double highTemp, int waterFreqDays) {
@@ -38,6 +44,7 @@ public class PlantData extends Model {
 		this.lowTemp = lowTemp;
 		this.highTemp = highTemp;
 		this.waterFreqDays = waterFreqDays;
+		this.planted = new ArrayList<Plant>();
     }
 
 	public PlantData addPlant(Date datePlanted, String name, String notes, boolean isActive, boolean isDroidFarmed) {
@@ -48,9 +55,18 @@ public class PlantData extends Model {
 	}
 
 	public PlantData addPlant(Plant newPlant) {
-		    newPlant.save();
-		    this.planted.add(newPlant);
+		if(newPlant != null)
+		{
+			newPlant.save();
+			this.planted.add(newPlant);
 		    this.save();
-		    return this;
+		}
+		else {
+			logger.warn("newPLant was NULL");
+			System.out.println("newPLant was NULL");
+		}
+			
+		return this;
+		    
 	}
 }
