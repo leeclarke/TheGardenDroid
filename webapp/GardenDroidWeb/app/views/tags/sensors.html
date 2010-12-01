@@ -1,0 +1,26 @@
+*{ Display a post in one of these modes: 'full' or 'home'  }*
+
+*{#{if _as == 'home'}}*
+
+#{if _sensorData.size() > 0}
+    <div class="older-posts">    
+        <h3>Most Recent Sensor Data </h3>
+    
+        #{list items:_sensorData, as:'prevData'}
+            <div class="post">
+                <h2 class="post-title">
+                    <a href="#">${prevData.sensorType}</a>
+                </h2>
+                <div class="post-metadata">
+                    <span class="post-date">
+                        ${prevData.dateTime.format('dd MMM yy hh:mm:ss')}
+                    </span>
+                    <span class="post-author">
+                        by ${prevData.data}
+                    </span>
+                </div>
+            </div>
+        #{/list}
+    </div>
+    
+#{/if}
