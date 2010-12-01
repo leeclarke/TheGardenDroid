@@ -3,17 +3,17 @@ import java.util.*;
 import play.test.*;
 import models.*;
 
-public class LogModelTest extends UnitTest {
+public class LogDataModelTest extends UnitTest {
 
     @Test
 	public void createAndRetrieveLog() {
 	    // Create a new user and save it
 	    Date now = new Date();
 	    String message = "Test Log message.";
-	    new Log(now, message).save();
+	    new LogData(now, message).save();
 
 	    // Retrieve the user with e-mail address bob@gmail.com
-	    Log log = Log.find("byMessage", message).first();
+	    LogData log = LogData.find("byMessage", message).first();
 
 	    // Test
 	    assertNotNull(log);
@@ -26,10 +26,10 @@ public class LogModelTest extends UnitTest {
 		    // Create a new user and save it
 		    Date now = new Date();
 		    String message = "Test Eror message.";
-		    new Log(now, message ,true).save();
+		    new LogData(now, message ,true).save();
 
 
-		    Log log = Log.find("byMessage", message).first();
+		    LogData log = LogData.find("byMessage", message).first();
 
 		    // Test
 		    assertNotNull(log);

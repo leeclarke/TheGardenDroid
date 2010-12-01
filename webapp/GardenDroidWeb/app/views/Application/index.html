@@ -1,4 +1,24 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
+ 
+#{if lastTempRead}
+    <div class="post">
+        <h2 class="post-title">
+            <a href="#">Current Conditions at ${lastTempRead.dateTime.format('dd MMM yy hh:mm:ss')}</a>
+        </h2>
+        <div class="post-metadata">
+            <span class="post-author">${lastTempRead.tempF} F</span>
+            <span class="post-date">${lastTempRead.tempC} C</span>
+        </div>
+    </div>
+#{/if}
+<br><HR>
+#{sensors sensorData:recentSensorData, as:'home' /}
+    
 
-#{welcome /}
+ 
+#{else}
+    <div class="empty">
+        There is currently nothing to read here.
+    </div>
+#{/else}

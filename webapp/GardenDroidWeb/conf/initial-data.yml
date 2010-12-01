@@ -1,0 +1,65 @@
+# you describe your data using the YAML notation here
+# and then load them using Fixtures.load("x.yml")
+
+ Plant(broc1):
+    name: Broc2010
+    datePlanted: 2010-11-25
+    notes: notes
+    isActive: true
+    isDroidFarmed: true
+    
+ PlantData(broc):
+    created: 2010-11-25
+    name: Broccoli
+    scientificName: Brassica Oleracea
+    daysTillHarvest: 42
+    daysTillHarvestEnd: 56
+    sunlight: full sun
+    lowTemp: 44.0
+    highTemp: 82.0
+    waterFreqDays: 5
+#    planted: broc1
+    
+ PlantData(spinach):
+    created: 2010-12-01
+    name: Spinach
+    scientificName: Spinacia Oleracea
+    daysTillHarvest: 35
+    daysTillHarvestEnd: 42
+    sunlight: full sun
+    lowTemp: 44.0
+    highTemp: 75.0
+    waterFreqDays: 4    
+    
+ PlantData(wsquash):
+    created: 2010-12-01
+    name: Squash (Winter)
+    scientificName: Cucurbita
+    daysTillHarvest: 77
+    daysTillHarvestEnd: 98
+    sunlight: full sun
+    lowTemp: 50.0
+    highTemp: 75.0
+    waterFreqDays: 7      
+
+ LogData(logdata):
+    dateTime: 2010-12-01
+    message: GardenDroid Startup
+    isError: false
+    
+ LogData(err):
+    dateTime: 2010-12-01 08:40:11
+    message: Invalid data message - 
+    isError: true
+
+ SensorData(moist):
+    dateTime: 2010-12-01 08:45:11
+    data: 23
+    sensorType: MOISTURE
+ 
+ TempSensorData(temp1):
+    dateTime: 2010-12-01 12:44:11
+    tempF: 68.65
+    tempC: 21.45
+    sensorType: TEMPERATURE
+    

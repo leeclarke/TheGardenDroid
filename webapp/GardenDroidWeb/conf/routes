@@ -10,3 +10,9 @@ GET     /public/                                staticDir:public
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
+
+
+#REST Post url
+
+POST /gardenDroidData                           RESTController.saveSensorData
+POST /gardenDroidData/temp                      RESTController.saveTempSensorData

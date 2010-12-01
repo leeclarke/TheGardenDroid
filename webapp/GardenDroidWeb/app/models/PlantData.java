@@ -23,14 +23,14 @@ public class PlantData extends Model {
     public double lowTemp;
     public double highTemp;
     public int waterFreqDays;
-
+    
 	@OneToMany(mappedBy="plantData", cascade=CascadeType.ALL)
-	public List<Plant> planted;
+	public List<Plant> plants;
 
     public PlantData(String name) {
 		this.created = new Date();
         this.name = name;
-        this.planted = new ArrayList<Plant>();
+        this.plants = new ArrayList<Plant>();
     }
 
     public PlantData(String name, String scientificName, int daysTillHarvest, int daysTillHarvestEnd, String sunlight, double lowTemp, double highTemp, int waterFreqDays) {
@@ -44,12 +44,12 @@ public class PlantData extends Model {
 		this.lowTemp = lowTemp;
 		this.highTemp = highTemp;
 		this.waterFreqDays = waterFreqDays;
-		this.planted = new ArrayList<Plant>();
+		this.plants = new ArrayList<Plant>();
     }
 
 	public PlantData addPlant(Date datePlanted, String name, String notes, boolean isActive, boolean isDroidFarmed) {
 	    Plant newPlant = new Plant(datePlanted, name, notes, isActive, isDroidFarmed).save();
-	    this.planted.add(newPlant);
+	    this.plants.add(newPlant);
 	    this.save();
 	    return this;
 	}
@@ -58,7 +58,7 @@ public class PlantData extends Model {
 		if(newPlant != null)
 		{
 			newPlant.save();
-			this.planted.add(newPlant);
+			this.plants.add(newPlant);
 		    this.save();
 		}
 		else {
