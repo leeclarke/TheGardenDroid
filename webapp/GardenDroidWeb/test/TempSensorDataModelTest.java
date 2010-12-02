@@ -12,13 +12,13 @@ public class TempSensorDataModelTest extends UnitTest {
 
 	    new TempSensorData(now, 78.23 , 22.79).save();
 
-	    TempSensorData sensor = TempSensorData.find("bySensorType", SensorType.TEMPERATURE).first();
+	    TempSensorData sensor = TempSensorData.find("sensorType = ? order by dateTime desc", SensorType.TEMPERATURE).first();
 
 	    // Test
 	    assertNotNull(sensor);
 
-	    assertEquals(78.23, sensor.data, 0);
-	    assertEquals(78.23, sensor.tempF, 0);
+	    assertEquals(78.23, sensor.tempF, .5);
+	    assertEquals("value was :"+sensor.data, 78.23, sensor.data, .5);
 	    assertEquals(22.79, sensor.tempC, 0);
 	    assertEquals(now, sensor.dateTime);
 	}

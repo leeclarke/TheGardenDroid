@@ -23,5 +23,5 @@ public class GetJson {
 	  }
 	
 	//result=
-	//{"tempF":78.23,"tempC":22.79,"dateTime":"Dec 1, 2010 5:16:12 PM","data":78.23,"sensorType":"TEMPERATURE"}
+	//{"tempF":46.23,"tempC":8.5,"dateTime":"Dec 2, 2010 9:16:12 PM","data":46.23,"sensorType":"TEMPERATURE"}
 }
