@@ -17,6 +17,7 @@ public class RESTController extends Controller {
 	 */
 	public static void saveSensorData() {
 		try {
+			System.out.println(" ### POSTED Sensor Data");
 			Reader reader = new InputStreamReader(request.body);
 			Gson gson = new GsonBuilder().create();
 			SensorData sensorData = gson.fromJson(reader, SensorData.class);
@@ -33,6 +34,7 @@ public class RESTController extends Controller {
 	 */
 	public static void saveTempSensorData(){
 		try {
+			System.out.println(" ### POSTED Sensor Data Temp");
 			Reader reader = new InputStreamReader(request.body);
 			Gson gson = new GsonBuilder().create();
 			TempSensorData sensorData = gson.fromJson(reader, TempSensorData.class);
