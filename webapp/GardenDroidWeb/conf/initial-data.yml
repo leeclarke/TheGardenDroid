@@ -62,4 +62,14 @@
     tempF: 68.65
     tempC: 21.45
     sensorType: TEMPERATURE
-    
+
+ TempSensorData(temp2):
+    dateTime: 2010-12-01 22:30:0
+    tempF: 75.5
+    tempC: 24.18
+    sensorType: TEMPERATURE
+
+ SensorData(lite):
+    dateTime: 2010-12-01 22:30:0
+    data: 1
+    sensorType: GROW_LITE

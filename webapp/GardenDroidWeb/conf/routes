@@ -8,11 +8,12 @@ GET     /                                       Application.index
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
+#REST Post url
+
+POST /gardenDroidData/saveData                  RESTController.saveSensorData
+POST /gardenDroidData/saveTemp                  RESTController.saveTempSensorData
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
 
 
-#REST Post url
-
-POST /gardenDroidData                           RESTController.saveSensorData
-POST /gardenDroidData/temp                      RESTController.saveTempSensorData

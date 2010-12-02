@@ -3,7 +3,7 @@ import java.util.*;
 import play.test.*;
 import models.*;
 
-public class TempSensorDataModelTest extends BaseUnitTest {
+public class TempSensorDataModelTest extends UnitTest {
 
     @Test
 	public void createAndRetrieveSensorData() {
