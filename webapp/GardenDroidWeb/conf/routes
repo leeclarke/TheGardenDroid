@@ -12,6 +12,7 @@ GET     /public/                                staticDir:public
 
 POST /gardenDroidData/saveData                  RESTController.saveSensorData
 POST /gardenDroidData/saveTemp                  RESTController.saveTempSensorData
+GET  /gardenDroidData/current                   RESTController.currentConditions
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
