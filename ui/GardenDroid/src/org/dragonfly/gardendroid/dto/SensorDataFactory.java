@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
  * @author lee clarke
  */
 public class SensorDataFactory {
-	
-	static Pattern msgPattern = Pattern.compile("["+SensorType.getValidLetters()+"]\\d{4}-\\d{2}-\\d{2}[T]\\d{1,2}:\\d{1,2}:\\d{1,2}\\|");
+
+	static Pattern msgPattern = Pattern.compile("["+SensorType.getValidLetters()+"]\\d{4}-\\d{1,2}-\\d{1,2}[T]\\d{1,2}:\\d{0,2}:\\d{0,2}\\|");
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	/**
@@ -50,7 +50,7 @@ public class SensorDataFactory {
 					data.dataValues.put(GardenDroidData.ERROR,"Failed to recieve Data Value. Type= "+data.getSensorType()+" Data Recieved:"+ dataString);
 				}
 				break;
-				
+
 			case TEMPERATURE:
 				if (tokens.length >= 3) {
 					data.dataValues.put(GardenDroidData.TEMP_C_VALUE, tokens[1]);
@@ -59,7 +59,7 @@ public class SensorDataFactory {
 					data.dataValues.put(GardenDroidData.ERROR,"Failed to recieve Data Value. Type= "+data.getSensorType()+" Data Recieved:"+ dataString);
 				}
 				break;
-	
+
 			default:
 				data.dataValues.put(GardenDroidData.ERROR,("Failed to recieve Data Value. Type= "+data.getSensorType()+" Data Recieved:"+ dataString));
 				break;
@@ -67,7 +67,7 @@ public class SensorDataFactory {
 
 		return data;
 	}
-	
+
 	/**
 	 * Validates the message and fixes and cleans up the message if needed.
 	 * @param message
@@ -81,7 +81,7 @@ public class SensorDataFactory {
 			Matcher matcher = msgPattern.matcher(message);
 			if(matcher.find())
 			{
-				//Clear off any junk at start of message if junk was prepended to message due to signal quality. 
+				//Clear off any junk at start of message if junk was prepended to message due to signal quality.
 				result = message.substring(matcher.start());
 			}
 			else {
@@ -94,7 +94,7 @@ public class SensorDataFactory {
 	 * Converts timestamp to Date correcting any flaws in the data format that
 	 * are sent from the RTC output. It will leave a 0 value blank which happens
 	 * for min and sec.
-	 * 
+	 *
 	 * @param dateString
 	 * @return
 	 * @throws ParseException
