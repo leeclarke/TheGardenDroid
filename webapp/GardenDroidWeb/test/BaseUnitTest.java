@@ -7,7 +7,8 @@ public class BaseUnitTest extends UnitTest {
 
 	@Before
     public void setup() {
-        Fixtures.deleteAll();
+//        Fixtures.deleteAll();
+		//Disabled for now.
     }
 
 

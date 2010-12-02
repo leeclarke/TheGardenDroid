@@ -17,4 +17,13 @@ public class TempSensorData extends SensorData {
         this.tempC = tempC;
     }
 
+	/**
+	 * Helper method because it gets called more then once.
+	 * @return
+	 */
+	public static TempSensorData getCurrentReading() {
+		TempSensorData temp = TempSensorData.find("sensorType = ? order by dateTime desc", SensorType.TEMPERATURE).first();
+		return temp;
+	}
+
 }

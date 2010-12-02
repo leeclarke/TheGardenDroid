@@ -73,3 +73,13 @@
     dateTime: 2010-12-01 22:30:0
     data: 1
     sensorType: GROW_LITE
+
+ SensorData(Alite):
+    dateTime: 2010-12-01 22:30:0
+    data: 22
+    sensorType: AMBIENT_LIGHT
+
+ SensorData(hu):
+    dateTime: 2010-12-01 22:30:0
+    data: 78
+    sensorType: HUMIDITY

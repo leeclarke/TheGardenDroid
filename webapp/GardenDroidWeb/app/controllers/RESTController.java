@@ -12,8 +12,6 @@ import com.google.gson.GsonBuilder;
 
 public class RESTController extends Controller {
 
-//TODO: Test all this.	
-	
 	/**
 	 * REST/JSON services for saving data
 	 */
@@ -46,5 +44,5 @@ public class RESTController extends Controller {
 		}
 	}
 	
-
+	//TODO: Add a GET for CurrentConditions
 }
