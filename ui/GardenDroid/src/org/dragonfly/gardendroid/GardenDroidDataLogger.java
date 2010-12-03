@@ -119,7 +119,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 								log.debug("Message==["+ gdata+"]");
 							}
 							//TODO: Pass Object to persistence layer and save using separate thread or queue/stack.
-							
+							RestController.postDataToServer(gdata);
 						}
 						message = new StringBuilder();
 					}
