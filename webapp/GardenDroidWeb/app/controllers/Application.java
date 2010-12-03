@@ -16,7 +16,6 @@ public class Application extends Controller {
 	}
 	
     public static void index() {
-    	//TODO: Assemble 'Last status' readings for all Sensors into a control panel.
     	TempSensorData lastTempRead = TempSensorData.find("sensorType = ? order by dateTime desc",SensorType.TEMPERATURE).first();
     	
     	//SensorData prevSensorData = SensorData.find("order by dateTime desc").first();

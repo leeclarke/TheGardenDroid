@@ -125,6 +125,12 @@ body {
     font-weight: bold;
 }
 
+.post .post-time {
+	color: #869AB1;
+    font-size: 130%;
+    font-weight: bold;
+}
+
 .post .post-metadata a {
     color: #9FA85D;
 }

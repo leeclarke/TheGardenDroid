@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import models.SensorData;
+import models.SensorType;
 import models.TempSensorData;
 
 import org.apache.log4j.Logger;
@@ -76,7 +79,10 @@ public class RESTController extends Controller {
 	 * Returns the current conditions in JSON format
 	 */
 	public static void currentConditions(){
-		renderJSON(SensorData.retrieveLatestSensorData());
+		HashMap<SensorType, SensorData> conds = SensorData.retrieveLatestSensorData();
+		conds.put(SensorType.TEMPERATURE, TempSensorData.getCurrentReading());
+		//TODO: add in Last Error info as well.
+		renderJSON(conds);
 	}
 	
 }
