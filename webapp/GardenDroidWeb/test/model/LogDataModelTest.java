@@ -1,6 +1,7 @@
 package model;
 import org.junit.*;
 import java.util.*;
+
 import play.test.*;
 import models.*;
 
@@ -23,7 +24,7 @@ public class LogDataModelTest extends UnitTest {
 	}
 
 	@Test
-		public void createAndRetrieveLog_Error() {
+	public void createAndRetrieveLog_Error() {
 		    // Create a new user and save it
 		    Date now = new Date();
 		    String message = "Test Eror message.";
@@ -36,5 +37,21 @@ public class LogDataModelTest extends UnitTest {
 		    assertNotNull(log);
 		    assertEquals(now, log.dateTime);
 		    assertEquals(true, log.isError);
+	}
+	
+	@Test
+	public void createAndRetrieveAll_Errors() {
+		List errs = LogData.getErrors();
+		assertNotNull(errs);
+		assertTrue(errs.size()>0);
+		
+	}
+	
+	@Test
+	public void createAndRetrieveAll_Logs() {
+		List logs = LogData.getLogEntries();
+		assertNotNull(logs);
+		assertTrue(logs.size()>0);
+		
 	}
 }

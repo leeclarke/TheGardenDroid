@@ -1,6 +1,7 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.jpa.*;
@@ -24,4 +25,15 @@ public class LogData extends Model {
 	        this.isError = false;
     }
 
+    public static List getErrors() {
+    	List<LogData> errList = new ArrayList<LogData>();
+    	errList = LogData.find("isError = ? order by dateTime desc", true).fetch();
+    	return errList;
+	}
+    
+    public static List getLogEntries() {
+    	List<LogData> logList = new ArrayList<LogData>();
+    	logList = LogData.find("isError = ? order by dateTime desc", false).fetch();
+    	return logList;
+	}
 }

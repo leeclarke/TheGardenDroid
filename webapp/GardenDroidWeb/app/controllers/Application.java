@@ -18,14 +18,14 @@ public class Application extends Controller {
     public static void index() {
     	TempSensorData lastTempRead = TempSensorData.find("sensorType = ? order by dateTime desc",SensorType.TEMPERATURE).first();
     	
-    	//SensorData prevSensorData = SensorData.find("order by dateTime desc").first();
-        List<SensorData> recentSensorData = SensorData.find(
-            "order by dateTime desc"
-        ).from(1).fetch(5);
+        List<SensorData> recentSensorData = SensorData.find("order by dateTime desc").from(1).fetch(5);
+        
+        List errors = LogData.getErrors();
+        List logs = LogData.getLogEntries();
         
         //TODO: build list of Warning notifications for Temp, water etc...  not built yet.
         //TODO: Get Recent Errors  and Log collections for display. 
-        render(lastTempRead, recentSensorData);
+        render(lastTempRead, recentSensorData, errors, logs);
     }
 
 }

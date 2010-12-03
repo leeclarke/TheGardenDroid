@@ -1,0 +1,32 @@
+*{ Display a post in one of these modes: 'log' or 'err'  }*
+
+*{#{if _as == 'err'}  Need to decide what I'll do here}*
+
+#{if _sensorData.size() > 0}
+    <div class="older-posts">    
+        <h3>Most Recent Sensor Input</h3>
+    
+        #{list items:_logData, as:'logData'}
+            <div class="post">
+                <span class="post-title">
+                    <a href="#">${logData.sensorType}</a>
+                </span>&nbsp;
+                <span class="post-metadata">
+                    <span class="post-date">
+                        [${logData.dateTime.format('dd MMM yy hh:mm:ss')}]
+                    </span>
+                    <span class="post-author">&nbsp;&nbsp;
+                        #{if logData.sensorType.code == 'T'}
+                        	 value: ${logData.tempF} F (${logData.tempC} C) 
+                        #{/if}
+                        #{else}
+                        	value: ${logData.data}   
+                        #{/else}
+                        		
+                    </span>
+                </span>
+            </div>
+        #{/list}
+    </div>
+    
+#{/if}
