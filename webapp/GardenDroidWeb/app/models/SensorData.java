@@ -34,7 +34,6 @@ public class SensorData extends Model {
 		SensorData tempWarning = SensorData.find("sensorType = ? order by dateTime desc", SensorType.TEMP_WARNING).first();
 		
 		sensorMap.put(SensorType.MOISTURE, moist);
-		System.out.println("### moist=="+moist);
 		sensorMap.put(SensorType.AMBIENT_LIGHT, ambientLight);
 		sensorMap.put(SensorType.GROW_LITE, growLight);
 		sensorMap.put(SensorType.HUMIDITY, humidity);

@@ -32,8 +32,17 @@ public class LogData extends Model {
 	}
     
     public static List getLogEntries() {
+    	return getLogEntries(null,null);
+    }
+    
+    public static List getLogEntries(Integer start, Integer limit) {
     	List<LogData> logList = new ArrayList<LogData>();
-    	logList = LogData.find("isError = ? order by dateTime desc", false).fetch();
+    	if(start != null && limit != null){
+    		logList = LogData.find("isError = ? order by dateTime desc", false).from(start).fetch(limit);
+    	}
+    	else {
+	    	logList = LogData.find("isError = ? order by dateTime desc", false).fetch();
+	    }
     	return logList;
 	}
 }

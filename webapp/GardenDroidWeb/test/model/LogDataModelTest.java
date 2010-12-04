@@ -3,9 +3,10 @@ import org.junit.*;
 import java.util.*;
 
 import play.test.*;
+import util.BaseUnitTest;
 import models.*;
 
-public class LogDataModelTest extends UnitTest {
+public class LogDataModelTest extends BaseUnitTest {
 
     @Test
 	public void createAndRetrieveLog() {
@@ -19,7 +20,7 @@ public class LogDataModelTest extends UnitTest {
 
 	    // Test
 	    assertNotNull(log);
-	    assertEquals(now, log.dateTime);
+	    assertDatesAlmostEqual(now, log.dateTime);
 	    assertEquals(false, log.isError);
 	}
 
@@ -35,7 +36,7 @@ public class LogDataModelTest extends UnitTest {
 
 		    // Test
 		    assertNotNull(log);
-		    assertEquals(now, log.dateTime);
+		    assertDatesAlmostEqual(now, log.dateTime);
 		    assertEquals(true, log.isError);
 	}
 	

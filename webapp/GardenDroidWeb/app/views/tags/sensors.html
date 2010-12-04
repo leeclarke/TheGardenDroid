@@ -19,6 +19,9 @@
                         #{if prevData.sensorType.code == 'T'}
                         	 value: ${prevData.tempF} F (${prevData.tempC} C) 
                         #{/if}
+                        #{elseif prevData.sensorType.code == 'G'}
+                        	 value: %{if(prevData.data == 1) out.print('ON'); else out.print('OFF'); }%  
+                        #{/elseif}
                         #{else}
                         	value: ${prevData.data}   
                         #{/else}

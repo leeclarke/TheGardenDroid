@@ -24,7 +24,6 @@ public class Application extends Controller {
         List logs = LogData.getLogEntries();
         
         //TODO: build list of Warning notifications for Temp, water etc...  not built yet.
-        //TODO: Get Recent Errors  and Log collections for display. 
         render(lastTempRead, recentSensorData, errors, logs);
     }
 

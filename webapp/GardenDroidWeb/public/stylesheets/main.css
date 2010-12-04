@@ -179,6 +179,9 @@ body {
     padding-left: 10px;
 }
 
+.older-posts a {
+	text-decoration: none;
+}
 .older-posts .post-title a {
     padding: 0;
     color: #131921;
