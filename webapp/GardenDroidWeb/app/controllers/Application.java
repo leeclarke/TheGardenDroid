@@ -1,6 +1,7 @@
 package controllers;
 
 import play.*;
+import play.db.jpa.JPABase;
 import play.mvc.*;
 
 import java.util.*;
@@ -27,4 +28,18 @@ public class Application extends Controller {
         render(lastTempRead, recentSensorData, errors, logs);
     }
 
+    /**
+     * Gets Sensor data for full view page.
+     */
+    public static void viewSensors() {
+    	//TODO: add pagenation
+    	List<SensorData> fullSensorData = SensorData.getSensorData(0, 20);
+    	render(fullSensorData);
+    }
+    
+    public static void viewLogs() {
+    	//TODO: add pagenation
+    	List fullLogs = LogData.getLogEntries();
+    	render(fullLogs);
+	}
 }
