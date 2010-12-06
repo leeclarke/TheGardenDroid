@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+#{set title:'Edit Plant Data' /}
+Edit form here.
+#{form @PlantLibraryAdmin.postPlantData(plantData.id)}
+	<p>
+        <label for="name">Plant name: </label>
+        <input type="text" name="name" id="name" />
+    </p>
+    <p>
+        <label for="scientificName">Scientific name: </label>
+        <input name="scientificName" id="scientificName" />
+    </p>
+    <p>
+        <label for="name">Temp Low: </label>
+        <input type="text" name="lowTemp" id="lowTemp" />
+    </p>
+    <p>
+        <label for="notes">Temp High: </label>
+        <input name="highTemp" id="highTemp">
+    </p>
+    <p>
+        <label for="notes">Light Req: </label>
+        <input name="sunlight" id="sunlight">
+    </p>
+    <p>
+        <label for="notes">Days til harvest : </label>
+        <input name="daysTillHarvest" id="daysTillHarvest">
+    </p>
+    <p>
+        <label for="notes">Days til harvest max: </label>
+        <input name="daysTillHarvestEnd" id="daysTillHarvestEnd">
+    </p>
+    <p>
+        <label for="notes">Water Frequency (days): </label>
+        <input name="waterFreqDays" id="waterFreqDays">
+    </p>
+    <p>
+        <label for="notes">Notes: </label>
+        <textarea name="notes" id="notes"></textarea>
+    </p>
+    <p>
+        <input type="submit" value="Submit Plant Data" />
+    </p>
+#{/form}

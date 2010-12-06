@@ -20,6 +20,10 @@ public class Plant extends Model {
 	@ManyToOne
 	public PlantData plantData;
 
+	public Plant(){
+		
+	}
+	
     public Plant(Date datePlanted, String name, String notes, boolean isActive, boolean isDroidFarmed) {
         this.datePlanted = datePlanted;
         this.name = name;

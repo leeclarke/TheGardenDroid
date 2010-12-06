@@ -1,0 +1,71 @@
+#{extends 'main.html' /}
+#{set title:'Plant Library' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#plantsTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+#{if plantings.size() > 0}
+    <div class="older-posts">    
+        <a href='#'><h3>Current Plantings</h3></a>
+    
+        #{list items:plantings, as:'planted'}
+            <div class="post">
+                <span class="post-title">
+                    <a href="@{PlantLibraryAdmin.editPlanted(planted.id)}">${planted.name}</a>
+                </span>&nbsp;
+                <span class="post-metadata">
+                    <span class="post-author">&nbsp;&nbsp; planted on - ${planted.datePlanted.format('dd MMM yy')}</span>
+                </span>
+            </div>
+        #{/list}
+    </div>
+    
+#{/if}
+<br>
+<hr>
+<BR>
+<a href='#'><h3>Plant Library Data</h3></a>
+<ul id="tools">
+    <li>
+        <a href="#">Add Plant</a>
+    </li>
+    <li>
+        <a href="#">Make Planting</a>
+    </li>
+
+</ul>
+
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="plantsTable"> 
+	<thead> 
+		<tr> 
+			<th>Name</th> 
+			<th>sci Name</th> 
+			<th>light</th> 
+			<th>Min Temp</th> 
+			<th>Max Temp</th> 
+			<th>Water Freq (days)</th>
+			<th>Harvest Days</th>
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if plants.size() > 0}
+        #{list items:plants, as:'plant'}
+            <tr>
+            	<td><a href="@{PlantLibraryAdmin.editPlantData(plant.id)}">${plant.name}</a></td>
+                <td>${plant.scientificName}</td>
+                <td>${plant.sunlight}</td>
+                <td>${plant.lowTemp}</td>
+                <td>${plant.highTemp}</td>
+                <td>${plant.waterFreqDays}</td>
+                <td>${plant.daysTillHarvest} - ${plant.daysTillHarvestEnd}</td>
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>
