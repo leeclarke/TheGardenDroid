@@ -10,6 +10,11 @@ import models.*;
 
 public class Application extends Controller {
 
+	public static final Integer ALL_LOGS = 0;
+	public static final Integer LOGS_ONLY = 1;
+	public static final Integer ERRORS_ONLY = 2;
+	
+	
 	@Before
 	static void addDefaults() {
 	    renderArgs.put("appTitle", Play.configuration.getProperty("droid.title"));

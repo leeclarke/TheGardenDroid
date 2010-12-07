@@ -52,6 +52,18 @@ A {
     text-decoration: none;
 }
 
+#libTools {
+	list-style: none;
+    margin: 0;
+    padding: 0;
+    float: right;
+}
+
+#libTools a{
+	color: #fff;
+    text-decoration: none;
+}
+
 #title {
     background: #B8C569;
     padding: 20px 30px 30px 20px;

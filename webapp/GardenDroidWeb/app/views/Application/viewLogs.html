@@ -1,4 +1,32 @@
 #{extends 'main.html' /}
 #{set title:'Logs' /}
 
-#{logSummery logData:fullLogs, as:'log' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#logTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+<a href='#'><h3>Log Data</h3></a>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="logTable"> 
+	<thead> 
+		<tr> 
+			<th width ="160">Timestamp</th> 
+			<th>Message</th> 
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if fullLogs.size() > 0}
+        #{list items:fullLogs, as:'log'}
+            <tr>
+            	<td>${log.dateTime.format('dd MMM yy hh:mm:ss')}</td>
+                <td>${log.message}</td>                
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>
