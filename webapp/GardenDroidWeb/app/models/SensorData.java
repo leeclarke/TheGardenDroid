@@ -1,10 +1,13 @@
 package models;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 
-import play.db.jpa.*;
+import play.db.jpa.Model;
 
 @Entity
 public class SensorData extends Model {
@@ -41,6 +44,17 @@ public class SensorData extends Model {
 		sensorMap.put(SensorType.TEMP_WARNING, tempWarning);
     	return sensorMap;
     }
+    
+    public static List getSensorData(Integer start, Integer limit) {
+    	List<SensorData> sensorList = new ArrayList<SensorData>();
+    	if(start != null && limit != null){
+    		sensorList = SensorData.find("order by dateTime desc").from(start).fetch(limit);
+    	}
+    	else {
+	    	sensorList = SensorData.find("order by dateTime desc").fetch();
+	    }
+    	return sensorList;
+	}
     
     @Override
     public String toString() {

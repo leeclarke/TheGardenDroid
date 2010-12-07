@@ -1,5 +1,6 @@
 package model;
 import java.util.Date;
+import java.util.List;
 
 import models.SensorData;
 import models.SensorType;
@@ -27,7 +28,7 @@ public class SensorDataModelTest extends UnitTest {
 	}
 
     @Test
-	public void createAndRetrieveSensorDataByType() {
+	public void findSensorDataByType() {
 	    // Create a new user and save it
 
 	    SensorData sensor = SensorData.find("sensorType = ? order by dateTime desc", SensorType.MOISTURE).first();
@@ -35,5 +36,12 @@ public class SensorDataModelTest extends UnitTest {
 	    // Test
 	    assertNotNull(sensor);
 
+	}
+    
+    @Test
+    public void getSensorData() {
+		List<SensorData> results = SensorData.getSensorData(0, 20);
+		assertNotNull(results);
+		assertTrue(results.size()>0);
 	}
 }
