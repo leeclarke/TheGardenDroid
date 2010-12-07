@@ -1,9 +1,11 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.jpa.*;
+import play.db.jpa.GenericModel.JPAQuery;
 
 @Entity
 public class Plant extends Model {
@@ -38,5 +40,10 @@ public class Plant extends Model {
 	        this.notes = notes;
 	        this.isActive = false;
     }
+
+	public static List getActivePlantings() {
+		List<Plant> planted = Plant.find("isActive = ? order by datePlanted desc", true).fetch();
+		return planted;
+	}
 
 }

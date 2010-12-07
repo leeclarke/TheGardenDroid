@@ -10,7 +10,7 @@ $(document).ready(function() {
 </script>
 #{if plantings.size() > 0}
     <div class="older-posts">    
-        <a href='#'><h3>Current Plantings</h3></a>
+        <h2 class="post-title"><a href='#'>Current Plantings</a></h2>
     
         #{list items:plantings, as:'planted'}
             <div class="post">
@@ -29,16 +29,6 @@ $(document).ready(function() {
 <hr>
 <BR>
 <a href='#'><h3>Plant Library Data</h3></a>
-<ul id="tools">
-    <li>
-        <a href="#">Add Plant</a>
-    </li>
-    <li>
-        <a href="#">Make Planting</a>
-    </li>
-
-</ul>
-
 <table cellpadding="4" cellspacing="1" border="0" class="display" id="plantsTable"> 
 	<thead> 
 		<tr> 

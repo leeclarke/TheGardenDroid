@@ -12,6 +12,9 @@ body {
 }
 
 /** Blog header **/
+A {
+	text-decoration: none;
+}
 
 #header {
     padding: 10px 0;
@@ -76,7 +79,7 @@ body {
 }
 
 #title h1 {
-    font-size: 64px;
+    font-size: 48px;
     margin: 0;
 }
 
@@ -86,12 +89,33 @@ body {
 }
 
 #title h2 {
-    font-size: 26px;
+    font-size: 18px;
     margin: 0;
     font-weight: normal;
 }
 
 /** Main content **/
+
+#widget {
+  display: table-row;
+}
+
+#widgetComp {
+	display: table-cell;	
+	width: 50%;
+}
+#actPlants, #currConds {
+	width: 100%;
+}
+
+#mainTable {
+	display: table;
+	width: 100%;
+}
+
+#contentSummery {
+  display: table-row;
+}
 
 #main {
     background: #314660;
@@ -131,8 +155,16 @@ body {
     font-weight: bold;
 }
 
+.post .post-time a{
+	
+    font-size: 130%;
+    color: #F5C2CC;
+    text-decoration: none;
+}
+
 .post .post-metadata a {
     color: #9FA85D;
+    text-decoration: none;
 }
 
 .post .post-content {

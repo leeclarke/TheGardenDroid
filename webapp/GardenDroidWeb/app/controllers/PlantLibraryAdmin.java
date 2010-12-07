@@ -27,21 +27,24 @@ public class PlantLibraryAdmin extends Controller {
 	
 	public static void editPlantData(Long id) {
 		PlantData plantData = new PlantData("");
-		plantData.id = (long) -1;
-		if(id != null)
-		{
+		logger.error("ENTER editPlantData="+id);
+		if(id != null && id >-1)	{
 			plantData = PlantData.findById(id);
 			if(plantData == null)
-				logger.warn("Recieved Null when looking up plantdata id="+id);
+				logger.error("Recieved Null when looking up plantdata id="+id);
+		} else {
+			plantData.id = (long) -1;
 		}
 		render(plantData);
 	}
 	
 	public static void editPlanted(Long id) {
 		Plant planted = new Plant();
-		if(id != null)
+		if(id != null && id >-1)
 		{
 			planted = Plant.findById(id);
+		} else {
+			planted.id = (long) -1;
 		}
 		render(planted);
 	}

@@ -1,10 +1,23 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{curr_conds /}
-<br><HR>
+<div id='mainTable'>
+<div class="widget" id ="widget">
+	<div id='widgetComp'>
+		<div id='currConds'>#{curr_conds /}</div>
+	</div> 
+	<div id='widgetComp'>
+		<div id='actPlants'>#{plantedConds planted:planted /}</div>
+	</div>
+</div>
+</div>
+<div id='mainTable'>
+<div id="contentSummery">
+<hr>
 #{sensors sensorData:recentSensorData, as:'home' /}
 <br>
-#{logSummery logData:errors, as:'err' /}
+#{logSummery logData:errs, as:'err' /}
 
 #{logSummery logData:logs, as:'log' /}
+</div>
+</div>

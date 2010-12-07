@@ -2,14 +2,16 @@
 
 %{
 def msgType = 'Log'
+def dtlLink = 'logs'
 if(_as == 'err')
 	msgType = 'Error'
+	dtlLink = 'errors'
 }%
 
-#{if _logData.size() > 0}
+
     <div class="older-posts">    
-        <a href='/logs'><h3>Most Recent ${msgType} Messages</h3></a>
-    
+        <a href='/${dtlLink}'><h3>Most Recent ${msgType} Messages ct(${_logData.size()})</h3></a>
+#{if _logData.size() > 0}    
         #{list items:_logData, as:'logData'}
             <div class="post">
                 <span class="post-title">
@@ -20,6 +22,6 @@ if(_as == 'err')
                 </span>
             </div>
         #{/list}
+#{/if}        
     </div>
     
-#{/if}

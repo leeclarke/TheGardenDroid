@@ -1,0 +1,20 @@
+ 	<div class="post">
+       <h2 class="post-title">
+           <a href="@{PlantLibrary.viewPlantData()}">Current Pantings</a>
+       </h2>
+       <div id='cond_time' class="post-time"></div>
+       <div class="post-metadata">
+#{if _planted.size() > 0}      
+	#{list items:_planted, as:'plant'}   	   
+           <a href="@{PlantLibraryAdmin.editPlantData(plant.id)}"><span class="post-time"> ${plant.name}</span></a>
+           <span class="post-date"> planted ${plant.datePlanted.format('dd MMM yyyy')}</span>
+           <span class="post-date">,  harvest in %{ 
+           		def now = new Date()
+           		def daysTil = (plant.harvestStart != null)?plant.harvestStart - now:0
+           		out.print(daysTil)
+           		}% days.</span>
+           <br>
+	#{/list}
+#{/if}        
+       </div>       
+   </div>

@@ -21,25 +21,30 @@ public class Application extends Controller {
     	
         List<SensorData> recentSensorData = SensorData.find("order by dateTime desc").from(1).fetch(5);
         
-        List errors = LogData.getErrors();
+        List errs = LogData.getErrors();
         List logs = LogData.getLogEntries();
         
-        //TODO: build list of Warning notifications for Temp, water etc...  not built yet.
-        render(lastTempRead, recentSensorData, errors, logs);
+        List planted = Plant.getActivePlantings();
+        
+        //TODO: Build another widgit for "Planted Plants" items planted days til harvest, days til water...
+        render(lastTempRead, recentSensorData, errs, logs, planted);
     }
 
     /**
      * Gets Sensor data for full view page.
      */
     public static void viewSensors() {
-    	//TODO: add pagenation
     	List<SensorData> fullSensorData = SensorData.getSensorData(0, 20);
     	render(fullSensorData);
     }
     
     public static void viewLogs() {
-    	//TODO: add pagenation
     	List fullLogs = LogData.getLogEntries();
+    	render(fullLogs);
+	}
+    
+    public static void viewErrors() {
+    	List fullLogs = LogData.getErrors();
     	render(fullLogs);
 	}
 }
