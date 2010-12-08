@@ -1,3 +1,56 @@
 #{extends 'main.html' /}
-#{set title:'Edit Planing Data' /}
-Edit Planted form here.
+#{extends 'main.html' /}
+#{set title:'Edit Planted Data' /}
+#{form @PlantLibraryAdmin.postPlantedData(planted?.id)}
+#{ifErrors}
+   #{errors}
+       <li class="error">${error}</li>
+   #{/errors}
+#{/ifErrors}
+<table>
+	<tr><td>
+        <label for="name">Plant name: </label></td>
+        <td width=80%>
+        	#{field 'name'}
+        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${planted?.name}"/>
+        	#{/field}
+    	</td></tr>
+    <tr><td>
+        <label for="scientificName">Date Planted: </label></td><td>
+        <span>${planted?.datePlanted?.format('dd MMM yyyy')}</span>
+    </td></tr>
+    <tr><td>
+        <label for="isActive">Active: </label></td><td>
+        #{field 'isActive'}
+        <input class="small_field" type="checkbox" name="${field.name}" id="${field.name}" value="${planted?.isActive}" />
+        #{/field}
+    </td></tr>
+    <tr><td>
+        <label for="isDroidFarmed">Droid Managed: </label></td><td>
+        <input class="small_field" type="checkbox" name="isDroidFarmed" id="isDroidFarmed" value="${planted?.isDroidFarmed}" />
+    </td></tr>
+    <tr><td>
+        <label for="plantCount">Plant Count: </label></td><td>
+        <input class="small_field" name="plantCount" id="plantCount" value="${planted?.plantCount}" />
+    </td></tr>
+    <tr><td>
+        <label for="harvestStart">Harvest Start Date: </label></td><td>
+        <input class="med_field"  name="harvestStart" id="harvestStart" value="${planted?.harvestStart?.format('dd MMM yyyy')}" />
+    </td></tr>
+    <tr><td>
+        <label for="harvestEnd">Harvest End Date: </label></td><td>
+        <input class="med_field"  name="harvestEnd" id="harvestEnd" value="${planted?.harvestEnd?.format('dd MMM yyyy')}" />
+    </td></tr>
+    <tr><td>
+        <label for="harvestYield">Harvest Yield (weight): </label></td><td>
+        <input class="small_field" name="harvestYield" id="harvestYield" value="${planted?.harvestYield}" />
+    </td></tr>
+    <tr><td>
+        <label for="notes">Notes: </label></td><td>
+        <textarea name="notes" id="notes">${planted?.notes}</textarea>
+    </td></tr>
+    <tr><td colspan="2">
+        <input type="submit" value="Submit Plant" />&nbsp;&nbsp;&nbsp;<input type="button" value="Delete" /></td>
+    </tr>
+</table>
+#{/form}

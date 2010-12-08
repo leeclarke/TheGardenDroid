@@ -38,14 +38,11 @@ public class PlantLibraryAdmin extends Controller {
 	}
 	
 	public static void editPlanted(Long id) {
-		Plant planted = new Plant();
-		if(id != null && id >-1)
-		{
-			planted = Plant.findById(id);
-		} else {
-			planted.id = (long) -1;
-		}
-		render(planted);
+		if(id != null && id >-1)	{
+			Plant planted = Plant.findById(id);
+			render(planted);
+		} 
+		render();
 	}
 	
 	public static void postPlantData(Long Id,@Required(message = "Name can not be empty!") String name, String scientificName, String notes, @Required @Min(message = "Days Til Harvest must be > 0", value=1) int daysTillHarvest, int daysTillHarvestEnd, String sunlight, @Required @Min(message = "Low Temp should be >32", value=32) double lowTemp, double highTemp, @Required @Min(message = "Water Frequency must be > 0", value=1) int waterFreqDays){
@@ -83,9 +80,6 @@ public class PlantLibraryAdmin extends Controller {
 	public static void postPlantedData(Long Id,@Required String name,Date datePlanted, String notes,@Required  boolean isActive,@Required  boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield){
 		//check for -1 which indicates add
 		
-		if (validation.hasErrors()) {
-	        render("Application/editPlanted.html", Id);
-	    }
 		Plant planted;
 		if(Id == -1 || Id == null ) {
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
@@ -93,7 +87,12 @@ public class PlantLibraryAdmin extends Controller {
 			planted.harvestYield = harvestYield;
 			planted.harvestStart =harvestStart;
 			planted.harvestEnd = harvestEnd;
-			planted.save();
+			if (validation.hasErrors()) {
+				logger.warn("Got Errors");
+				render("@editPlanted", planted);
+		    } else {
+		    	planted.save();
+		    }
 		} else {
 			planted = Plant.findById(Id);
 			if(planted != null)
@@ -107,12 +106,23 @@ public class PlantLibraryAdmin extends Controller {
 				planted.harvestYield = harvestYield;
 				planted.harvestStart =harvestStart;
 				planted.harvestEnd = harvestEnd;
-				planted.save();
+				if (validation.hasErrors()) {
+					logger.warn("Got Errors");
+					render("@editPlanted", planted);
+			    } else {
+			    	planted.save();
+			    }
 			} else {
-				planted = new Plant();
-				//TODO: add validation error. This should never happen but this allows a graceful failure.
+				planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
+				planted.plantCount = plantCount;
+				planted.harvestYield = harvestYield;
+				planted.harvestStart =harvestStart;
+				planted.harvestEnd = harvestEnd;
+				validation.addError("Id", "Invalid ID save the item again to create a new Planting.", "");
+				logger.warn("Got Errors");
+				render("@editPlanted", planted);
 			}
 		}
-		editPlanted(planted.id);
+		PlantLibrary.viewPlantData();
 	}
 }
