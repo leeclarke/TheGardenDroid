@@ -339,6 +339,17 @@ form textarea {
 form input, form textarea {
     font-size: 14px;
 }
+.large_field{
+    width: 300px;
+}
+
+.med_field{
+    width: 100px;
+}
+
+.small_field{
+    width: 50px;
+}
 
 form label {
     display: block;

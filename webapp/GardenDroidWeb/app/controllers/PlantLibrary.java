@@ -27,5 +27,4 @@ public class PlantLibrary extends Controller {
 		List<Plant> plantings = Plant.find("isActive = ?", true).fetch();
 		render(plants,plantings);
 	}
-	
 }

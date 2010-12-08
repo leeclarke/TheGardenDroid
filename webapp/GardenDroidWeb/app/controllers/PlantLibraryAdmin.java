@@ -27,7 +27,7 @@ public class PlantLibraryAdmin extends Controller {
 	
 	public static void editPlantData(Long id) {
 		PlantData plantData = new PlantData("");
-		logger.error("ENTER editPlantData="+id);
+		logger.debug("ENTER editPlantData="+id);
 		if(id != null && id >-1)	{
 			plantData = PlantData.findById(id);
 			if(plantData == null)
@@ -68,8 +68,7 @@ public class PlantLibraryAdmin extends Controller {
 			plantData.waterFreqDays = waterFreqDays;
 			plantData.save();
 		}
-		
-		render(plantData);
+		editPlantData(plantData.id);
 	}
 	
 	public static void postPlantedData(){
