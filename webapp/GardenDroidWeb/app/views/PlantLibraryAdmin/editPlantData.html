@@ -1,46 +1,57 @@
 #{extends 'main.html' /}
 #{set title:'Edit Plant Data' /}
-#{form @PlantLibraryAdmin.postPlantData(plantData.id)}
+#{form @PlantLibraryAdmin.postPlantData(plantData?.id)}
+#{ifErrors}
+   #{errors}
+       <li class="error">${error}</li>
+   #{/errors}
+#{/ifErrors}
 <table>
 	<tr><td>
         <label for="name">Plant name: </label></td>
         <td width=80%>
-        	<input class="large_field" type="text" name="name" id="name" value="${plantData.name}"/>
+        	#{field 'name'}
+        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${plantData?.name}"/>
+        	#{/field}
     	</td></tr>
     <tr><td>
         <label for="scientificName">Scientific name: </label></td><td>
-        <input class="large_field" name="scientificName" id="scientificName" value="${plantData.scientificName}" />
+        <input class="large_field" name="scientificName" id="scientificName" value="${plantData?.scientificName}" />
     </td></tr>
     <tr><td>
         <label for="name">Temp Low: </label></td><td>
-        <input class="small_field" type="text" name="lowTemp" id="lowTemp" value="${plantData.lowTemp}" />
+        <input class="small_field" type="text" name="lowTemp" id="lowTemp" value="${plantData?.lowTemp}" />
     </td></tr>
     <tr><td>
         <label for="notes">Temp High: </label></td><td>
-        <input class="small_field" type="text" name="highTemp" id="highTemp" value="${plantData.highTemp}" />
+        <input class="small_field" type="text" name="highTemp" id="highTemp" value="${plantData?.highTemp}" />
     </td></tr>
     <tr><td>
         <label for="notes">Light Req: </label></td><td>
-        <input class="med_field"  name="sunlight" id="sunlight" value="${plantData.sunlight}" />
+        <input class="med_field"  name="sunlight" id="sunlight" value="${plantData?.sunlight}" />
     </td></tr>
     <tr><td>
         <label for="notes">Days til harvest : </label></td><td>
-        <input class="small_field" name="daysTillHarvest" id="daysTillHarvest" value="${plantData.daysTillHarvest}" />
+        #{field 'daysTillHarvest'}
+        <input class="small_field ${field.errorClass}" name="${field.name}" id="${field.name}" value="${plantData?.daysTillHarvest}" />
+        #{/field}
     </td></tr>
     <tr><td>
         <label for="notes">Days til harvest max: </label></td><td>
-        <input class="small_field" name="daysTillHarvestEnd" id="daysTillHarvestEnd" value="${plantData.daysTillHarvestEnd}" />
+        <input class="small_field" name="daysTillHarvestEnd" id="daysTillHarvestEnd" value="${plantData?.daysTillHarvestEnd}" />
     </td></tr>
     <tr><td>
         <label for="notes">Water Frequency (days): </label></td><td>
-        <input class="small_field" name="waterFreqDays" id="waterFreqDays" value="${plantData.waterFreqDays}" />
+        #{field 'waterFreqDays'}
+        <input class="small_field ${field.errorClass}" name="${field.name}" id="${field.name}" value="${plantData?.waterFreqDays}" />
+        #{/field}
     </td></tr>
     <tr><td>
         <label for="notes">Notes: </label></td><td>
-        <textarea name="notes" id="notes">${plantData.notes}</textarea>
+        <textarea name="notes" id="notes">${plantData?.notes}</textarea>
     </td></tr>
-    <tr><td>
-        <input type="submit" value="Submit Plant Data" />
-    </td></tr>
+    <tr><td colspan="2">
+        <input type="submit" value="Submit Plant Data" />&nbsp;&nbsp;&nbsp;<input type="button" value="Delete" /></td>
+    </tr>
 </table>
 #{/form}

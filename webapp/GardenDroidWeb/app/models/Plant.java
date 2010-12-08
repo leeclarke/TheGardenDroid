@@ -14,10 +14,10 @@ public class Plant extends Model {
     public String name;
     public String notes;
     public boolean isActive;
-    public int plantCount;
+    public Integer plantCount;
     public Date harvestStart;
     public Date harvestEnd;
-    public double harvestYield;
+    public Double harvestYield;
 	public boolean isDroidFarmed;
 	@ManyToOne
 	public PlantData plantData;

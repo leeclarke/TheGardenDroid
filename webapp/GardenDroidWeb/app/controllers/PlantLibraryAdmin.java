@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -7,6 +8,8 @@ import org.codehaus.groovy.tools.shell.commands.ShowCommand;
 
 import models.Plant;
 import models.PlantData;
+import play.data.validation.Min;
+import play.data.validation.Required;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -26,16 +29,12 @@ public class PlantLibraryAdmin extends Controller {
 	}
 	
 	public static void editPlantData(Long id) {
-		PlantData plantData = new PlantData("");
 		logger.debug("ENTER editPlantData="+id);
 		if(id != null && id >-1)	{
-			plantData = PlantData.findById(id);
-			if(plantData == null)
-				logger.error("Recieved Null when looking up plantdata id="+id);
-		} else {
-			plantData.id = (long) -1;
-		}
-		render(plantData);
+			PlantData plantData = PlantData.findById(id);
+			render(plantData);
+		} 
+		render();
 	}
 	
 	public static void editPlanted(Long id) {
@@ -49,11 +48,17 @@ public class PlantLibraryAdmin extends Controller {
 		render(planted);
 	}
 	
-	public static void postPlantData(Long Id,String name, String scientificName, String notes, int daysTillHarvest, int daysTillHarvestEnd, String sunlight, double lowTemp, double highTemp, int waterFreqDays){
+	public static void postPlantData(Long Id,@Required(message = "Name can not be empty!") String name, String scientificName, String notes, @Required @Min(message = "Days Til Harvest must be > 0", value=1) int daysTillHarvest, int daysTillHarvestEnd, String sunlight, @Required @Min(message = "Low Temp should be >32", value=32) double lowTemp, double highTemp, @Required @Min(message = "Water Frequency must be > 0", value=1) int waterFreqDays){
 		//check for -1 which indicates add
+		
 		PlantData plantData;
-		if(Id == -1 || Id == null ) {
-			plantData = new PlantData(name, scientificName, daysTillHarvest, daysTillHarvestEnd, sunlight, lowTemp, highTemp, waterFreqDays).save();
+		if(Id == null || Id == -1 ) {
+			plantData = new PlantData(name, scientificName, daysTillHarvest, daysTillHarvestEnd, sunlight, lowTemp, highTemp, waterFreqDays);
+			if (validation.hasErrors()) {
+				render("@editPlantData", plantData);
+			}else {
+				plantData.save();
+			}			
 		}
 		else {
 			plantData = PlantData.findById(Id);
@@ -66,13 +71,48 @@ public class PlantLibraryAdmin extends Controller {
 			plantData.lowTemp = lowTemp;
 			plantData.highTemp = highTemp;
 			plantData.waterFreqDays = waterFreqDays;
-			plantData.save();
+			if (validation.hasErrors()) {
+				render("@editPlantData", plantData);
+			}else {
+				plantData.save();
+			}
 		}
-		editPlantData(plantData.id);
+		PlantLibrary.viewPlantData();
 	}
 	
-	public static void postPlantedData(){
+	public static void postPlantedData(Long Id,@Required String name,Date datePlanted, String notes,@Required  boolean isActive,@Required  boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield){
 		//check for -1 which indicates add
 		
+		if (validation.hasErrors()) {
+	        render("Application/editPlanted.html", Id);
+	    }
+		Plant planted;
+		if(Id == -1 || Id == null ) {
+			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
+			planted.plantCount = plantCount;
+			planted.harvestYield = harvestYield;
+			planted.harvestStart =harvestStart;
+			planted.harvestEnd = harvestEnd;
+			planted.save();
+		} else {
+			planted = Plant.findById(Id);
+			if(planted != null)
+			{	
+				planted.name = name;
+				planted.datePlanted = datePlanted;
+				planted.notes = notes;
+				planted.isActive = isActive;
+				planted.isDroidFarmed = isDroidFarmed;
+				planted.plantCount = plantCount;
+				planted.harvestYield = harvestYield;
+				planted.harvestStart =harvestStart;
+				planted.harvestEnd = harvestEnd;
+				planted.save();
+			} else {
+				planted = new Plant();
+				//TODO: add validation error. This should never happen but this allows a graceful failure.
+			}
+		}
+		editPlanted(planted.id);
 	}
 }
