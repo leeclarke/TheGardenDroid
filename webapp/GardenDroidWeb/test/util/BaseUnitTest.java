@@ -5,20 +5,10 @@ import java.util.*;
 import play.test.*;
 import models.*;
 
-public class BaseUnitTest extends UnitTest {
+public abstract class BaseUnitTest extends UnitTest {
 	
 	Logger logger = Logger.getLogger(BaseUnitTest.class);
-//	@Before
-//    public void setup() {
-////        Fixtures.deleteAll();
-//		//Disabled for now.
-//    }
 
-
-//	@Test
-//	public void dummyTest() {
-//
-//	}
 	
 	/**
 	 * Checks for equality but ignores mils.
@@ -41,9 +31,11 @@ public class BaseUnitTest extends UnitTest {
 		System.out.println("expected="+expected.getTime());
 		System.out.println("actual="+actual.getTime());
 		System.out.println("#@@@ dateDif==" + dateDif);
-		if(dateDif < 1000 && dateDif > -1000 ) {
+		if(dateDif < 10000 && dateDif > -10000 ) {
 			assertTrue(true);
 		}
-		assertTrue("expected: ["+expected + "] actual: [" + actual +"]",false);
+		else {
+			assertTrue("expected: ["+expected + "] actual: [" + actual +"]",false);
+		}
 	}
 }

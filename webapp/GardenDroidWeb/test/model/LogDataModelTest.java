@@ -13,10 +13,10 @@ public class LogDataModelTest extends BaseUnitTest {
 	    // Create a new user and save it
 	    Date now = new Date();
 	    String message = "Test Log message.";
-	    new LogData(now, message).save();
+	    LogData logD = new LogData(now, message ,false);
+	    logD.save();
 
-	    // Retrieve the user with e-mail address bob@gmail.com
-	    LogData log = LogData.find("byMessage", message).first();
+	    LogData log = LogData.findById(logD.id);
 
 	    // Test
 	    assertNotNull(log);
@@ -29,10 +29,11 @@ public class LogDataModelTest extends BaseUnitTest {
 		    // Create a new user and save it
 		    Date now = new Date();
 		    String message = "Test Eror message.";
-		    new LogData(now, message ,true).save();
+		    LogData logD = new LogData(now, message ,true);
+		    logD.save();
 
 
-		    LogData log = LogData.find("byMessage", message).first();
+		    LogData log = LogData.findById(logD.id);
 
 		    // Test
 		    assertNotNull(log);

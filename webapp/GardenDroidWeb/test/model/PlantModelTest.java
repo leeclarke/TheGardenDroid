@@ -2,16 +2,15 @@ package model;
 import org.junit.*;
 import java.util.*;
 import play.test.*;
+import util.BaseUnitTest;
 import models.*;
 
-public class PlantModelTest extends UnitTest {
+public class PlantModelTest extends BaseUnitTest {
 
     @Test
 	public void createAndRetrievePlant() {
 		Fixtures.load("data.yml");
 
-
-//TODO: Add PlantData to test!
 	    // Create a new user and save it
 	    Date now = new Date();
 	    String name = "Broccoli";
@@ -27,7 +26,7 @@ public class PlantModelTest extends UnitTest {
 	    assertEquals(notes, plant.notes);
 	    assertEquals(true, plant.isActive);
 	    assertEquals(true, plant.isDroidFarmed);
-	    assertEquals(now, plant.datePlanted);
+	    assertDatesAlmostEqual(now, plant.datePlanted);
 	}
 
 
