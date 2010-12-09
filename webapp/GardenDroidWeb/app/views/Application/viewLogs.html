@@ -5,7 +5,8 @@
 $(document).ready(function() {
 	$('#logTable').dataTable( {
 		"bLengthChange": false,
-		"sPaginationType": "full_numbers"
+		"sPaginationType": "full_numbers",
+		"aaSorting": [[ 0, "desc" ]]
 	} );
 } );
 </script>

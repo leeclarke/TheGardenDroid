@@ -39,7 +39,7 @@ public class Application extends Controller {
      * Gets Sensor data for full view page.
      */
     public static void viewSensors() {
-    	List<SensorData> fullSensorData = SensorData.getSensorData(0, 20);
+    	List<SensorData> fullSensorData = SensorData.getSensorData(null, null);
     	render(fullSensorData);
     }
     
