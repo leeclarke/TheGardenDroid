@@ -38,11 +38,12 @@ public class PlantLibraryAdmin extends Controller {
 	}
 	
 	public static void editPlanted(Long id) {
+		List<PlantData> plantData = PlantData.findAll();
 		if(id != null && id >-1)	{
 			Plant planted = Plant.findById(id);
-			render(planted);
+			render(planted,plantData);
 		} 
-		render();
+		render(plantData);
 	}
 	
 	public static void postPlantData(Long Id,@Required(message = "Name can not be empty!") String name, String scientificName, String notes, @Required @Min(message = "Days Til Harvest must be > 0", value=1) int daysTillHarvest, int daysTillHarvestEnd, String sunlight, @Required @Min(message = "Low Temp should be >32", value=32) double lowTemp, double highTemp, @Required @Min(message = "Water Frequency must be > 0", value=1) int waterFreqDays){
@@ -77,19 +78,26 @@ public class PlantLibraryAdmin extends Controller {
 		PlantLibrary.viewPlantData();
 	}
 	
-	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield){
+	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, Long plantDataId){
 		//check for -1 which indicates add
 		logger.warn("ENTER postPlantedData");
 		Plant planted;
+		PlantData plantData = null;
+		if(plantDataId != null && plantDataId >-1) {
+			plantData = PlantData.findById(plantDataId);
+			logger.debug("plantData == "+plantData.name);
+		}
+			
 		if(Id == -1 || Id == null ) {
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 			planted.plantCount = plantCount;
 			planted.harvestYield = harvestYield;
+			planted.plantData = plantData;
 			if(harvestStart != null) planted.harvestStart =harvestStart;
 			if(harvestEnd != null) planted.harvestEnd = harvestEnd;
 			if (validation.hasErrors()) {
-				logger.warn("Got Errors");
-				logger.warn("ERRORS: "+validation.errorsMap());
+				logger.debug("Got Errors");
+				logger.debug("ERRORS: "+validation.errorsMap());
 				render("@editPlanted", planted);
 		    } else {
 		    	planted.save();
@@ -99,19 +107,20 @@ public class PlantLibraryAdmin extends Controller {
 			if(planted != null)
 			{	
 				planted.name = name;
-				logger.warn("datePlanted="+datePlanted );
+				logger.debug("datePlanted="+datePlanted );
 				planted.datePlanted = datePlanted;
 				planted.notes = notes;
 				planted.isActive = isActive;
 				planted.isDroidFarmed = isDroidFarmed;
 				planted.plantCount = plantCount;
 				planted.harvestYield = harvestYield;
-				logger.warn("harvestStart="+harvestStart );
+				planted.plantData = plantData;
+				logger.debug("harvestStart="+harvestStart );
 				if(harvestStart != null ) planted.harvestStart =harvestStart;
 				if(harvestEnd != null) planted.harvestEnd = harvestEnd;
 				if (validation.hasErrors()) {
-					logger.warn("Got Errors");
-					logger.warn("ERR: "+validation.errorsMap());
+					logger.debug("Got Errors");
+					logger.debug("ERR: "+validation.errorsMap());
 					render("@editPlanted", planted);
 			    } else {
 			    	planted.save();
@@ -122,8 +131,9 @@ public class PlantLibraryAdmin extends Controller {
 				planted.harvestYield = harvestYield;
 				planted.harvestStart =harvestStart;
 				planted.harvestEnd = harvestEnd;
+				planted.plantData = plantData;
 				validation.addError("Id", "Invalid ID save the item again to create a new Planting.", "");
-				logger.warn("Got Errors");
+				logger.debug("Got Errors");
 				render("@editPlanted", planted);
 			}
 		}

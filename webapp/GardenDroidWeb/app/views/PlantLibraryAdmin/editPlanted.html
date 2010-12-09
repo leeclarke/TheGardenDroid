@@ -48,6 +48,16 @@
         <input class="small_field" name="harvestYield" id="harvestYield" value="${planted?.harvestYield}" />
     </td></tr>
     <tr><td>
+        <label for="plantDataId">Plant Data Type: </label></td><td>
+        <select name="plantDataId" id="plantDataId" class="large_field" >
+        	<option value="-1"> </option>
+        	 #{list items:plantData, as:'plant'}
+        	 	<option value="${plant.id}" #{if planted.plantData.id && plant.id ==  planted.plantData.id}selected="selected" #{/if}> ${plant.name} </option>
+        	 #{/list}
+        	 *{value="${planted?.plantData?.id?}"}*
+        </select> 
+    </td></tr>
+    <tr><td>
         <label for="notes">Notes: </label></td><td>
         <textarea name="notes" id="notes">${planted?.notes}</textarea>
     </td></tr>
