@@ -17,17 +17,19 @@
     	</td></tr>
     <tr><td>
         <label for="scientificName">Date Planted: </label></td><td>
-        <span>${planted?.datePlanted?.format('dd MMM yyyy')}</span>
+        #{field 'datePlanted'}
+        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${planted?.datePlanted?.format('yyyy-MM-dd')}"/>
+        #{/field}
     </td></tr>
     <tr><td>
         <label for="isActive">Active: </label></td><td>
         #{field 'isActive'}
-        <input class="small_field" type="checkbox" name="${field.name}" id="${field.name}" value="${planted?.isActive}" />
+        <input class="small_field" type="checkbox" name="${field.name}" id="${field.name}" #{if planted?.isActive} checked="checked" #{/if} />
         #{/field}
     </td></tr>
     <tr><td>
         <label for="isDroidFarmed">Droid Managed: </label></td><td>
-        <input class="small_field" type="checkbox" name="isDroidFarmed" id="isDroidFarmed" value="${planted?.isDroidFarmed}" />
+        <input class="small_field" type="checkbox" name="isDroidFarmed" id="isDroidFarmed"  #{if planted?.isDroidFarmed} checked="checked" #{/if} />
     </td></tr>
     <tr><td>
         <label for="plantCount">Plant Count: </label></td><td>
@@ -35,11 +37,11 @@
     </td></tr>
     <tr><td>
         <label for="harvestStart">Harvest Start Date: </label></td><td>
-        <input class="med_field"  name="harvestStart" id="harvestStart" value="${planted?.harvestStart?.format('dd MMM yyyy')}" />
+        <input class="med_field"  name="harvestStart" id="harvestStart" value="${planted?.harvestStart?.format('yyyy-MM-dd')}" />
     </td></tr>
     <tr><td>
         <label for="harvestEnd">Harvest End Date: </label></td><td>
-        <input class="med_field"  name="harvestEnd" id="harvestEnd" value="${planted?.harvestEnd?.format('dd MMM yyyy')}" />
+        <input class="med_field"  name="harvestEnd" id="harvestEnd" value="${planted?.harvestEnd?.format('yyyy-MM-dd')}" />
     </td></tr>
     <tr><td>
         <label for="harvestYield">Harvest Yield (weight): </label></td><td>

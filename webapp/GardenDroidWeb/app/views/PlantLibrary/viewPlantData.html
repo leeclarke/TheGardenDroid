@@ -19,7 +19,8 @@ $(document).ready(function() {
                     <a href="@{PlantLibraryAdmin.editPlanted(planted.id)}">${planted.name}</a>
                 </span>&nbsp;
                 <span class="post-metadata">
-                    <span class="post-author">&nbsp;&nbsp; planted on - ${planted.datePlanted.format('dd MMM yy')}</span>
+                    <span class="post-author">&nbsp;&nbsp; planted on ${planted.datePlanted?.format('dd MMM yyyy')}</span>
+                    <span class="post-text">&nbsp;&nbsp; Projected harvest in %{if(planted.harvestStart != null) {out.print(planted.harvestStart -(new Date())) }else {out.print("?")} }% days.</span>
                 </span>
             </div>
         #{/list}

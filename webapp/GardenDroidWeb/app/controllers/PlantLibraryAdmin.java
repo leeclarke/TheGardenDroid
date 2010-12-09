@@ -77,18 +77,19 @@ public class PlantLibraryAdmin extends Controller {
 		PlantLibrary.viewPlantData();
 	}
 	
-	public static void postPlantedData(Long Id,@Required String name,Date datePlanted, String notes,@Required  boolean isActive,@Required  boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield){
+	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield){
 		//check for -1 which indicates add
-		
+		logger.warn("ENTER postPlantedData");
 		Plant planted;
 		if(Id == -1 || Id == null ) {
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 			planted.plantCount = plantCount;
 			planted.harvestYield = harvestYield;
-			planted.harvestStart =harvestStart;
-			planted.harvestEnd = harvestEnd;
+			if(harvestStart != null) planted.harvestStart =harvestStart;
+			if(harvestEnd != null) planted.harvestEnd = harvestEnd;
 			if (validation.hasErrors()) {
 				logger.warn("Got Errors");
+				logger.warn("ERRORS: "+validation.errorsMap());
 				render("@editPlanted", planted);
 		    } else {
 		    	planted.save();
@@ -98,16 +99,19 @@ public class PlantLibraryAdmin extends Controller {
 			if(planted != null)
 			{	
 				planted.name = name;
+				logger.warn("datePlanted="+datePlanted );
 				planted.datePlanted = datePlanted;
 				planted.notes = notes;
 				planted.isActive = isActive;
 				planted.isDroidFarmed = isDroidFarmed;
 				planted.plantCount = plantCount;
 				planted.harvestYield = harvestYield;
-				planted.harvestStart =harvestStart;
-				planted.harvestEnd = harvestEnd;
+				logger.warn("harvestStart="+harvestStart );
+				if(harvestStart != null ) planted.harvestStart =harvestStart;
+				if(harvestEnd != null) planted.harvestEnd = harvestEnd;
 				if (validation.hasErrors()) {
 					logger.warn("Got Errors");
+					logger.warn("ERR: "+validation.errorsMap());
 					render("@editPlanted", planted);
 			    } else {
 			    	planted.save();
