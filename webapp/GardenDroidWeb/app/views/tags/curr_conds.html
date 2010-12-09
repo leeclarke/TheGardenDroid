@@ -4,7 +4,9 @@
 	
 	//After Page load set data values.
 	jQuery(window).load(function() {
-		retrieveCurrent()
+		retrieveCurrent();
+		var myvalues = [32,46,56,78,65,59,43,39,34,43];
+        $('.tempsparkline').sparkline(myvalues, {lineWidth:2 , lineColor:'#F5C2CC', fillColor: '#B8C569', width:'100px', height:'40px', chartRangeMin:'0'}); 
 	});
 	
 	//updates the diplayed data values
@@ -35,6 +37,7 @@
 	}
 	
 	setInterval( "retrieveCurrent()", 60*1000 );
+	
 </script>
 
  	<div class="post">
@@ -48,9 +51,11 @@
            <span class="post-date"> (<span id='tempC'></span> C)</span>
            <div class="post-date">Humidity: <span id='humidity'></span></div>
            <div class="post-date">Soil Moisture: <span id='moist'></span></div>
-           <div class="post-date">Grow Lite: <span id='grow'></span> </div>
-           <div class="post-date">Ambient Light: <span id='ambLite'></span> </div>
+           <div class="post-date" >Grow Lite: <span id='grow'></span> </div>
+           <div style="position:relative; float:right; top:4px;	left:150px;	z-index:2;"><span class="tempsparkline" >Loading...</span> <br>Recent Temp Range</div>
+           <div class="post-date" style="float:left">Ambient Light: <span id='ambLite'></span> </div>
            <div class="post-date">Irrigation: <span id='water'></span> </div>
            <div class="post-date">Temprature Warning: <span id='warn'></span> </div>
+           
        </div>       
    </div>
