@@ -2,6 +2,7 @@ package org.dragonfly.gardendroid;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 
@@ -27,9 +28,13 @@ public class RestController {
 	public static void postDataToServer(GardenDroidData gdata) throws IOException{
 		if(gdata != null) {
 			URL url = new URL( (gdata.getSensorType() == SensorType.TEMPERATURE)? tempSensorURL: sensorURL);
-			
 			ByteArrayInputStream stream = new ByteArrayInputStream(gardenDataToJSON(gdata).getBytes("UTF-8"));
-			RESTClient.request(logger.isDebugEnabled(), RESTClient.POST, url, "", "",stream);
+			try {
+				RESTClient.request(logger.isDebugEnabled(), RESTClient.POST, url, "", "",stream);
+			} catch (IOException e) {
+				logger.error(e);
+				throw new IOException("Error writing to REST Service",e);
+			}
 		}
 	}
 	

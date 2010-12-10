@@ -12,19 +12,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author lee
- * Simply having no luck getting this thing to Sens a  message, could be because of the RF access already running?
+ * Simply having no luck getting this thing to Send a  message, could be because of the RF access already running?
  */
 public class ConfigGardenDroid  implements SerialPortEventListener {
 	static final SimpleDateFormat txDateFormat = new SimpleDateFormat("yyMMddhhmmss");
-	
+	static final Logger logger = Logger.getLogger(ConfigGardenDroid.class);
 	public enum Commands {  
 		HELP, SET_TIME, SET_TEMP_FREQ, SET_TEMP_THRESHOLD;
 	}
 	
 	SerialPort serialPort;
     /** The port we're normally going to use. */
+	//TODO: Add to properties file.
 	private static final String PORT_NAMES[] = { 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
 			"/dev/ttyUSB1", // Linux
@@ -97,7 +100,7 @@ public synchronized void close() {
  */
 public synchronized void serialEvent(SerialPortEvent oEvent) {
 	try {
-		Thread.sleep(500);  //wait to get the message
+		Thread.sleep(750);  //wait to get the message
 	} catch (InterruptedException e1) {
 		System.out.println(e1);
 	}

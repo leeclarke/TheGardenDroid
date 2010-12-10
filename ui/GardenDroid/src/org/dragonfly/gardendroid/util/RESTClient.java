@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 //import sun.misc.BASE64Encoder;
 
 /**
@@ -18,6 +20,7 @@ import java.util.List;
  */
 public class RESTClient
 {
+	static final Logger logger = Logger.getLogger(RESTClient.class); 
     public static final String GET = "GET";
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
@@ -176,7 +179,7 @@ public class RESTClient
         }
         
         // dump body
-        System.out.print(responseBody);
+        logger.debug(responseBody);
         System.out.flush();
     }
 }

@@ -23,6 +23,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 	private static final String PORT_NAMES[] = { 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
 			"/dev/ttyUSB1", // Linux
+			"/dev/ttyUSB0",
 			"COM3", // Windows
 			};
 	/** Buffered input stream from the port */
@@ -118,7 +119,6 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 								log.debug("EOM");
 								log.debug("Message==["+ gdata+"]");
 							}
-							//TODO: Pass Object to persistence layer and save using separate thread or queue/stack.
 							RestController.postDataToServer(gdata);
 						}
 						message = new StringBuilder();

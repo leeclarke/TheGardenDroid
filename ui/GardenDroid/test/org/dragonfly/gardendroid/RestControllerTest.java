@@ -1,6 +1,7 @@
 package org.dragonfly.gardendroid;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.dragonfly.gardendroid.RestController;
 import org.dragonfly.gardendroid.dto.GardenDroidData;
 import org.dragonfly.gardendroid.dto.SensorDataFactory;
