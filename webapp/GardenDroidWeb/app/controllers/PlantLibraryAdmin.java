@@ -10,6 +10,7 @@ import models.Plant;
 import models.PlantData;
 import play.data.validation.Min;
 import play.data.validation.Required;
+import play.db.jpa.JPABase;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -78,9 +79,25 @@ public class PlantLibraryAdmin extends Controller {
 		PlantLibrary.viewPlantData();
 	}
 	
+	/**
+	 * @param Id - -1 or null value indicates an add.
+	 * @param name
+	 * @param datePlanted
+	 * @param notes
+	 * @param isActive
+	 * @param isDroidFarmed
+	 * @param plantCount
+	 * @param harvestStart
+	 * @param harvestEnd
+	 * @param harvestYield
+	 * @param plantDataId
+	 */
 	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, Long plantDataId){
-		//check for -1 which indicates add
 		logger.warn("ENTER postPlantedData");
+		if(params._contains("deletePlnt")){
+			logger.warn("##### got DEL req");
+			deletePlanted(Id);
+		}
 		Plant planted;
 		PlantData plantData = null;
 		if(plantDataId != null && plantDataId >-1) {
@@ -88,7 +105,8 @@ public class PlantLibraryAdmin extends Controller {
 			logger.debug("plantData == "+plantData.name);
 		}
 			
-		if(Id == -1 || Id == null ) {
+		if( Id == null || Id == -1) {
+//			TODO: Need to compute Harvest Date based off of selected PlantData if the entry is new or the Plant Data Changed.			
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 			planted.plantCount = plantCount;
 			planted.harvestYield = harvestYield;
@@ -136,6 +154,15 @@ public class PlantLibraryAdmin extends Controller {
 				logger.debug("Got Errors");
 				render("@editPlanted", planted);
 			}
+		}
+		PlantLibrary.viewPlantData();
+	}
+	
+	public static void deletePlanted(Long Id) {
+		Plant planted = Plant.findById(Id);
+		if(planted != null)
+		{
+			planted.delete();
 		}
 		PlantLibrary.viewPlantData();
 	}

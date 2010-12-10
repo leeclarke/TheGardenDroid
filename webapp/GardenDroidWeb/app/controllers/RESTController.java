@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import models.SensorData;
 import models.SensorType;
@@ -83,6 +85,19 @@ public class RESTController extends Controller {
 		conds.put(SensorType.TEMPERATURE, TempSensorData.getCurrentReading());
 		//TODO: add in Last Error info as well.
 		renderJSON(conds);
+	}
+	
+	/**
+	 * Builds a listing of the last 24 Temp readings in reverse order.
+	 */
+	public static void tempHistory() {
+		ArrayList<Double> temps = new ArrayList<Double>();
+		List<TempSensorData> tempList = TempSensorData.find("order by dateTime desc").from(0).fetch(24);
+		for (TempSensorData temp : tempList) {
+			temps.add(temp.tempF);
+		}
+		Collections.reverse(temps);
+		renderJSON(temps);
 	}
 	
 }

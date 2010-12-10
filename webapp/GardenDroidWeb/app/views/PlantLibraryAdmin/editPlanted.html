@@ -1,5 +1,12 @@
 #{extends 'main.html' /}
 #{extends 'main.html' /}
+<script>
+	$(document).ready(function() {
+		#{if planted?.id == null || planted?.id == -1}
+			$('#deletePlnt').attr('disabled', 'disabled');
+		#{/if}		
+	});
+</script>
 #{set title:'Edit Planted Data' /}
 #{form @PlantLibraryAdmin.postPlantedData(planted?.id)}
 #{ifErrors}
@@ -18,13 +25,13 @@
     <tr><td>
         <label for="scientificName">Date Planted: </label></td><td>
         #{field 'datePlanted'}
-        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${planted?.datePlanted?.format('yyyy-MM-dd')}"/>
+        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${planted?.datePlanted ? (planted?.datePlanted?.format('yyyy-MM-dd')) : (new Date()).format('yyyy-MM-dd')}"/>
         #{/field}
     </td></tr>
     <tr><td>
         <label for="isActive">Active: </label></td><td>
         #{field 'isActive'}
-        <input class="small_field" type="checkbox" name="${field.name}" id="${field.name}" #{if planted?.isActive} checked="checked" #{/if} />
+        <input class="small_field" type="checkbox" name="${field.name}" id="${field.name}" #{if planted?.isActive || !(planted?.id) } checked="checked" #{/if} />
         #{/field}
     </td></tr>
     <tr><td>
@@ -52,7 +59,7 @@
         <select name="plantDataId" id="plantDataId" class="large_field" >
         	<option value="-1"> </option>
         	 #{list items:plantData, as:'plant'}
-        	 	<option value="${plant.id}" #{if planted.plantData.id && plant.id ==  planted.plantData.id}selected="selected" #{/if}> ${plant.name} </option>
+        	 	<option value="${plant.id}" #{if planted?.plantData?.id && plant.id ==  planted?.plantData?.id}selected="selected" #{/if}> ${plant.name} </option>
         	 #{/list}
         	 *{value="${planted?.plantData?.id?}"}*
         </select> 
@@ -62,7 +69,7 @@
         <textarea name="notes" id="notes">${planted?.notes}</textarea>
     </td></tr>
     <tr><td colspan="2">
-        <input type="submit" value="Submit Plant" />&nbsp;&nbsp;&nbsp;<input type="button" value="Delete" /></td>
+        <input type="submit" value="Submit Plant" />&nbsp;&nbsp;&nbsp;<input id="deletePlnt" name="deletePlnt" type="submit" value="Delete" /></td>
     </tr>
 </table>
 #{/form}

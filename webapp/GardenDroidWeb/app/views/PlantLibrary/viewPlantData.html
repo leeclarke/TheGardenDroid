@@ -10,8 +10,9 @@ $(document).ready(function() {
 </script>
 <div id="libTools"><a href="@{PlantLibraryAdmin.editPlanted(-1)}">Make Planting</a> <b>|</b> <a href="@{PlantLibraryAdmin.editPlantData(-1)}">Add Plant</a></div>
 #{if plantings.size() > 0}
+    <h3>Current Plantings</a> | <a href='@{PlantLibrary.viewAllPlantings()}'>All Plantings</a></h3>
     <div class="older-posts">    
-        <h2 class="post-title"><a href='#'>Current Plantings</a></h2>
+        
     
         #{list items:plantings, as:'planted'}
             <div class="post">
@@ -24,6 +25,7 @@ $(document).ready(function() {
                 </span>
             </div>
         #{/list}
+        
     </div>
     
 #{/if}

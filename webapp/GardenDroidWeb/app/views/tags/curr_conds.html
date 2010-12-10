@@ -1,12 +1,12 @@
 <script type="text/javascript">
 	var currConds;
 	var currCondAction = #{jsAction @RESTController.currentConditions() /}
-	
+	var tempHistoryAction = #{jsAction @RESTController.tempHistory() /}
+	//var myvalues = [32,46,56,78,65,59,43,39,34,43];
+	var tempChartConfig = {lineWidth:2 , lineColor:'#F5C2CC', fillColor: '#B8C569', width:'120px', height:'40px', chartRangeMin:'20'};
 	//After Page load set data values.
 	jQuery(window).load(function() {
 		retrieveCurrent();
-		var myvalues = [32,46,56,78,65,59,43,39,34,43];
-        $('.tempsparkline').sparkline(myvalues, {lineWidth:2 , lineColor:'#F5C2CC', fillColor: '#B8C569', width:'100px', height:'40px', chartRangeMin:'0'}); 
 	});
 	
 	//updates the diplayed data values
@@ -18,21 +18,30 @@
 		$('#moist').html(data.MOISTURE.data)
 		$('#grow').html(getStatusDesc(data.GROW_LITE.data))
 		$('#ambLite').html(data.AMBIENT_LIGHT.data)
-		if(data.WATER_IRRIGATION)
+		if(data.WATER_IRRIGATION) {
 			$('#water').html(getStatusDesc(data.WATER_IRRIGATION.data))
+		} else {
+			$('#water').html(getStatusDesc(0))
+		}
 		if(data.TEMP_WARNING) {
 			$('#warn').html((data.TEMP_WARNING.data = 1)? 'Warning!':'')
+		} else {
+			$('#warn').html('None')
 		}
 	}
 	
 	function getStatusDesc(value) {
-		return (value == 1)?'ON':'OFF'
+		return (value == null || value == 1)?'ON':'OFF'
 	}
 	
-	//Makes call to REST service
+	//Makes call to REST services for Current and temp history
 	function retrieveCurrent() {
 		$.getJSON(currCondAction(),function(data) {
 			updateCurrData(data);
+		})
+		
+		$.getJSON(tempHistoryAction(),function(data) {
+			$('.tempsparkline').sparkline(data, tempChartConfig); 
 		})
 	}
 	
@@ -55,7 +64,7 @@
            <div style="position:relative; float:right; top:4px;	left:150px;	z-index:2;"><span class="tempsparkline" >Loading...</span> <br>Recent Temp Range</div>
            <div class="post-date" style="float:left">Ambient Light: <span id='ambLite'></span> </div>
            <div class="post-date">Irrigation: <span id='water'></span> </div>
-           <div class="post-date">Temprature Warning: <span id='warn'></span> </div>
+           <div class="post-date">Temp Warning: <span id='warn'></span> </div>
            
        </div>       
    </div>

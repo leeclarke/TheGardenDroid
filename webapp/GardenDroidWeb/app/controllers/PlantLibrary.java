@@ -27,4 +27,12 @@ public class PlantLibrary extends Controller {
 		List<Plant> plantings = Plant.find("isActive = ?", true).fetch();
 		render(plants,plantings);
 	}
+	
+	/**
+	 * Returns all Plantings for browsing.
+	 */
+	public static void viewAllPlantings() {
+		List<Plant> plants = Plant.find("order by datePlanted desc").fetch();
+		render(plants);
+	}
 }
