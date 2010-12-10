@@ -28,9 +28,9 @@ public abstract class BaseUnitTest extends UnitTest {
 			assertTrue(true);
 		}
 		long dateDif = expected.getTime() - actual.getTime();
-		System.out.println("expected="+expected.getTime());
-		System.out.println("actual="+actual.getTime());
-		System.out.println("#@@@ dateDif==" + dateDif);
+		logger.debug("expected="+expected.getTime());
+		logger.debug("actual="+actual.getTime());
+		logger.debug("#@@@ dateDif==" + dateDif);
 		if(dateDif < 10000 && dateDif > -10000 ) {
 			assertTrue(true);
 		}

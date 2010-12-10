@@ -17,7 +17,7 @@ GET  /currentCond                               RESTController.currentConditions
 GET  /plantLibrary                              PlantLibrary.viewPlantData
 GET  /plantLibrary/editPlanted/                 PlantLibrary.editPlanted
 GET  /plantLibrary/editPlanted/{id}             PlantLibrary.editPlanted
-POST /plantLibrary/deletePlanted/{id}           PlantLibrary.deletePlanted
+POST /plantLibrary/deletePlanted/{id}           PlantLibraryAdmin.deletePlanted
 POST /plantLibrary/postPlanted                  PlantLibrary.postPlanted
 
 GET  /plantLibrary/editPlantData/               PlantLibrary.editPlantData
@@ -28,6 +28,7 @@ POST /plantLibrary/postPlantData                PlantLibrary.postPlantData
 POST /gardenDroidData/saveData                  RESTController.saveSensorData
 POST /gardenDroidData/saveTemp                  RESTController.saveTempSensorData
 GET  /gardenDroidData/current                   RESTController.currentConditions
+GET  /gardenDroidData/tempHistory               RESTController.tempHistory
 
 # Import Secure routes
 *       /                                       module:secure
