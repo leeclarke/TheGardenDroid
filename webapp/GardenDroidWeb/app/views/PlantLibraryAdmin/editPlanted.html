@@ -4,6 +4,10 @@
 	$(document).ready(function() {
 		#{if planted?.id == null || planted?.id == -1}
 			$('#deletePlnt').attr('disabled', 'disabled');
+			$('#harvestStart').attr('disabled', 'disabled');
+			$('#harvestStart').attr('value', 'computed');
+			$('#harvestEnd').attr('disabled', 'disabled');
+			$('#harvestEnd').attr('value', 'computed');
 		#{/if}		
 	});
 </script>

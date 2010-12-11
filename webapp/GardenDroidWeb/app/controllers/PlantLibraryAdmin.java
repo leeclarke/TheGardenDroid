@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class PlantLibraryAdmin extends Controller {
 	 * @param harvestYield
 	 * @param plantDataId
 	 */
-	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, Long plantDataId){
+	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, @Required(message="Please select a Plant Type.") Long plantDataId){
 		logger.warn("ENTER postPlantedData");
 		if(params._contains("deletePlnt")){
 			logger.warn("##### got DEL req");
@@ -106,13 +107,23 @@ public class PlantLibraryAdmin extends Controller {
 		}
 			
 		if( Id == null || Id == -1) {
-//			TODO: Need to compute Harvest Date based off of selected PlantData if the entry is new or the Plant Data Changed.			
+			if(datePlanted == null) datePlanted = new Date();
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 			planted.plantCount = plantCount;
 			planted.harvestYield = harvestYield;
 			planted.plantData = plantData;
-			if(harvestStart != null) planted.harvestStart =harvestStart;
-			if(harvestEnd != null) planted.harvestEnd = harvestEnd;
+			if(harvestStart != null) {
+				planted.harvestStart =harvestStart;
+			}
+			else {
+				planted.harvestStart = computeHarvestDate(planted.datePlanted, plantData);
+			}
+			if(harvestEnd != null) {
+				planted.harvestEnd = harvestEnd;
+			}
+			else {
+				planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantData);
+			}
 			if (validation.hasErrors()) {
 				logger.debug("Got Errors");
 				logger.debug("ERRORS: "+validation.errorsMap());
@@ -124,6 +135,7 @@ public class PlantLibraryAdmin extends Controller {
 			planted = Plant.findById(Id);
 			if(planted != null)
 			{	
+//				TODO: Need to compute Harvest Date based off of selected PlantData if the entry the Plant Data Changed.
 				planted.name = name;
 				logger.debug("datePlanted="+datePlanted );
 				planted.datePlanted = datePlanted;
@@ -132,10 +144,23 @@ public class PlantLibraryAdmin extends Controller {
 				planted.isDroidFarmed = isDroidFarmed;
 				planted.plantCount = plantCount;
 				planted.harvestYield = harvestYield;
+				if(planted.plantData.id != plantData.id)
+				{
+					if(harvestStart != null) {
+						planted.harvestStart =harvestStart;
+					}
+					else {
+						planted.harvestStart = computeHarvestDate(planted.datePlanted, plantData);
+					}
+					if(harvestEnd != null) {
+						planted.harvestEnd = harvestEnd;
+					}
+					else {
+						planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantData);
+					}
+				}
 				planted.plantData = plantData;
 				logger.debug("harvestStart="+harvestStart );
-				if(harvestStart != null ) planted.harvestStart =harvestStart;
-				if(harvestEnd != null) planted.harvestEnd = harvestEnd;
 				if (validation.hasErrors()) {
 					logger.debug("Got Errors");
 					logger.debug("ERR: "+validation.errorsMap());
@@ -156,6 +181,13 @@ public class PlantLibraryAdmin extends Controller {
 			}
 		}
 		PlantLibrary.viewPlantData();
+	}
+	
+	protected static Date computeHarvestDate(Date datePlanted, PlantData plantData) {
+		Calendar plantingDate = Calendar.getInstance();
+		plantingDate.setTime(datePlanted);
+		plantingDate.add(Calendar.DATE, plantData.daysTillHarvestEnd);
+		return plantingDate.getTime();
 	}
 	
 	public static void deletePlanted(Long Id) {
