@@ -1,0 +1,55 @@
+#{extends 'main.html' /}
+#{set title:'Edit Droid Options' /}
+#{form @OptionsManager.postOptions(1)}
+#{ifErrors}
+   #{errors}
+       <li class="error">${error}</li>
+   #{/errors}
+#{/ifErrors}
+<div class="option-dirs">Configure how and when GardenDroid Notifies you when there is an event which requires urgent attention.</div> 
+<hr>
+<table>
+	<tr><td>
+        <label for="name">Email Address: </label></td>
+        <td width=75% colspan=2>
+        	#{field 'email'}
+        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${options?.email}"/>
+        	#{/field}
+    	</td>
+    	<td><span>&nbsp;</span></td>
+    </tr>
+    <tr><td>
+    	<label for="enableWarningNotification">Enable Warnings:</label></td><td>
+        <input class="small_field" type="checkbox" name="enableWarningNotification" id="enableWarningNotification"  #{if options?.enableWarningNotification} checked="checked" #{/if} /></td>
+        <td><span class="option-help">GardenDroid will email you when something goes wrong if disabled warnings will still be logged.</span>
+    </td></tr>
+    <tr><td>
+        <label for="enableLowTempWarning">Warn Low Temp: </label></td><td>
+        <input class="small_field" type="checkbox" name="enableLowTempWarning" id="enableLowTempWarning"  #{if options?.enableLowTempWarning} checked="checked" #{/if} /></td>
+        <td><span class="option-help">Sends a warning if Temp falls below threshold.</span></td>        
+    </tr>
+    <tr><td>
+        <label for="lowTempThreshold">Low Temp Threshold: </label></td><td>
+        <input class="small_field" type="text" name="lowTempThreshold" id="lowTempThreshold" value="${options?.lowTempThreshold}" /></td>
+        <td><span>&nbsp;</span></td>        
+    </tr>
+    <tr><td>
+        <label for="enableHighTempWarning">Warn High Temp:</label></td><td>
+        <input class="small_field" type="checkbox" name="enableHighTempWarning" id="enableHighTempWarning"  #{if options?.enableHighTempWarning} checked="checked" #{/if} /></td>
+        <td><span class="option-help">Sends a warning if Temp rises above threshold.</span></td>        
+    </tr>
+    <tr><td>
+        <label for="highTempThreshold">High Temp Threshold: </label></td><td>
+        <input class="small_field" type="text" name="highTempThreshold" id="highTempThreshold" value="${options?.highTempThreshold}" /></td>
+        <td><span>&nbsp;</span></td>        
+    </tr>
+    <tr><td>
+        <label for="enablePlantedWarnings">Warn Plant Specific: </label></td><td>
+        <input class="small_field" type="checkbox" name="enablePlantedWarnings" id="enablePlantedWarnings"  #{if options?.enablePlantedWarnings} checked="checked" #{/if} /></td>
+        <td><span class=option-help>(Will notify you of specific temp and watering needs for active plants.)</span></td>        
+    </tr>
+    <tr><td colspan="2">
+        <input type="submit" value="Save Options" /></td>
+    </tr>
+</table>
+#{/form}

@@ -543,6 +543,20 @@ tr.odd {
     -webkit-box-shadow: none;
 }
 
+.option-dirs {
+    color: #BAC36E;
+    display: block;
+    font-size: 100%;
+    display: inline-block;
+}
+
+.option-help {
+    color: #BAC36E;
+    display: block;
+    font-size: 70%;
+    display: inline-block;
+}
+
 /** Login **/
 
 #login form {
