@@ -1,0 +1,9 @@
+#{extends 'main.html' /}
+#{set title:'GardenDroid Reports' /}
+
+#{ifErrors}
+   #{errors}
+       <li class="error">${error}</li>
+   #{/errors}
+#{/ifErrors}
+<div class="option-dirs">Main landing page for Report data.</div> 
