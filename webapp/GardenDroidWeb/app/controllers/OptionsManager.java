@@ -1,5 +1,7 @@
 package controllers;
 
+import org.apache.log4j.Logger;
+
 import models.Options;
 import play.Play;
 import play.data.validation.Required;
@@ -13,7 +15,7 @@ import play.mvc.With;
  */
 @With(Secure.class)
 public class OptionsManager  extends Controller{
-
+	static Logger logger = Logger.getLogger(OptionsManager.class);
 	@Before
 	static void addDefaults() {
 	    renderArgs.put("appTitle", Play.configuration.getProperty("droid.title"));
@@ -22,10 +24,11 @@ public class OptionsManager  extends Controller{
 	
 	public static void viewOptions() {
 		Options options = Options.find("order by id").first();
+		
 		render(options);
 	}
 	
-	public static void postOptions(Long id, @Required(message="Email is required for GardenDroid to be able to notify you.") String email,Boolean enableWarningNotification,Boolean enableLowTempWarning,Double  lowTempThreshold,Boolean enableHighTempWarning,Double  highTempThreshold,Boolean enablePlantedWarnings) {
+	public static void postOptions(Long id, @Required(message="Email is required for GardenDroid to be able to notify you.") String email,Boolean enableWarningNotification,Boolean enableLowTempWarning,Double  lowTempThreshold,Boolean enableHighTempWarning,Double  highTempThreshold,Boolean enablePlantedWarnings, Integer remoteAliveCheckMins) {
 		Options options = Options.find("order by id").first();
 		validation.email(email);
 		if(enableLowTempWarning != null)
@@ -42,7 +45,7 @@ public class OptionsManager  extends Controller{
 		
 		//Always get the first one as there shouldn't be multiple entries.
 		if(options == null){
-			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings);
+			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins);
 		}
 		else {
 			options.email = email;
@@ -52,8 +55,10 @@ public class OptionsManager  extends Controller{
 			options.enableHighTempWarning = (enableHighTempWarning == null)?false:enableHighTempWarning;
 			options.lowTempThreshold = (lowTempThreshold == null)?0.0:lowTempThreshold;
 			options.highTempThreshold = (highTempThreshold == null)?0.0:highTempThreshold;
+			options.remoteAliveCheckMins = (remoteAliveCheckMins == null)?Options.ALIVE_DEFAULT:remoteAliveCheckMins;
 		}
 		if(validation.hasErrors()) {
+			logger.warn("Val Err= "+validation.errorsMap());
 			render("@viewOptions", options);
 		}
 		options.save();

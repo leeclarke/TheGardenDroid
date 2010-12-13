@@ -24,6 +24,11 @@
         <td><span class="option-help">GardenDroid will email you when something goes wrong if disabled warnings will still be logged.</span>
     </td></tr>
     <tr><td>
+    	<label for="remoteAliveCheckMins">Remote Alive Mins:</label></td><td>
+        <input class="small_field" type="text" name="remoteAliveCheckMins" id="remoteAliveCheckMins" value="${options?.remoteAliveCheckMins}" /></td>
+        <td><span class="option-help">How long to wait before Assuming something with the remote GardenDroid has gone wrong.</span>
+    </td></tr>
+    <tr><td>
         <label for="enableLowTempWarning">Warn Low Temp: </label></td><td>
         <input class="small_field" type="checkbox" name="enableLowTempWarning" id="enableLowTempWarning"  #{if options?.enableLowTempWarning} checked="checked" #{/if} /></td>
         <td><span class="option-help">Sends a warning if Temp falls below threshold.</span></td>        

@@ -45,7 +45,7 @@ public class SensorData extends Model {
     	return sensorMap;
     }
     
-    public static List getSensorData(Integer start, Integer limit) {
+    public static List<SensorData> getSensorData(Integer start, Integer limit) {
     	List<SensorData> sensorList = new ArrayList<SensorData>();
     	if(start != null && limit != null){
     		sensorList = SensorData.find("order by dateTime desc").from(start).fetch(limit);
