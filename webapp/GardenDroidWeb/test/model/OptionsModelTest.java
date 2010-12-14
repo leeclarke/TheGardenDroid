@@ -14,7 +14,7 @@ public class OptionsModelTest  extends BaseUnitTest {
 		Double lowTempThreshold = 32.0;
 		Double highTempThreshold = 95.5;
 		
-		new Options(email, true, true, lowTempThreshold, true, highTempThreshold, false).save();
+		new Options(email, true, true, lowTempThreshold, true, highTempThreshold, false, 60).save();
 		
 		
 		Options resp = Options.find("order by id").first();
@@ -26,5 +26,6 @@ public class OptionsModelTest  extends BaseUnitTest {
 		assertTrue(resp.enableHighTempWarning);
 		assertEquals(lowTempThreshold, resp.lowTempThreshold);
 		assertEquals(highTempThreshold, resp.highTempThreshold);
+		assertEquals(new Integer(60), resp.remoteAliveCheckMins);
 	}
 }
