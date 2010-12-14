@@ -2,10 +2,13 @@ package jobs;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.apache.log4j.Logger;
 
+import models.AlertType;
 import models.Options;
 import models.SensorData;
 import play.Play;
@@ -15,7 +18,8 @@ import play.libs.Mail;
 
 @Every("1h")
 public class WarningMonitorJob extends Job {
-
+	static Logger logger = Logger.getLogger(WarningMonitorJob.class);
+	
 	/** 
 	 * Job responsible for monitoring status of the GardenDroid and logging and sending out notifications if expected.
 	 * @see play.jobs.Job#doJob()
@@ -26,6 +30,11 @@ public class WarningMonitorJob extends Job {
 		Options options = Options.find("order by id").first();
 		
 		boolean isOperational = verifyDroidIsOperational(options.remoteAliveCheckMins);
+		if(!isOperational) {
+			sendNotification(options, AlertType.DROID_DOWN.subject,AlertType.DROID_DOWN.message);
+			//TODO: Log the error to the Log Table as an Alert.
+		}
+		
 		
 	}
 	
@@ -55,10 +64,11 @@ public class WarningMonitorJob extends Job {
 	 */
 	public void sendNotification(Options options, String subject, String alertMessage) throws EmailException{
 		SimpleEmail email = new SimpleEmail();
-		email.setFrom(Play.configuration.getProperty("mail.smtp.user")+"@gmail.com");
+		email.setFrom(Play.configuration.getProperty("mail.smtp.user"));//+"@gmail.com");
 		email.addTo(options.email);
 		email.setSubject(subject);
 		email.setMsg(alertMessage);
 		Mail.send(email); 
+		logger.info("Email Alert sent to address:" + options.email + " subject:" + subject);
 	}
 }
