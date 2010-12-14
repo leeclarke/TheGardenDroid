@@ -6,9 +6,11 @@ import java.util.List;
 
 import jobs.WarningMonitorJob;
 
+import models.Options;
 import models.SensorData;
 import models.SensorType;
 
+import org.apache.commons.mail.EmailException;
 import org.junit.Test;
 
 import play.db.jpa.JPABase;
@@ -48,7 +50,10 @@ public class WarningMonitorJobTest extends BaseUnitTest {
 	}
 	
 	@Test
-	public void sendNotification() {
+	public void sendNotification() throws EmailException {
+		Options options = new Options("lee.k.clarke@gmail.com", true,true,new Double(33),false,new Double(0),true,new Integer(60));
+		WarningMonitorJob warning =  new WarningMonitorJob();
+		warning.sendNotification(options, "Notification Test", "Just testing the GardenDroid Notification system, this is only a test...");
 		
 	}
 }
