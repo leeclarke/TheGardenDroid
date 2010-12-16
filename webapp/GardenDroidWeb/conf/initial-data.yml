@@ -162,3 +162,8 @@
     tempF: 55.4
     tempC: 13.0
     sensorType: TEMPERATURE               
+
+ Warning(w1):
+    dateTime: 2010-12-11 11:40:00
+    isActive: true
+    alertType: PLANT_TEMP_LOW
