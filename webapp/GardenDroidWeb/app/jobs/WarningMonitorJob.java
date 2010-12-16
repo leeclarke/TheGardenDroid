@@ -149,6 +149,6 @@ public class WarningMonitorJob extends Job {
 	 */
 	public void checkActivePlantings(Options options) {
 		// TODO Auto-generated method stub
-		
+		//TODO Add stale config check to the options ui page.
 	}
 }
