@@ -51,9 +51,9 @@ public class Warning extends Model {
 	public static List<Warning> getActive(AlertType aType) {
 		List<Warning> active;
 		if(aType != null) {
-			active = Warning.find("alertType = ? AND isActive = true", aType).fetch();
+			active = Warning.find("alertType = ? AND isActive = true order by dateTime desc" , aType).fetch();
 		} else {
-			active = Warning.find("isActive = true").fetch();
+			active = Warning.find("isActive = true order by dateTime desc").fetch();
 		}		
 		return active;
 	}

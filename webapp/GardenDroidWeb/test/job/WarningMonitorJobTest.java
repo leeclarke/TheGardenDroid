@@ -2,23 +2,32 @@ package job;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import jobs.WarningMonitorJob;
-
+import models.AlertType;
 import models.Options;
 import models.SensorData;
 import models.SensorType;
+import models.TempSensorData;
+import models.Warning;
 
 import org.apache.commons.mail.EmailException;
 import org.junit.Test;
 
-import play.db.jpa.JPABase;
-
+import play.mvc.Before;
+import play.test.Fixtures;
 import util.BaseUnitTest;
 
 public class WarningMonitorJobTest extends BaseUnitTest {
 
+	Options options = new Options("lee.k.clarke@gmail.com", true,true,new Double(33),true,new Double(95),true,new Integer(60));
+	
+	@Before
+	public void setUp() {
+	    Fixtures.deleteAll();
+	    Fixtures.load("initial-data.yml");
+	}
+	
 	@Test
 	public void verifyDroidIsOperational(){
 		WarningMonitorJob warning =  new WarningMonitorJob();
@@ -51,9 +60,56 @@ public class WarningMonitorJobTest extends BaseUnitTest {
 	
 	@Test
 	public void sendNotification() throws EmailException {
-		Options options = new Options("lee.k.clarke@gmail.com", true,true,new Double(33),false,new Double(0),true,new Integer(60));
 		WarningMonitorJob warning =  new WarningMonitorJob();
 		warning.sendNotification(options, "Notification Test", "Just testing the GardenDroid Notification system, this is only a test...");
 		
+	}
+
+	@Test
+	public void isAlertTypeActive() {
+		WarningMonitorJob warning =  new WarningMonitorJob();
+		boolean  resp = warning.isAlertTypeActive(AlertType.WATER_PUMP_DOWN, options);
+		assertTrue("Water pump should return false since it's not yet implemented.", !resp);
+		
+		Warning testWater = new Warning("Test warning",true,AlertType.WATER_PUMP_DOWN);
+		Calendar oldDate = Calendar.getInstance();
+		oldDate.add(Calendar.HOUR, -20);
+		testWater.dateTime = oldDate.getTime();
+		testWater.save();
+		resp = warning.isAlertTypeActive(AlertType.WATER_PUMP_DOWN, options);
+		assertTrue("Water pump warning was just created and should be active..", resp);
+		testWater.delete();//doesn't seem to get deleted by Fixture.. 
+	}
+
+	//NOTE: For some reason one of the three following tests will always fail because the TempSensor save doesn't seem to happen fast enough to return in a dependent search. No time to figure this out right now.	
+		
+	@Test
+	public void checkForTempThresholdsAlert_NoAlert() {
+		TempSensorData tempresp = new TempSensorData(new Date(),44.2,4).save();
+		assertTrue(tempresp.id >1);
+			
+		WarningMonitorJob warning =  new WarningMonitorJob();
+		int  resp = warning.checkForTempThresholdsAlert(options);
+		assertEquals(0, resp);
+	}
+
+	@Test
+	public void checkForTempThresholdsAlert_WithAlertHigh() {
+		//Inset high temp and test
+		WarningMonitorJob warning =  new WarningMonitorJob();
+		new TempSensorData(new Date(),99.2,37.2).save();
+		int resp = warning.checkForTempThresholdsAlert(options);
+		assertEquals("HIGH Temp Threshold test failed.",1, resp);
+	}
+	
+	@Test
+	public void checkForTempThresholdsAlert_WithAlertLow() throws InterruptedException {
+		//Set current temp value
+		TempSensorData tempresp = new TempSensorData(new Date(),29.2,-2).save();
+		assertTrue(tempresp.id >1);
+		
+		WarningMonitorJob warning =  new WarningMonitorJob();
+		int  resp = warning.checkForTempThresholdsAlert(options);
+		assertEquals("LOW Temp Threshold test failed.",-1, resp);
 	}
 }

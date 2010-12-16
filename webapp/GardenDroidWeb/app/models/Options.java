@@ -12,9 +12,10 @@ public class Options extends Model{
 	public Boolean enableLowTempWarning;
 	public Double  lowTempThreshold;
 	public Boolean enableHighTempWarning;
-	public Double  highTempThreshold;
+	public Double  highTempThreshold = 100.0; //set as default if none provided.
 	public Boolean enablePlantedWarnings;
 	public Integer remoteAliveCheckMins;
+	public Integer snoozeActiveWarnings_hours = 12;  //if an active warning exists how many hours to snooze it before sending out a new warning Alert.
 
 	public Options(String email, Boolean enableWarningNotification, Boolean enableLowTempWarning, Double  lowTempThreshold, Boolean enableHighTempWarning, Double highTempThreshold, Boolean enablePlantedWarnings, Integer remoteAliveCheckMins) {
 		this.email = email;
@@ -29,5 +30,19 @@ public class Options extends Model{
 		this.highTempThreshold = (highTempThreshold == null)? 0.0: highTempThreshold;
 		
 		this.remoteAliveCheckMins = (remoteAliveCheckMins == null)?ALIVE_DEFAULT:remoteAliveCheckMins;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("[SensorData]");
+    	sb.append(" email=").append(email);
+    	sb.append(" enableWarningNotification=").append(enableWarningNotification);
+    	sb.append(" enableLowTempWarning=").append(enableLowTempWarning);
+    	sb.append(" lowTempThreshold=").append(lowTempThreshold);
+    	sb.append(" enableHighTempWarning=").append(enableHighTempWarning);
+    	sb.append(" highTempThreshold=").append(highTempThreshold);
+    	sb.append(" enablePlantedWarnings=").append(enablePlantedWarnings);
+    	sb.append(" remoteAliveCheckMins=").append(remoteAliveCheckMins);
+    	return sb.toString();
 	}
 }
