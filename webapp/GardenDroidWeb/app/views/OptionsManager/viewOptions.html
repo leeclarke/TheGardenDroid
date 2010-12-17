@@ -6,6 +6,34 @@
        <li class="error">${error}</li>
    #{/errors}
 #{/ifErrors}
+<script>
+
+	$(document).ready(function() 
+	{
+		var settings = {
+				  padding: 20,
+				  width: 300,
+				  spikeLength: 40,
+				  spikeGirth: 40,
+				  cornerRadius: 30,
+				  fill: '#BAC36E',	
+				  strokeWidth: 2,
+				  strokeStyle: '#3C4313',
+				  cssStyles: {color: '#3C4313', fontWeight: 'bold'},
+				  positions: ['right','left']
+				};
+		
+	   // Notice the use of the each() method to acquire access to each elements attributes
+	   $('#help-tip3').bt(settings);
+	   $('#help-tip4').bt(settings);
+	   $('#help-tip5').bt(settings);
+	   $('#help-tip6').bt(settings);
+	   $('#help-tip7').bt(settings);
+	   
+	   $('#help-tip2').bt(settings);
+	   $('#help-tip').bt(settings);
+	});
+</script>
 <div class="option-dirs">Configure how and when GardenDroid Notifies you when there is an event which requires urgent attention.</div> 
 <hr>
 <table>
@@ -21,37 +49,42 @@
     <tr><td>
     	<label for="enableWarningNotification">Enable Warnings:</label></td><td>
         <input class="small_field" type="checkbox" name="enableWarningNotification" id="enableWarningNotification"  #{if options?.enableWarningNotification} checked="checked" #{/if} /></td>
-        <td><span class="option-help">GardenDroid will email you when something goes wrong if disabled warnings will still be logged.</span>
+        <td> <span class="help-tip" id="help-tip" title="GardenDroid will email you when something goes wrong. <br><br>If disabled warnings will still be logged.">&nbsp;?&nbsp;</span>
     </td></tr>
+    <tr><td>
+        <label for="snoozeActiveWarnings_hours">Stale WarningTime Limit: </label></td><td>
+        <input class="small_field" type="text" name="snoozeActiveWarnings_hours" id="snoozeActiveWarnings_hours" value="${options?.snoozeActiveWarnings_hours}" /></td>
+        <td> <span class="help-tip" id="help-tip2" title="Number of hours to ignore a previously reported warning before sending out a new email. To never resend a warning enter -1.">&nbsp;?&nbsp;</span></td>        
+    </tr>
     <tr><td>
     	<label for="remoteAliveCheckMins">Remote Alive Mins:</label></td><td>
         <input class="small_field" type="text" name="remoteAliveCheckMins" id="remoteAliveCheckMins" value="${options?.remoteAliveCheckMins}" /></td>
-        <td><span class="option-help">How long to wait before Assuming something with the remote GardenDroid has gone wrong.</span>
+        <td> <span class="help-tip" id="help-tip3" title="How long to wait before Assuming something with the remote GardenDroid has gone wrong.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="enableLowTempWarning">Warn Low Temp: </label></td><td>
         <input class="small_field" type="checkbox" name="enableLowTempWarning" id="enableLowTempWarning"  #{if options?.enableLowTempWarning} checked="checked" #{/if} /></td>
-        <td><span class="option-help">Sends a warning if Temp falls below threshold.</span></td>        
+        <td><span class="help-tip" id="help-tip4" title="Sends a warning if Temp falls below threshold.">&nbsp;?&nbsp;</span></td>        
     </tr>
     <tr><td>
         <label for="lowTempThreshold">Low Temp Threshold: </label></td><td>
         <input class="small_field" type="text" name="lowTempThreshold" id="lowTempThreshold" value="${options?.lowTempThreshold}" /></td>
-        <td><span>&nbsp;</span></td>        
+        <td><span class="help-tip" id="help-tip5" title="GardenDroid will email you when something goes wrong. <br><br>If disabled warnings will still be logged.">&nbsp;?&nbsp;</span></td>        
     </tr>
     <tr><td>
         <label for="enableHighTempWarning">Warn High Temp:</label></td><td>
         <input class="small_field" type="checkbox" name="enableHighTempWarning" id="enableHighTempWarning"  #{if options?.enableHighTempWarning} checked="checked" #{/if} /></td>
-        <td><span class="option-help">Sends a warning if Temp rises above threshold.</span></td>        
+        <td><span class="help-tip" id="help-tip6" title="Sends a warning if Temp rises above threshold.">&nbsp;?&nbsp;</span></td>        
     </tr>
     <tr><td>
         <label for="highTempThreshold">High Temp Threshold: </label></td><td>
         <input class="small_field" type="text" name="highTempThreshold" id="highTempThreshold" value="${options?.highTempThreshold}" /></td>
-        <td><span>&nbsp;</span></td>        
+        <td>&nbsp;</td>        
     </tr>
     <tr><td>
         <label for="enablePlantedWarnings">Warn Plant Specific: </label></td><td>
         <input class="small_field" type="checkbox" name="enablePlantedWarnings" id="enablePlantedWarnings"  #{if options?.enablePlantedWarnings} checked="checked" #{/if} /></td>
-        <td><span class=option-help>(Will notify you of specific temp and watering needs for active plants.)</span></td>        
+        <td><span class="help-tip" id="help-tip7" title="Will notify you of specific temp and watering needs for active plants.)>&nbsp;?&nbsp;</span></td>        
     </tr>
     <tr><td colspan="2">
         <input type="submit" value="Save Options" name="save"/>&nbsp;&nbsp;<input type="submit" value="Send Test Email" name="testemail"/></td>

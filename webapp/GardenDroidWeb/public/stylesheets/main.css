@@ -137,6 +137,12 @@ A {
     padding: 20px;
 }
 
+.help-tip {
+	color: #BAC36E;
+    text-decoration: none;	
+    font-weight: bold;
+}
+
 /** Post **/
 
 .post .post-title {
