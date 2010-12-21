@@ -39,7 +39,7 @@
 <table>
 	<tr><td>
         <label for="name">Email Address: </label></td>
-        <td width=75% colspan=2>
+        <td colspan=2>
         	#{field 'email'}
         	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${options?.email}"/>
         	#{/field}
@@ -84,9 +84,9 @@
     <tr><td>
         <label for="enablePlantedWarnings">Warn Plant Specific: </label></td><td>
         <input class="small_field" type="checkbox" name="enablePlantedWarnings" id="enablePlantedWarnings"  #{if options?.enablePlantedWarnings} checked="checked" #{/if} /></td>
-        <td><span class="help-tip" id="help-tip7" title="Will notify you of specific temp and watering needs for active plants.)>&nbsp;?&nbsp;</span></td>        
+        <td><span class="help-tip" id="help-tip7" title="Will notify you of specific temp and watering needs for active plants.")>&nbsp;?&nbsp;</span></td>        
     </tr>
-    <tr><td colspan="2">
+    <tr><td colspan="3">
         <input type="submit" value="Save Options" name="save"/>&nbsp;&nbsp;<input type="submit" value="Send Test Email" name="testemail"/></td>
     </tr>
 </table>
