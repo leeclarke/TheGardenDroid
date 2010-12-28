@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.List;
+
 import jobs.WarningMonitorJob;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.Logger;
 
 import models.Options;
+import models.UserDataType;
 import play.Play;
 import play.data.validation.Required;
 import play.mvc.Before;
@@ -31,8 +34,9 @@ public class OptionsManager  extends Controller{
 	 */
 	public static void viewOptions() {
 		Options options = Options.find("order by id").first();
-		
-		render(options);
+		List<UserDataType> userDataFields = UserDataType.find("order by name").fetch();
+		logger.warn("UserDataType count=" + userDataFields.size());
+		render(options, userDataFields);
 	}
 	
 	/**
@@ -103,5 +107,20 @@ public class OptionsManager  extends Controller{
 			OptionsManager.sendTestEmail(options);
 		}
 		OptionsManager.viewOptions();	
+	}
+	
+	public static void postUserData(Long id, @Required(message="field name is required")String name, String description) {
+		id = (id == null)?-1:id;
+		
+		UserDataType uType = UserDataType.findById(id);
+		if(uType == null) {
+			uType = new UserDataType(name, description);
+		}
+		else {
+			uType.name = name;
+			uType.description = description;
+		}
+		uType.save();
+		OptionsManager.viewOptions();
 	}
 }

@@ -1,0 +1,46 @@
+*{ edit and add User Fields  
+
+TODO: Need to find a way to click the link w/o it navigating. Maybe a div?}*
+#{form @OptionsManager.postUserData() , id:'UserDataForm'}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#userFieldsTable').dataTable( {
+		"bLengthChange": false,
+		"bFilter": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+
+function setToEdit(id, name, desc ) {
+	$("#id").val(id);
+	$("#name").val(name);
+	$("#description").val(desc);
+}
+</script>
+<BR>
+<div class="option-dirs">User Defined fields : provide the ability to record observational data for later review ex(plant height).</div>    
+<br/><br/>
+<input class="med_field" type="hidden" name="id" id="id" value="-1"/>
+<table>
+	<tr><td><label>Field Name</label></td><td colspan=2><label>Description</label></td></tr>
+	<tr><td><input class="med_field" type="text" name="name" id="name" value=""/></td><td><input class="large_field" type="text" name="description" id="description" value=""/></td><td><input type="submit" value="Save" name="save"/></td></tr>
+</table>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="userFieldsTable"> 
+	<thead> 
+		<tr> 
+			<th width="200px">Name</th> 
+			<th width="300px">Description</th> 
+		</tr> 
+	</thead> 
+	<tbody>
+    #{if _userFields?.size() > 0}
+        #{list items:_userFields, as:'userType'}
+        	<tr>
+        		<td><div onclick="setToEdit('${userType.id}','${userType.name}','${userType.description}' )"><b>${userType.name}</b></div></td>
+        		<td>${userType.description}</td>
+        	</tr>
+    	#{/list}
+    #{/if}
+    </tbody>		
+</table>
+#{/form}

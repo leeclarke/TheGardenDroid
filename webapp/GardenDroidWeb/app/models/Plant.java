@@ -41,7 +41,7 @@ public class Plant extends Model {
 	        this.isActive = false;
     }
 
-	public static List getActivePlantings() {
+	public static List<Plant> getActivePlantings() {
 		List<Plant> planted = Plant.find("isActive = ? order by datePlanted desc", true).fetch();
 		return planted;
 	}

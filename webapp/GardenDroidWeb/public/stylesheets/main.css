@@ -584,3 +584,8 @@ tr.odd {
 table.display thead th {
 	font-size: 80%;
 }
+
+#userFieldsTable a {
+	color: #000;
+	font-weight: bold;
+}

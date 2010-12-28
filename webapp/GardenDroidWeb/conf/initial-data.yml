@@ -167,7 +167,11 @@
     dateTime: 2010-12-11 11:40:00
     isActive: true
     alertType: PLANT_TEMP_LOW
-    
+
  User(admin):
     userName: Lee
     password: password
+
+ UserDataType(udt1):
+    name: Plant_DieOff
+    description: test
