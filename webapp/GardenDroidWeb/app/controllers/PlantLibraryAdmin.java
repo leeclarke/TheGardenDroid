@@ -63,6 +63,11 @@ public class PlantLibraryAdmin extends Controller {
 	
 	public static void postPlantData(Long Id,@Required(message = "Name can not be empty!") String name, String scientificName, String notes, @Required @Min(message = "Days Til Harvest must be > 0", value=1) int daysTillHarvest, int daysTillHarvestEnd, String sunlight, @Required @Min(message = "Low Temp should be >32", value=32) double lowTemp, double highTemp, @Required @Min(message = "Water Frequency must be > 0", value=1) int waterFreqDays){
 		//check for -1 which indicates add
+		logger.warn("ENTER POST");
+		if(params._contains("DelPlant")){
+			logger.warn("##### got DEL req");
+			deletePlantData(Id);
+		}
 		
 		PlantData plantData;
 		if(Id == null || Id == -1 ) {
@@ -148,7 +153,6 @@ public class PlantLibraryAdmin extends Controller {
 			planted = Plant.findById(Id);
 			if(planted != null)
 			{	
-//				TODO: Need to compute Harvest Date based off of selected PlantData if the entry the Plant Data Changed.
 				planted.name = name;
 				logger.debug("datePlanted="+datePlanted );
 				planted.datePlanted = datePlanted;
@@ -211,4 +215,14 @@ public class PlantLibraryAdmin extends Controller {
 		}
 		PlantLibrary.viewPlantData();
 	}
+	
+	public static void deletePlantData(Long Id) {
+		PlantData plantData = PlantData.findById(Id);
+		if(plantData != null)
+		{
+			plantData.delete();
+		}
+		PlantLibrary.viewPlantData();
+	}
+	
 }
