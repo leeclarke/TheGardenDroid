@@ -37,11 +37,11 @@ $(document).ready(function() {
 	<thead> 
 		<tr> 
 			<th>Name</th> 
-			<th>sci Name</th> 
+			<th>Sci Name</th> 
 			<th>light</th> 
-			<th>Min Temp</th> 
+			<th>Min. Temp</th> 
 			<th>Max Temp</th> 
-			<th>Water Freq (days)</th>
+			<th>Water Freq</th>
 			<th>Harvest Days</th>
 		</tr> 
 	</thead> 
@@ -52,10 +52,10 @@ $(document).ready(function() {
             	<td><a href="@{PlantLibraryAdmin.editPlantData(plant.id)}">${plant.name}</a></td>
                 <td>${plant.scientificName}</td>
                 <td>${plant.sunlight}</td>
-                <td>${plant.lowTemp}</td>
-                <td>${plant.highTemp}</td>
-                <td>${plant.waterFreqDays}</td>
-                <td>${plant.daysTillHarvest} - ${plant.daysTillHarvestEnd}</td>
+                <td><center>${plant.lowTemp}</center></td>
+                <td><center>${plant.highTemp}</center></td>
+                <td><center>${plant.waterFreqDays} days</center></td>
+                <td><center>${plant.daysTillHarvest} - ${plant.daysTillHarvestEnd}</center></td>
             </tr>
         #{/list}
     </div>

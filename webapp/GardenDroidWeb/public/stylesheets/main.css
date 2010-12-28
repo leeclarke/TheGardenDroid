@@ -91,7 +91,7 @@ A {
 }
 
 #title h1 {
-    font-size: 48px;
+    font-size: 34px;
     margin: 0;
 }
 
@@ -101,7 +101,7 @@ A {
 }
 
 #title h2 {
-    font-size: 18px;
+    font-size: 14px;
     margin: 0;
     font-weight: normal;
 }
@@ -579,4 +579,8 @@ tr.odd {
 #plantsTable a {
 	color: #000;
 	font-weight: bold;
+}
+
+table.display thead th {
+	font-size: 80%;
 }

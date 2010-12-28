@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{extends 'main.html' /}
+
 <script>
 	$(document).ready(function() {
 		#{if planted?.id == null || planted?.id == -1}
@@ -9,7 +9,32 @@
 			$('#harvestEnd').attr('disabled', 'disabled');
 			$('#harvestEnd').attr('value', 'computed');
 		#{/if}		
-	});
+		
+		var settings = {
+					  padding: 20,
+					  width: 300,
+					  spikeLength: 100,
+					  spikeGirth: 20,
+					  cornerRadius: 30,
+					  fill: '#BAC36E',	
+					  strokeWidth: 2,
+					  strokeStyle: '#3C4313',
+					  cssStyles: {color: '#3C4313', fontWeight: 'bold'},
+					  positions: ['right','left']
+					};
+			
+		   // Notice the use of the each() method to acquire access to each elements attributes
+		   
+		   $('#help-tip2').bt(settings);
+		   $('#help-tip1').bt(settings);
+		   $('#help-tip').bt(settings);
+		   $('#help-tip3').bt(settings);
+		   $('#help-tip4').bt(settings);
+		   $('#help-tip5').bt(settings);
+		   $('#help-tip6').bt(settings);
+		   $('#help-tip7').bt(settings);
+		   $('#help-tip8').bt(settings);
+		});
 </script>
 #{set title:'Edit Planted Data' /}
 #{form @PlantLibraryAdmin.postPlantedData(planted?.id)}
@@ -19,44 +44,51 @@
    #{/errors}
 #{/ifErrors}
 <table>
-	<tr><td>
+	<tr><td width=340px>
         <label for="name">Plant name: </label></td>
-        <td width=80%>
+        <td width=70%>
         	#{field 'name'}
         	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${planted?.name}"/>
-        	#{/field}
+        	#{/field}&nbsp;<span class="help-tip" id="help-tip" title="The name you want to call this planting.">&nbsp;?&nbsp;</span>
     	</td></tr>
     <tr><td>
         <label for="scientificName">Date Planted: </label></td><td>
         #{field 'datePlanted'}
         	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${planted?.datePlanted ? (planted?.datePlanted?.format('yyyy-MM-dd')) : (new Date()).format('yyyy-MM-dd')}"/>
-        #{/field}
-    </td></tr>
+        #{/field}&nbsp;<span class="help-tip" id="help-tip1" title="The date you planted in the greenhouse or ground.">&nbsp;?&nbsp;</span>
+    </td>
+    </tr>
     <tr><td>
         <label for="isActive">Active: </label></td><td>
         #{field 'isActive'}
         <input class="small_field" type="checkbox" name="${field.name}" id="${field.name}" #{if planted?.isActive || !(planted?.id) } checked="checked" #{/if} />
-        #{/field}
-    </td></tr>
+        #{/field}&nbsp;<span class="help-tip" id="help-tip2" title="Check to indicate that the plant is currently growing, deselect to remove from active list.">&nbsp;?&nbsp;</span>
+    </td>
+    <td></td></tr>
     <tr><td>
         <label for="isDroidFarmed">Droid Managed: </label></td><td>
         <input class="small_field" type="checkbox" name="isDroidFarmed" id="isDroidFarmed"  #{if planted?.isDroidFarmed} checked="checked" #{/if} />
+        &nbsp;<span class="help-tip" id="help-tip3" title="Check to indicate that a GardenDroid is managing the plant directly.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="plantCount">Plant Count: </label></td><td>
         <input class="small_field" name="plantCount" id="plantCount" value="${planted?.plantCount}" />
+        &nbsp;<span class="help-tip" id="help-tip4" title="Number planted in this planting.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="harvestStart">Harvest Start Date: </label></td><td>
         <input class="med_field"  name="harvestStart" id="harvestStart" value="${planted?.harvestStart?.format('yyyy-MM-dd')}" />
+        &nbsp;<span class="help-tip" id="help-tip5" title="Date to start Harvest, computed from plant Type if left blank.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="harvestEnd">Harvest End Date: </label></td><td>
         <input class="med_field"  name="harvestEnd" id="harvestEnd" value="${planted?.harvestEnd?.format('yyyy-MM-dd')}" />
+        &nbsp;<span class="help-tip" id="help-tip6" title="Expected date Harvest will end, computed from plant Type if left blank.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="harvestYield">Harvest Yield (weight): </label></td><td>
         <input class="small_field" name="harvestYield" id="harvestYield" value="${planted?.harvestYield}" />
+        &nbsp;<span class="help-tip" id="help-tip7" title="Weight of harvested yield in pounds or kilos depending on your flavor.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="plantDataId">Plant Data Type: </label></td><td>
@@ -67,8 +99,9 @@
         	 #{/list}
         	 *{value="${planted?.plantData?.id?}"}*
         </select> 
+        &nbsp;<span class="help-tip" id="help-tip8" title="Plant type from the Plant Library, by setting this some values and warnings can be computed from the plant type.">&nbsp;?&nbsp;</span>
     </td></tr>
-    <tr><td>
+    <tr><td valign="top">
         <label for="notes">Notes: </label></td><td>
         <textarea name="notes" id="notes">${planted?.notes}</textarea>
     </td></tr>

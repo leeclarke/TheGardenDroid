@@ -1,4 +1,33 @@
 #{extends 'main.html' /}
+<script>
+		$(document).ready(function() 
+		{
+			var settings = {
+					  padding: 20,
+					  width: 300,
+					  spikeLength: 60,
+					  spikeGirth: 10,
+					  cornerRadius: 30,
+					  fill: '#BAC36E',	
+					  strokeWidth: 2,
+					  strokeStyle: '#3C4313',
+					  cssStyles: {color: '#3C4313', fontWeight: 'bold'},
+					  positions: ['right','left']
+					};
+			
+		   // Notice the use of the each() method to acquire access to each elements attributes
+		   
+		   $('#help-tip2').bt(settings);
+		   $('#help-tip1').bt(settings);
+		   $('#help-tip').bt(settings);
+		   $('#help-tip3').bt(settings);
+		   $('#help-tip4').bt(settings);
+		   $('#help-tip5').bt(settings);
+		   $('#help-tip6').bt(settings);
+		   $('#help-tip7').bt(settings);
+		   $('#help-tip8').bt(settings);
+		});
+</script>
 #{set title:'Edit Plant Data' /}
 #{form @PlantLibraryAdmin.postPlantData(plantData?.id)}
 #{ifErrors}
@@ -13,38 +42,46 @@
         	#{field 'name'}
         	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${plantData?.name}"/>
         	#{/field}
+        	&nbsp;<span class="help-tip" id="help-tip" title="The common name of the plant.">&nbsp;?&nbsp;</span>
     	</td></tr>
     <tr><td>
         <label for="scientificName">Scientific name: </label></td><td>
         <input class="large_field" name="scientificName" id="scientificName" value="${plantData?.scientificName}" />
+        &nbsp;<span class="help-tip" id="help-tip1" title="The scientific name of the plant.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="name">Temp Low: </label></td><td>
         <input class="small_field" type="text" name="lowTemp" id="lowTemp" value="${plantData?.lowTemp}" />
+        &nbsp;<span class="help-tip" id="help-tip2" title="Lowest temp the plant can tolerate.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="notes">Temp High: </label></td><td>
         <input class="small_field" type="text" name="highTemp" id="highTemp" value="${plantData?.highTemp}" />
+        &nbsp;<span class="help-tip" id="help-tip3" title="Highest temp the plant can tolerate.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="notes">Light Req: </label></td><td>
         <input class="med_field"  name="sunlight" id="sunlight" value="${plantData?.sunlight}" />
+        &nbsp;<span class="help-tip" id="help-tip4" title="Plants recomended light requirements.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="notes">Days til harvest : </label></td><td>
         #{field 'daysTillHarvest'}
         <input class="small_field ${field.errorClass}" name="${field.name}" id="${field.name}" value="${plantData?.daysTillHarvest}" />
         #{/field}
+        &nbsp;<span class="help-tip" id="help-tip5" title="Expected date until harvest.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="notes">Days til harvest max: </label></td><td>
         <input class="small_field" name="daysTillHarvestEnd" id="daysTillHarvestEnd" value="${plantData?.daysTillHarvestEnd}" />
+        &nbsp;<span class="help-tip" id="help-tip6" title="Max harvest days.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="notes">Water Frequency (days): </label></td><td>
         #{field 'waterFreqDays'}
         <input class="small_field ${field.errorClass}" name="${field.name}" id="${field.name}" value="${plantData?.waterFreqDays}" />
         #{/field}
+        &nbsp;<span class="help-tip" id="help-tip7" title="number of days between watering. This effects when the Droid will water plant if managed by the droid.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="notes">Notes: </label></td><td>
