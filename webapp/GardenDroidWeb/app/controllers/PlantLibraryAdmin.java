@@ -17,6 +17,10 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
+/**
+ * Main controller for managing and interacting with plant Library data.
+ * @author leeclarke
+ */
 @With(Secure.class)
 public class PlantLibraryAdmin extends Controller {
 	static Logger logger = Logger.getLogger(PlantLibraryAdmin.class);

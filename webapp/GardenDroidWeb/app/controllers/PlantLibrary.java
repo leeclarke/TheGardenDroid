@@ -9,6 +9,10 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
+/**
+ * Un-secured portion of the PlantLibrary which enables browsing of the data by anyone.
+ * @author leeclarke
+ */
 public class PlantLibrary extends Controller {
 
 	@Before

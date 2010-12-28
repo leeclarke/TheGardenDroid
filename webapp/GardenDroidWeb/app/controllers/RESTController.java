@@ -21,9 +21,16 @@ import play.mvc.Controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * REST implementation which is used by the external Droid interface to post data. Also used by the web app to update
+ * the views with realtime data using ajax.
+ * 
+ * @author leeclarke
+ */
 public class RESTController extends Controller {
 
 	static final Logger logger = Logger.getLogger(RESTController.class);
+
 	/**
 	 * REST/JSON services for saving data
 	 */
@@ -36,34 +43,32 @@ public class RESTController extends Controller {
 			SensorData sensorData = gson.fromJson(body, SensorData.class);
 			sensorData.save();
 			renderJSON("{status:OK}");
-		}
-		catch (Exception e) {
-			logger.warn("Failed to convert REST Post. JSON input: "+body );
+		} catch (Exception e) {
+			logger.warn("Failed to convert REST Post. JSON input: " + body);
 			renderJSON("{status:Invalid Input}");
 		}
 	}
-	
+
 	/**
 	 * REST/JSON services for saving Temp data only
 	 */
-	public static void saveTempSensorData(){
+	public static void saveTempSensorData() {
 		String body = "";
 		try {
 			logger.debug("REST POSTED Sensor Data Temp");
 			body = streamToString(request.body);
-			
+
 			Gson gson = new GsonBuilder().create();
 			TempSensorData sensorData = gson.fromJson(body, TempSensorData.class);
 			sensorData.save();
 			renderJSON("{status:OK}");
-		}
-		catch (Exception e) {
-			logger.warn("Failed to convert REST Post. JSON input: "+body );
+		} catch (Exception e) {
+			logger.warn("Failed to convert REST Post. JSON input: " + body);
 			renderJSON("{status:Invalid Input}");
 		}
 	}
-	
-	static String streamToString(InputStream body){
+
+	static String streamToString(InputStream body) {
 		BufferedReader in = new BufferedReader(new InputStreamReader(body));
 		StringBuffer sb = new StringBuffer();
 		String line;
@@ -76,17 +81,17 @@ public class RESTController extends Controller {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Returns the current conditions in JSON format
 	 */
-	public static void currentConditions(){
+	public static void currentConditions() {
 		HashMap<SensorType, SensorData> conds = SensorData.retrieveLatestSensorData();
 		conds.put(SensorType.TEMPERATURE, TempSensorData.getCurrentReading());
-		//TODO: add in Last Error info as well.
+		// TODO: add in Last Error info as well.
 		renderJSON(conds);
 	}
-	
+
 	/**
 	 * Builds a listing of the last 24 Temp readings in reverse order.
 	 */
@@ -99,5 +104,5 @@ public class RESTController extends Controller {
 		Collections.reverse(temps);
 		renderJSON(temps);
 	}
-	
+
 }

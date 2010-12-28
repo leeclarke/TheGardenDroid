@@ -4,6 +4,10 @@ import play.Play;
 import play.mvc.Before;
 import play.mvc.Controller;
 
+/**
+ * Central controller for viewing Reports.
+ * @author leeclarke
+ */
 public class ReportsManager  extends Controller{
 	
 	@Before
