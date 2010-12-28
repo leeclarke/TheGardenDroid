@@ -19,6 +19,7 @@ import play.mvc.With;
 @With(Secure.class)
 public class OptionsManager  extends Controller{
 	static Logger logger = Logger.getLogger(OptionsManager.class);
+	
 	@Before
 	static void addDefaults() {
 	    renderArgs.put("appTitle", Play.configuration.getProperty("droid.title"));

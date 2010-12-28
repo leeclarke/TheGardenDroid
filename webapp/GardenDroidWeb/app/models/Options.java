@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 
 import play.db.jpa.Model;
 
+/**
+ * DO containing the Web app options which control Notifications and other app configurations.
+ * @author leeclarke
+ */
 @Entity
 public class Options extends Model{
 	public static final Integer ALIVE_DEFAULT = 60;
@@ -18,6 +22,10 @@ public class Options extends Model{
 	public Integer remoteAliveCheckMins;
 	public Integer snoozeActiveWarnings_hours = SNOOZE_DEFAULT;  //if an active warning exists how many hours to snooze it before sending out a new warning Alert.
 
+	public Options(String email, Boolean enableWarningNotification, Boolean enableLowTempWarning, Double  lowTempThreshold, Boolean enableHighTempWarning, Double highTempThreshold, Boolean enablePlantedWarnings, Integer remoteAliveCheckMins) {
+		this(email,enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins , Options.SNOOZE_DEFAULT);
+	}
+	
 	public Options(String email, Boolean enableWarningNotification, Boolean enableLowTempWarning, Double  lowTempThreshold, Boolean enableHighTempWarning, Double highTempThreshold, Boolean enablePlantedWarnings, Integer remoteAliveCheckMins, Integer snoozeActiveWarnings_hours) {
 		this.email = email;
 		this.enableWarningNotification = (enableWarningNotification == null)? false:enableWarningNotification;

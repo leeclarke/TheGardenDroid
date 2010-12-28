@@ -9,15 +9,24 @@ import org.codehaus.groovy.tools.shell.commands.ShowCommand;
 
 import models.Plant;
 import models.PlantData;
+import play.Play;
 import play.data.validation.Min;
 import play.data.validation.Required;
 import play.db.jpa.JPABase;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
 @With(Secure.class)
 public class PlantLibraryAdmin extends Controller {
 	static Logger logger = Logger.getLogger(PlantLibraryAdmin.class);
+	
+	@Before
+	static void addDefaults() {
+	    renderArgs.put("appTitle", Play.configuration.getProperty("droid.title"));
+	    renderArgs.put("appBaseline", Play.configuration.getProperty("droid.baseline"));
+	}
+	
 	/**
 	 * Load up plant Library for browse and search
 	 */
