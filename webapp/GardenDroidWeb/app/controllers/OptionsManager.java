@@ -63,7 +63,7 @@ public class OptionsManager  extends Controller{
 	 * @param enablePlantedWarnings
 	 * @param remoteAliveCheckMins
 	 */
-	public static void postOptions(Long id, @Required(message="Email is required for GardenDroid to be able to notify you.") String email,Boolean enableWarningNotification,Boolean enableLowTempWarning,Double  lowTempThreshold,Boolean enableHighTempWarning,Double  highTempThreshold,Boolean enablePlantedWarnings, Integer remoteAliveCheckMins) {
+	public static void postOptions(Long id, @Required(message="Email is required for GardenDroid to be able to notify you.") String email,Boolean enableWarningNotification,Boolean enableLowTempWarning,Double  lowTempThreshold,Boolean enableHighTempWarning,Double  highTempThreshold,Boolean enablePlantedWarnings, Integer remoteAliveCheckMins, Integer snoozeActiveWarnings_hours) {
 		Options options = Options.find("order by id").first();
 		validation.email(email);
 		if(enableLowTempWarning != null)
@@ -80,7 +80,7 @@ public class OptionsManager  extends Controller{
 		
 		//Always get the first one as there shouldn't be multiple entries.
 		if(options == null){
-			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins);
+			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins, snoozeActiveWarnings_hours);
 		}
 		else {
 			options.email = email;
@@ -91,6 +91,7 @@ public class OptionsManager  extends Controller{
 			options.lowTempThreshold = (lowTempThreshold == null)?0.0:lowTempThreshold;
 			options.highTempThreshold = (highTempThreshold == null)?0.0:highTempThreshold;
 			options.remoteAliveCheckMins = (remoteAliveCheckMins == null)?Options.ALIVE_DEFAULT:remoteAliveCheckMins;
+			options.snoozeActiveWarnings_hours = (snoozeActiveWarnings_hours == null)?Options.SNOOZE_DEFAULT:snoozeActiveWarnings_hours;
 		}
 		if(validation.hasErrors()) {
 			logger.warn("Val Err= "+validation.errorsMap());

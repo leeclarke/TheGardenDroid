@@ -7,6 +7,7 @@ import play.db.jpa.Model;
 @Entity
 public class Options extends Model{
 	public static final Integer ALIVE_DEFAULT = 60;
+	public static final Integer SNOOZE_DEFAULT = 12;
 	public String email;
 	public Boolean enableWarningNotification;
 	public Boolean enableLowTempWarning;
@@ -15,9 +16,9 @@ public class Options extends Model{
 	public Double  highTempThreshold = 100.0; //set as default if none provided.
 	public Boolean enablePlantedWarnings;
 	public Integer remoteAliveCheckMins;
-	public Integer snoozeActiveWarnings_hours = 12;  //if an active warning exists how many hours to snooze it before sending out a new warning Alert.
+	public Integer snoozeActiveWarnings_hours = SNOOZE_DEFAULT;  //if an active warning exists how many hours to snooze it before sending out a new warning Alert.
 
-	public Options(String email, Boolean enableWarningNotification, Boolean enableLowTempWarning, Double  lowTempThreshold, Boolean enableHighTempWarning, Double highTempThreshold, Boolean enablePlantedWarnings, Integer remoteAliveCheckMins) {
+	public Options(String email, Boolean enableWarningNotification, Boolean enableLowTempWarning, Double  lowTempThreshold, Boolean enableHighTempWarning, Double highTempThreshold, Boolean enablePlantedWarnings, Integer remoteAliveCheckMins, Integer snoozeActiveWarnings_hours) {
 		this.email = email;
 		this.enableWarningNotification = (enableWarningNotification == null)? false:enableWarningNotification;
 		
@@ -30,6 +31,7 @@ public class Options extends Model{
 		this.highTempThreshold = (highTempThreshold == null)? 0.0: highTempThreshold;
 		
 		this.remoteAliveCheckMins = (remoteAliveCheckMins == null)?ALIVE_DEFAULT:remoteAliveCheckMins;
+		this.snoozeActiveWarnings_hours = (snoozeActiveWarnings_hours == null)?SNOOZE_DEFAULT:snoozeActiveWarnings_hours; 
 	}
 	
 	@Override
