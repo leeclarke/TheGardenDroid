@@ -589,3 +589,7 @@ table.display thead th {
 	color: #000;
 	font-weight: bold;
 }
+
+.clickableText {
+	cursor: pointer;	
+}

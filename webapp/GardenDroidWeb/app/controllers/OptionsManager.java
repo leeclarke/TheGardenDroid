@@ -109,16 +109,17 @@ public class OptionsManager  extends Controller{
 		OptionsManager.viewOptions();	
 	}
 	
-	public static void postUserData(Long id, @Required(message="field name is required")String name, String description) {
+	public static void postUserData(Long id, @Required(message="field name is required")String name, String description, boolean active) {
 		id = (id == null)?-1:id;
 		
 		UserDataType uType = UserDataType.findById(id);
 		if(uType == null) {
 			uType = new UserDataType(name, description);
-		}
+		}	
 		else {
 			uType.name = name;
 			uType.description = description;
+			uType.active = active;
 		}
 		uType.save();
 		OptionsManager.viewOptions();
