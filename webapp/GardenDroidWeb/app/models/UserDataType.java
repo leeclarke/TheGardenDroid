@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -33,7 +34,8 @@ public class UserDataType extends Model {
 	}
 	
 	public static List<UserDataType> fetchActiveDataTypes(){
-		
+		List<UserDataType> results =  UserDataType.find("active = true order by name").fetch();
+		return results;
 	}
 }
 

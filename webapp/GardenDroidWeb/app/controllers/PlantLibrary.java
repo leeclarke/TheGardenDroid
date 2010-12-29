@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.Plant;
 import models.PlantData;
+import models.UserDataType;
 import play.Play;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -29,7 +30,8 @@ public class PlantLibrary extends Controller {
 		List<PlantData> plants = PlantData.find("order By name").fetch();
 		
 		List<Plant> plantings = Plant.find("isActive = ?", true).fetch();
-		render(plants,plantings);
+		List<UserDataType> activeUserTypes = UserDataType.fetchActiveDataTypes();
+		render(plants,plantings,activeUserTypes);
 	}
 	
 	/**

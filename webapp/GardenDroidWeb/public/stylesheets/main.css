@@ -593,3 +593,8 @@ table.display thead th {
 .clickableText {
 	cursor: pointer;	
 }
+
+.notice {
+	background: #BAC36E;
+	color: #000;
+}

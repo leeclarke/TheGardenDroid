@@ -1,6 +1,8 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -28,4 +30,19 @@ public class ObservationData  extends Model {
 		this.dataValue = dataValue;
 	}
 	
+	public ObservationData(Plant plant, UserDataType dataType, Double dataValue) {
+		this(new Date(), plant, dataType, dataValue);
+	}
+	
+	/**
+	 * Gets all observations related to a given plant
+	 * @param planting
+	 */
+	public static List<ObservationData> retrieveObservationsForPlanting(Plant planting){
+		List<ObservationData> resp = new ArrayList<ObservationData>();
+		if(planting != null && planting.id != null) {
+			resp = ObservationData.find("plant = ? order by dateCreated", planting).fetch();
+		}
+		return resp;
+	}
 }

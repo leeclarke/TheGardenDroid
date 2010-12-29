@@ -92,13 +92,7 @@
     </td></tr>
     <tr><td>
         <label for="plantDataId">Plant Data Type: </label></td><td>
-        <select name="plantDataId" id="plantDataId" class="large_field" >
-        	<option value="-1"> </option>
-        	 #{list items:plantData, as:'plant'}
-        	 	<option value="${plant.id}" #{if planted?.plantData?.id && plant.id ==  planted?.plantData?.id}selected="selected" #{/if}> ${plant.name} </option>
-        	 #{/list}
-        	 *{value="${planted?.plantData?.id?}"}*
-        </select> 
+        #{plantSelect plantData:plantData, planted:planted /}
         &nbsp;<span class="help-tip" id="help-tip8" title="Plant type from the Plant Library, by setting this some values and warnings can be computed from the plant type.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td valign="top">
@@ -110,3 +104,5 @@
     </tr>
 </table>
 #{/form}
+<br>
+#{observationTable observations:observations, plant:planted /}

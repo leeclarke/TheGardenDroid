@@ -1,0 +1,11 @@
+*{ plantSelect - provides a seelct input with valid plants from the Library.
+	Required: 
+		plantData - List of Plants
+}*
+<select name="plantDataId" id="plantDataId" class="large_field" >
+	<option value="-1"> </option>
+	 #{list items:_plantData, as:'plant'}
+	 	<option value="${plant.id}" #{if _planted?.plantData?.id && plant.id ==  _planted?.plantData?.id}selected="selected" #{/if}> ${plant.name} </option>
+	 #{/list}
+	 *{value="${_planted?.plantData?.id?}"}*
+</select>

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.groovy.tools.shell.commands.ShowCommand;
 
+import models.ObservationData;
 import models.Plant;
 import models.PlantData;
 import play.Play;
@@ -56,8 +57,11 @@ public class PlantLibraryAdmin extends Controller {
 		List<PlantData> plantData = PlantData.findAll();
 		if(id != null && id >-1)	{
 			Plant planted = Plant.findById(id);
-			render(planted,plantData);
+			List<ObservationData> observations = ObservationData.retrieveObservationsForPlanting(planted);
+			
+			render(planted,plantData,observations);
 		} 
+		
 		render(plantData);
 	}
 	
@@ -112,16 +116,17 @@ public class PlantLibraryAdmin extends Controller {
 	 * @param plantDataId
 	 */
 	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, @Required(message="Please select a Plant Type.") Long plantDataId){
-		logger.warn("ENTER postPlantedData");
+		logger.info("ENTER postPlantedData");
 		if(params._contains("deletePlnt")){
-			logger.warn("##### got DEL req");
+			logger.debug("##### got DEL req");
 			deletePlanted(Id);
 		}
+		logger.debug("PLant ID = " + plantDataId);
 		Plant planted;
 		PlantData plantData = null;
 		if(plantDataId != null && plantDataId >-1) {
 			plantData = PlantData.findById(plantDataId);
-			logger.debug("plantData == "+plantData.name);
+			logger.warn("plantData == "+plantData.name);
 		}
 			
 		if( Id == null || Id == -1) {
@@ -161,7 +166,7 @@ public class PlantLibraryAdmin extends Controller {
 				planted.isDroidFarmed = isDroidFarmed;
 				planted.plantCount = plantCount;
 				planted.harvestYield = harvestYield;
-				if(planted.plantData.id != plantData.id)
+				if(planted.plantData == null || planted.plantData.id != plantData.id)
 				{
 					if(harvestStart != null) {
 						planted.harvestStart =harvestStart;
