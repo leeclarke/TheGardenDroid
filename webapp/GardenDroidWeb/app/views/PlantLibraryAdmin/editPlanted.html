@@ -34,6 +34,7 @@
 		   $('#help-tip6').bt(settings);
 		   $('#help-tip7').bt(settings);
 		   $('#help-tip8').bt(settings);
+		   $('#help-tip9').bt(settings);
 		});
 </script>
 #{set title:'Edit Planted Data' /}
@@ -104,5 +105,7 @@
     </tr>
 </table>
 #{/form}
+<h3>Add Observation for ${planted?.name}<span class="help-tip" id="help-tip9" title="You can record your own Observation data related to the selected planting which can help you track things GerdenDroid didn't think of and later even view changes over time in the reports section.">&nbsp;?&nbsp;</span></h3>
+#{quickObservation plantings:plantings, activeUserTypes:activeUserTypes, dest:"editPlant"/}
 <br>
 #{observationTable observations:observations, plant:planted /}

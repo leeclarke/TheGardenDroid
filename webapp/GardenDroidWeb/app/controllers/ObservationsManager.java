@@ -19,7 +19,7 @@ public class ObservationsManager extends Controller {
 		/**
 		 * Quick Post simple inserts a new Observation and directs back to PlanyLibrary main page.
 		 */
-		public static void quickPostObservation(Long plantDataId, Long dataTypeId, Double dataValue) {
+		public static void quickPostObservation(Long plantDataId, Long dataTypeId, Double dataValue, String editpage) {
 			logger.warn("Enter quickPostObservation: plantDataId="+plantDataId+", dataTypeId="+dataTypeId + " dataValue="+dataValue);
 			
 			Plant plant = Plant.findById(plantDataId);
@@ -31,7 +31,9 @@ public class ObservationsManager extends Controller {
 			else {
 				logger.warn("Failed to save Observation info. plant="+plant + " dataType="+dataType);
 			}
-						
+			
+			if(editpage != null)
+				PlantLibraryAdmin.editPlanted(plant.id);
 			PlantLibrary.viewPlantData();
 		}
 		

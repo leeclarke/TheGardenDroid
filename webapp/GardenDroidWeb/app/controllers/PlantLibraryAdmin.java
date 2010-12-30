@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.codehaus.groovy.tools.shell.commands.ShowCommand;
 import models.ObservationData;
 import models.Plant;
 import models.PlantData;
+import models.UserDataType;
 import play.Play;
 import play.data.validation.Min;
 import play.data.validation.Required;
@@ -58,8 +60,11 @@ public class PlantLibraryAdmin extends Controller {
 		if(id != null && id >-1)	{
 			Plant planted = Plant.findById(id);
 			List<ObservationData> observations = ObservationData.retrieveObservationsForPlanting(planted);
+			List<Plant> plantings = new ArrayList<Plant>();
+			plantings.add(planted);
+			List<UserDataType> activeUserTypes = UserDataType.fetchActiveDataTypes();
 			
-			render(planted,plantData,observations);
+			render(planted,plantData,observations,activeUserTypes, plantings);
 		} 
 		
 		render(plantData);

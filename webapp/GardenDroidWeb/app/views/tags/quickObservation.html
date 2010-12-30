@@ -1,6 +1,7 @@
 *{ Quick entry allows input of Observation Data for a planted plant. 
 	Requires:	activeUataTypes - Active UserDataTypes 
 				plantings - Active Plantings.
+				dest -  if not null then redirect after submit to the Plant Edit page.
 	}*
 #{if ObservationSucessful }
 	<div class="notice">${ObservationSucessful}</div>	
@@ -10,4 +11,5 @@
 		<tr><td><label>Planting</label></td><td ><label>Data Type</label><td colspan=3><label>Value</label></td></td></tr>
 	<tr><td>#{plantingSelect plantData:_plantings /}</td><td>#{userTypeSelect activeUserTypes:_activeUserTypes /}</td><td><input class="large_field" type="text" name="dataValue" id="dataValue"/></td></td><td><input type="submit" value="Save" name="save"/></td><td><input type="button" value="Clear" name="Clear" onclick="clearFields();"/></td></tr>
 	</table>
+	#{if _dest}<input type="hidden" name="editpage" id="editpage"  value="true"/>#{/if}
 #{/form}
