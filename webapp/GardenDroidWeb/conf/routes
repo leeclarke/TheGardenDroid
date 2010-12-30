@@ -25,6 +25,11 @@ GET  /plantLibrary/editPlantData/{id}           PlantLibrary.editPlantData
 POST /plantLibrary/deletePlantData/{id}         PlantLibrary.deletePlantData 
 POST /plantLibrary/postPlantData                PlantLibrary.postPlantData
 
+GET  /reports/editUserScript/		            ReportsManager.editUserScript
+GET  /reports/editUserScript/{id}	            ReportsManager.editUserScript
+POST /reports/deleteUserScript/{id}         	ReportsManager.deleteUserScript 
+POST /reports/saveUserScripts                	ReportsManager.saveUserScript
+
 POST /gardenDroidData/saveData                  RESTController.saveSensorData
 POST /gardenDroidData/saveTemp                  RESTController.saveTempSensorData
 GET  /gardenDroidData/current                   RESTController.currentConditions

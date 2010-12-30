@@ -598,3 +598,8 @@ table.display thead th {
 	background: #BAC36E;
 	color: #000;
 }
+
+#reportsTable a {
+	color: #000;
+	font-weight: bold;
+}

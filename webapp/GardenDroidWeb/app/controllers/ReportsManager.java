@@ -1,6 +1,22 @@
 package controllers;
 
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import models.ObservationData;
+import models.Plant;
+import models.PlantData;
+import models.ReportUserScript;
+import models.UserDataType;
 import play.Play;
+import play.data.validation.Required;
+import play.db.jpa.JPABase;
 import play.mvc.Before;
 import play.mvc.Controller;
 
@@ -9,6 +25,7 @@ import play.mvc.Controller;
  * @author leeclarke
  */
 public class ReportsManager  extends Controller{
+	static Logger logger = Logger.getLogger(ReportsManager.class);
 	
 	@Before
 	static void addDefaults() {
@@ -20,6 +37,86 @@ public class ReportsManager  extends Controller{
 	 * General landing page for reports.
 	 */
 	public static void viewReports() {
-		render();
+		String scriptTest = "def now = new Date(); def week = now+foo; return \"Week = \"+week";
+		
+		List<ReportUserScript> userScripts = ReportUserScript.fetchAllScripts();
+		render(scriptTest, userScripts);
 	}
+	
+	/**
+	 * Supports Edit form
+	 * @param id
+	 */
+	public static void editUserScript(Long id) {
+		List<Plant> plantings = Plant.find("isActive = ?", true).fetch();
+		if(id != null) {
+			ReportUserScript script = ReportUserScript.findById(id);
+			if(script != null)
+				render(plantings,script);
+		}
+		render(plantings);
+		
+	}
+	
+	public static void saveUserScript(Long id, @Required(message="Must provide a name.") String name, String description, @Required(message="You need to provide a script!") String scriptBody, Date startDate, Date endDate, Long plantDataId) {
+		logger.warn("##### ENTER save id="+id);
+		if(params._contains("DelScript")){
+			logger.warn("##### got DEL req");
+			deleteUserScript(id);
+		}
+		ReportUserScript script;
+		Plant plant = null;
+		if(plantDataId != null && plantDataId >-1)
+			plant = Plant.findById(plantDataId);
+		if(id != null && id > -1) {
+			script = ReportUserScript.findById(id);
+			if(script != null) {
+				script.name = name;
+				script.description = description;
+				script.script = scriptBody;
+				if(startDate != null) script.startDate = startDate;
+				if(endDate != null) script.endDate = endDate;
+			}
+			else {
+				script = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant).save();
+			}
+		}
+		else
+		{
+			script  = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant).save();
+		}
+		logger.warn("POST id="+script.id);
+		ReportsManager.editUserScript(script.id);		
+	}
+	
+	/**
+	 * Generates the user script for display. The default available data objects the script can manipulate are also added.
+	 * Included objects are:
+	 * 		SensorData - [List]
+	 * 		Plantings - [List]
+	 * 	AND If Planting is Specified:
+	 * 		Planting - object
+	 * 		ObservationData - [List]
+	 * @param id
+	 */
+	public static void displayUserReport(Long id) {
+		//TODO: Finish this portion!!
+		ReportUserScript script = ReportUserScript.findById(id);
+		
+		Binding binding = new Binding();
+		binding.setVariable("foo", new Integer(7));
+		GroovyShell shell = new GroovyShell(binding);
+
+		Object scriptResult = shell.evaluate(script.script);
+		render(script, scriptResult);
+	}
+	
+	public static void deleteUserScript(Long id) {
+		ReportUserScript resp = ReportUserScript.findById(id);
+		if(resp != null)
+			resp.delete();
+		
+		ReportsManager.viewReports();
+	}
+	
 }
