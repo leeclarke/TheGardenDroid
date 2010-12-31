@@ -60,7 +60,7 @@ public class WarningMonitorJob extends Job {
 	 * @param aType
 	 */
 	protected void processAlert(Options options, AlertType aType ) {
-		if(!isAlertTypeActive(aType, options)) {
+		if(isAlertTypeActive(aType, options)) {
 			try {
 				if(!options.enableWarningNotification) {
 					sendNotification(options, aType.subject,aType.message);
