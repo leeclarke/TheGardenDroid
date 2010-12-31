@@ -32,6 +32,7 @@ public class WarningMonitorJob extends Job {
 	public void doJob() throws Exception {
 		super.doJob();
 		Options options = Options.find("order by id").first();
+		//See if should be active 
 		
 		boolean isOperational = verifyDroidIsOperational(options.remoteAliveCheckMins);
 		if(!isOperational) {
@@ -61,7 +62,11 @@ public class WarningMonitorJob extends Job {
 	protected void processAlert(Options options, AlertType aType ) {
 		if(!isAlertTypeActive(aType, options)) {
 			try {
-				sendNotification(options, aType.subject,aType.message);
+				if(!options.enableWarningNotification) {
+					sendNotification(options, aType.subject,aType.message);
+				} else {
+					logger.warn("Email Notifications currently disabled.");
+				}
 				new Warning(aType.message, true, aType).save();
 			} catch (EmailException e) {
 				logger.error("Email Alert failed.",e);
