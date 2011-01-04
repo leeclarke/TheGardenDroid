@@ -1,24 +1,6 @@
 # you describe your data using the YAML notation here
 # and then load them using Fixtures.load("x.yml")
 
- Plant(broc1):
-    name: Broc2010
-    datePlanted: 2010-11-25
-    notes: notes
-    isActive: true
-    isDroidFarmed: true
-    harvestStart: 2011-01-06
-    harvestStart: 2011-01-20
- 
- Plant(spch1):
-    name: Spinach Test
-    datePlanted: 2010-12-05
-    notes: Testing in lower light corner
-    isActive: true
-    isDroidFarmed: true
-    harvestStart: 2011-01-18
-    harvestStart: 2011-02-18
-    
  PlantData(broc):
     created: 2010-11-25
     name: Broccoli
@@ -29,8 +11,17 @@
     lowTemp: 44.0
     highTemp: 82.0
     waterFreqDays: 5
-#    planted: broc1
     
+ Plant(broc1):
+    name: Broc2010
+    datePlanted: 2010-11-25
+    notes: notes
+    isActive: true
+    isDroidFarmed: true
+    harvestStart: 2011-01-06
+    harvestStart: 2011-01-20
+    plantData: broc
+
  PlantData(spinach):
     created: 2010-12-01
     name: Spinach
@@ -41,6 +32,17 @@
     lowTemp: 44.0
     highTemp: 75.0
     waterFreqDays: 4    
+     
+ Plant(spch1):
+    name: Spinach Test
+    datePlanted: 2010-12-05
+    notes: Testing in lower light corner
+    isActive: true
+    isDroidFarmed: true
+    harvestStart: 2011-01-18
+    harvestStart: 2011-02-18
+    plantData: spinach
+
     
  PlantData(wsquash):
     created: 2010-12-01

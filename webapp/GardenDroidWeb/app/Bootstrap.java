@@ -36,7 +36,7 @@ public class Bootstrap extends Job {
 			}
 		}
 		else {
-			new UserDataType(UserDataType.DEFAULT_PLANT_IRRIGATION, "Event: Plants were watered by hand or by the Droid.").save();
+			UserDataType.DEFAULT_PLANT_IRRIGATION.save();
 		}
 			
 	}
