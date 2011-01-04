@@ -2,6 +2,7 @@ package jobs;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -11,9 +12,14 @@ import org.apache.log4j.Logger;
 
 import models.AlertType;
 import models.LogData;
+import models.ObservationData;
 import models.Options;
+import models.Plant;
+import models.PlantData;
 import models.SensorData;
+import models.SensorType;
 import models.TempSensorData;
+import models.UserDataType;
 import models.Warning;
 import play.Play;
 import play.jobs.Every;
@@ -30,6 +36,7 @@ public class WarningMonitorJob extends Job {
 	 */
 	@Override
 	public void doJob() throws Exception {
+		logger.info("Starting WarningMonitorJob");
 		super.doJob();
 		Options options = Options.find("order by id").first();
 		//See if should be active 
@@ -59,11 +66,14 @@ public class WarningMonitorJob extends Job {
 	 * @param options
 	 * @param aType
 	 */
-	protected void processAlert(Options options, AlertType aType ) {
+	protected boolean processAlert(Options options, AlertType aType ) {
+		boolean emailSent = false;
 		if(isAlertTypeActive(aType, options)) {
 			try {
-				if(!options.enableWarningNotification) {
+				if(options.enableWarningNotification) {
 					sendNotification(options, aType.subject,aType.message);
+					logger.debug("Email Notification Sent");
+					emailSent = true;
 				} else {
 					logger.warn("Email Notifications currently disabled.");
 				}
@@ -73,6 +83,7 @@ public class WarningMonitorJob extends Job {
 				new LogData(new Date(), "Failed to send email address to email address: "+options.email).save();
 			}
 		}
+		return emailSent;
 	}
 
 	/**
@@ -128,6 +139,24 @@ public class WarningMonitorJob extends Job {
 	}
 	
 	/**
+	 * Using defaults or values set in options; check most recent temp readings for over/under threshold state.
+	 * @param options
+	 * @return - true value indicated Alert status.
+	 */
+	public int checkForTempThresholdsAlert(PlantData plant) {
+		int status = 0;
+		TempSensorData tempReading = TempSensorData.getCurrentReading();
+		logger.warn("current=="+tempReading);
+		logger.warn("planting=="+plant);
+		if(tempReading.tempF >= plant.highTemp) {
+			status = 1;
+		} else if(tempReading.tempF <= plant.lowTemp){
+			status = -1;
+		}
+		return status;
+	}
+	
+	/**
 	 * Check alert table to see if there is an active Warning of the given Alert type and that they are not older then the stale hours limit. 
 	 * Active warnings are considered stale if they are older then the configured Stale hours options which defaults to 12.
 	 * @param aType
@@ -151,9 +180,77 @@ public class WarningMonitorJob extends Job {
 	/**
 	 * All checks done on specific plants under the GardenDroid's care will be managed from here.
 	 * @param options
+	 * @throws EmailException 
 	 */
-	public void checkActivePlantings(Options options) {
-		// TODO Auto-generated method stub
-		//TODO Add stale config check to the options ui page.
+	public boolean checkActivePlantings(Options options){
+		boolean alertDetected = false;
+		if(options.enablePlantedWarnings){
+			StringBuilder sb = new StringBuilder();
+			
+			List<Plant> plantings = Plant.getActivePlantings();
+			for (Plant plant : plantings) {
+				//Check Temp Thresholds
+				logger.warn("### Checking on plant: " + plant);
+				int tempWarn = checkForTempThresholdsAlert(plant.plantData);
+				if(tempWarn == 1){
+					sb.append("\n ").append(plant.name).append(": Tempratures have exceeded the Plants indicated tolerance range.");
+				} else if(tempWarn == -1) {
+					sb.append("\n ").append(plant.name).append(": Tempratures have dropped below the Plants indicated tolerance range.");
+				}
+				//check watering
+				HashMap<SensorType, SensorData> latest = SensorData.retrieveLatestSensorData();
+				boolean sensorState = false; 
+				boolean observationState = false;
+				int waterDays = plant.plantData.waterFreqDays;
+				if(latest.containsKey(SensorType.WATER_IRRIGATION) && latest.get(SensorType.WATER_IRRIGATION) != null) {
+					
+					SensorData water = latest.get(SensorType.WATER_IRRIGATION);
+					logger.warn("### latest water data== " +water);
+					Calendar waterDate = Calendar.getInstance();
+					waterDate.setTime(water.dateTime);
+					
+					Calendar nextWaterDate = Calendar.getInstance();
+					nextWaterDate.add(Calendar.DATE, waterDays);
+					
+					if(waterDate.before(nextWaterDate)){
+						sensorState = true;
+					}
+				} 
+				
+				if(!sensorState){  //check observation entries.
+					ObservationData mostRecent = ObservationData.find("plant = ? AND dataType = ? order by dateCreated desc", new Object[]{plant, UserDataType.DEFAULT_PLANT_IRRIGATION }).first();
+					if(mostRecent != null) {
+						Calendar obsWaterDate = Calendar.getInstance();
+						obsWaterDate.setTime(mostRecent.dateCreated);
+						
+						Calendar nextWaterDate = Calendar.getInstance();
+						nextWaterDate.add(Calendar.DATE, waterDays);
+						if(obsWaterDate.before(nextWaterDate)){
+							observationState = true;
+						}
+					}
+				}
+				logger.warn(" sensorState=" +sensorState + "  ObsState=" + observationState);
+				if(!sensorState & !observationState) {
+					sb.append("\n ").append(plant.name).append(": is due for irrigation.");
+				}
+				
+			}
+			
+			if(sb.length()>0){
+				try {
+					alertDetected = true;
+					if(options.enableWarningNotification) {
+						sendNotification(options, "", sb.toString());
+					}
+					logger.info("Plant Alert Message Sent: "  + sb.toString());
+				}catch (EmailException e) {
+					logger.error("Email Alert failed.",e);
+					new LogData(new Date(), "Failed to send email address to email address: "+options.email).save();
+				}
+			}
+			
+		}
+		return alertDetected;
 	}
 }

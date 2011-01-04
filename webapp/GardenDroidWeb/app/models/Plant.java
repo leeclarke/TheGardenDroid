@@ -46,4 +46,14 @@ public class Plant extends Model {
 		return planted;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("[Plant]");
+		sb.append("Name: ").append(this.name);
+		sb.append("datePlanted: ").append(this.datePlanted);
+		sb.append("isActive: ").append(this.isActive);
+		sb.append("isDroidFarmed: ").append(this.isDroidFarmed);
+		sb.append("plantData: ").append(this.plantData);
+		return sb.toString();
+	}
 }

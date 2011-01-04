@@ -41,7 +41,7 @@ public class ObservationData  extends Model {
 	public static List<ObservationData> retrieveObservationsForPlanting(Plant planting){
 		List<ObservationData> resp = new ArrayList<ObservationData>();
 		if(planting != null && planting.id != null) {
-			resp = ObservationData.find("plant = ? order by dateCreated", planting).fetch();
+			resp = ObservationData.find("plant = ? order by dateCreated desc", planting).fetch();
 		}
 		return resp;
 	}
