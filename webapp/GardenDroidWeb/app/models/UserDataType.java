@@ -17,6 +17,7 @@ public class UserDataType extends Model {
 
 	//public enum DataType {STRING, NUMBER};
 	
+	public static final String DEFAULT_PLANT_IRRIGATION = "Plant Irrigation";
 	public String description;
 	public String name;
 	public boolean active;  //when inactive the item wont show up on the input form any longer. Its a reversible form of soft delete. 
