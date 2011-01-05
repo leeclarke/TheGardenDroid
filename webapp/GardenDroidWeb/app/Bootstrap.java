@@ -29,7 +29,7 @@ public class Bootstrap extends Job {
 	private void loadObservationFields() {
 		List<UserDataType> types = UserDataType.findAll();
 		if(types.size() != 0) {
-			UserDataType uType = UserDataType.find("byName", UserDataType.DEFAULT_PLANT_IRRIGATION).first();
+			UserDataType uType = UserDataType.find("byName", UserDataType.DEFAULT_PLANT_IRRIGATION.name).first();
 			if(!uType.active) {
 				uType.active = true;
 				uType.save();
