@@ -1,2 +1,16 @@
 #{extends 'main.html' /}
 #{set title:'GardenDroid User Report' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#reportTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+<h3><a href="@{ReportsManager.editUserScript(script.id)}" class="clickableText">${script.name}</a></h3>
+<div class="option-dirs">${script.description}</div>
+<hr/>
+%{ out.print(scriptResult)}%
+
+

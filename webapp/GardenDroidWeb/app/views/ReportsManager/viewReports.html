@@ -15,19 +15,7 @@ $(document).ready(function() {
 #{/ifErrors}
 <div class="option-dirs">Main landing page for Report data.</div> 
 <div id="libTools"> <b>|</b> <a href="@{ReportsManager.editUserScript(-1)}">Add Report Script</a></div>
-Groovy Eval:<br>
 
-<br>
-%{
-Binding binding = new Binding();
-binding.setVariable("foo", new Integer(7));
-GroovyShell shell = new GroovyShell(binding);
-
-Object value = shell.evaluate(scriptTest);
-out.print( value);
-}%
-
-<hr>
 <h3>User Reports</h3>
 <table cellpadding="4" cellspacing="1" border="0" class="display" id="reportsTable"> 
 	<thead> 
@@ -42,7 +30,7 @@ out.print( value);
 #{if userScripts.size() > 0}
         #{list items:userScripts, as:'uScript'}
             <tr>
-            	<td><center><img src="@{'/public/images/open.gif'}" alt="view"/></center></td>
+            	<td><center><a href="@{ReportsManager.displayUserReport(uScript.id)}" style="color:transparent; background-color: transparent; border-style: none"><img src="@{'/public/images/open.gif'}" alt="view"/></a></center></td>
             	<td><a href="@{ReportsManager.editUserScript(uScript.id)}" class="clickableText">${uScript.name}</a></td>
                 <td>${uScript.dateCreated?.format('yyyy-MM-dd')}</td>
                 <td>${uScript.description}</td>

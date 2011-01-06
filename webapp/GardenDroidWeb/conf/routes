@@ -15,19 +15,16 @@ GET     /public/                                staticDir:public
 GET  /currentCond                               RESTController.currentConditions
 
 GET  /plantLibrary                              PlantLibrary.viewPlantData
-GET  /plantLibrary/editPlanted/                 PlantLibrary.editPlanted
-GET  /plantLibrary/editPlanted/{id}             PlantLibrary.editPlanted
+#GET  /plantLibrary/editPlanted/                 PlantLibrary.editPlanted
+#GET  /plantLibrary/editPlanted/{id}             PlantLibrary.editPlanted
 POST /plantLibrary/deletePlanted/{id}           PlantLibraryAdmin.deletePlanted
-POST /plantLibrary/postPlanted                  PlantLibrary.postPlanted
+#POST /plantLibrary/postPlanted                  PlantLibrary.postPlanted
 
 GET  /plantLibrary/editPlantData/               PlantLibrary.editPlantData
 GET  /plantLibrary/editPlantData/{id}           PlantLibrary.editPlantData
-POST /plantLibrary/deletePlantData/{id}         PlantLibrary.deletePlantData 
-POST /plantLibrary/postPlantData                PlantLibrary.postPlantData
 
 GET  /reports/editUserScript/		            ReportsManager.editUserScript
-GET  /reports/editUserScript/{id}	            ReportsManager.editUserScript
-POST /reports/deleteUserScript/{id}         	ReportsManager.deleteUserScript 
+GET  /reports/editUserScript/{id}	            ReportsManager.editUserScript 
 POST /reports/saveUserScripts                	ReportsManager.saveUserScript
 
 POST /gardenDroidData/saveData                  RESTController.saveSensorData
