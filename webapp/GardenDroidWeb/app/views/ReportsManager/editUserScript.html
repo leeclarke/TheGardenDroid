@@ -21,6 +21,9 @@ $(document).ready(function() {
 		$('#help-tip4').bt(settings);
 		$('#help-tip5').bt(settings);
 		$('#help-tip6').bt(settings);
+		
+		//Add resize for textarea
+		$('textarea.resizable:not(.processed)').TextAreaResizer();
 	});
 	
 </script>
@@ -88,7 +91,7 @@ $(document).ready(function() {
         </td>
         <td valign="top">
 	        #{field 'scriptBody'}
-	        <textarea class="${field.errorClass}" name="${field.name}" id="${field.name}">${script?.script}</textarea>
+	        <textarea class="${field.errorClass} resizable" name="${field.name}" id="${field.name}">${script?.script}</textarea>
 	        #{/field}&nbsp;<span class="help-tip" id="help-tip6" title="This should be a groovy script which ends with a return statement. The following objects are available to your script: <ul><li>sensorData - [List]<li>plantings - [List]</ul><br>At this time you should return a string containing display HTML, to display a slick table liek the ones used elsewhere int he app simply include class='display' id='ReportTable' in the table tag. You can also copy the code samples from one of the default reports for guidance. ">&nbsp;?&nbsp;</span>
     	</td></tr>
     <tr><td colspan="2">

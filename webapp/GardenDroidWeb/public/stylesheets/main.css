@@ -603,3 +603,20 @@ table.display thead th {
 	color: #000;
 	font-weight: bold;
 }
+
+/* Resizable TextArea Support*/
+div.grippie {
+background:#EEEEEE url(/public/javascripts/TextArea_Resizer_1.0.4/grippie.png) no-repeat scroll center 2px;
+border-color:#DDDDDD;
+border-style:solid;
+border-width:0pt 1px 1px;
+cursor:s-resize;
+height:9px;
+overflow:hidden;
+}
+.resizable-textarea textarea {
+display:block;
+margin-bottom:0pt;
+width:95%;
+height: 20%;
+}
