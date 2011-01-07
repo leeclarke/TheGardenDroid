@@ -2,6 +2,7 @@ package controllers;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import groovy.lang.MissingPropertyException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +17,8 @@ import models.Plant;
 import models.PlantData;
 import models.ReportUserScript;
 import models.SensorData;
+import models.SensorType;
+import models.TempSensorData;
 import models.UserDataType;
 import play.Play;
 import play.data.validation.Required;
@@ -109,51 +112,67 @@ public class ReportsManager  extends Controller{
 	 */
 	public static void displayUserReport(Long id) {
 		ReportUserScript script = ReportUserScript.findById(id);
-		
-		Binding binding = new Binding();
-		List<SensorData> sensorData;  // Default to last 90 days just to tighten up volume
-		if(script.startDate != null || script.endDate != null){
-			logger.warn("SensorData Limit by Date");
-			StringBuilder query =  new StringBuilder();
-			ArrayList params  = new ArrayList();
-			if(script.startDate != null)
-			{
-				query.append("dateTime > ? ");
-				params.add(script.startDate);
-				if(script.endDate != null)
-					query.append(" AND ");
-			}
-			if(script.endDate != null)
-			{
-				query.append("dateTime < ?");
-				params.add(script.endDate);
-			}
-			query.append(" order by dateTime");
-			logger.warn(query.toString());
-			sensorData = SensorData.find(query.toString(), params.toArray()).fetch();
-		} else {
-			Calendar startDate = Calendar.getInstance();
-			startDate.set(Calendar.HOUR, 0);
-			startDate.set(Calendar.MINUTE, 0);
-			startDate.set(Calendar.SECOND, 0);
-			startDate.set(Calendar.MILLISECOND, 0);
-			
-			startDate.add(Calendar.DATE, -90);
-			sensorData = SensorData.find("dateTime > ? order by dateTime desc", startDate.getTime()).fetch();
-		}
-		
-		
-		//TODO: consider flag for All Plantings or Active only. Default To Active?
-		List<Plant> plantings = Plant.findAll(); 
-		binding.setVariable("sensorData", sensorData);
-		binding.setVariable("plantings", plantings);
-		GroovyShell shell = new GroovyShell(binding);
 		Object scriptResult = "";
-		try {
-			scriptResult = shell.evaluate(script.script);
+		if(script != null) {
+			Binding binding = new Binding();
+			List<SensorData> sensorData;  // Default to last 90 days just to tighten up volume
+			if(script.startDate != null || script.endDate != null){
+				logger.warn("SensorData Limit by Date");
+				StringBuilder query =  new StringBuilder();
+				ArrayList params  = new ArrayList();
+				if(script.startDate != null)
+				{
+					query.append("dateTime > ? ");
+					params.add(script.startDate);
+					if(script.endDate != null)
+						query.append(" AND ");
+				}
+				if(script.endDate != null)
+				{
+					query.append("dateTime < ?");
+					params.add(script.endDate);
+				}
+				query.append(" order by dateTime");
+				logger.warn(query.toString());
+				sensorData = SensorData.find(query.toString(), params.toArray()).fetch();
+			} else {
+				Calendar startDate = Calendar.getInstance();
+				startDate.set(Calendar.HOUR, 0);
+				startDate.set(Calendar.MINUTE, 0);
+				startDate.set(Calendar.SECOND, 0);
+				startDate.set(Calendar.MILLISECOND, 0);
+				
+				startDate.add(Calendar.DATE, -90);
+				sensorData = SensorData.find("dateTime > ? order by dateTime desc", startDate.getTime()).fetch();
+				//TODO: Ensure that the generic Data field gets populated with tempF
+				for (SensorData sd : sensorData) {
+					if(sd.sensorType == SensorType.TEMPERATURE) {
+						
+						sd.data = ((TempSensorData)sd).tempF;
+					}
+				}
+			}
+			
+			
+			//TODO: consider flag for All Plantings or Active only. Default To Active?
+			List<Plant> plantings = Plant.findAll(); 
+			binding.setVariable("sensorData", sensorData);
+			binding.setVariable("plantings", plantings);
+			GroovyShell shell = new GroovyShell(binding);
+			
+			try {
+				scriptResult = shell.evaluate(script.script);
+			} catch(CompilationFailedException e) {
+				scriptResult = e.getMessage();
+			} catch (MissingPropertyException m) {
+				scriptResult = m.getMessage();
+			} catch (NullPointerException n) {
+				scriptResult = "Sorr, the script was null or invalid, edit the script and try again.";
+			}
 		}
-		catch(CompilationFailedException e) {
-			scriptResult = e.getMessage();
+		else {
+			script = new ReportUserScript("InvalidScript","","",null,null,null);
+			scriptResult = "Sorr, the script was null or invalid, edit the script and try again.";
 		}
 		render(script, scriptResult);
 	}
