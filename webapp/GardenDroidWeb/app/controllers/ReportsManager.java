@@ -65,7 +65,7 @@ public class ReportsManager  extends Controller{
 		
 	}
 	
-	public static void saveUserScript(Long id, @Required(message="Must provide a name.") String name, String description, @Required(message="You need to provide a script!") String scriptBody, Date startDate, Date endDate, Long plantDataId) {
+	public static void saveUserScript(Long id, @Required(message="Must provide a name.") String name, String description, @Required(message="You need to provide a script!") String scriptBody, Date startDate, Date endDate, Long plantDataId, boolean activeOnlyPlantings) {
 		logger.warn("##### ENTER save id="+id);
 		if(params._contains("deleteScript")){
 			logger.warn("##### got DEL req");
@@ -84,17 +84,18 @@ public class ReportsManager  extends Controller{
 				script.description = description;
 				script.script = scriptBody;
 				script.planting = plant;
+				script.activeOnlyPlantings = activeOnlyPlantings;
 				if(startDate != null) script.startDate = startDate;
 				if(endDate != null) script.endDate = endDate;
 				script.save();
 			}
 			else {
-				script = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant).save();
+				script = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant, activeOnlyPlantings).save();
 			}
 		}
 		else
 		{
-			script  = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant).save();
+			script  = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant, activeOnlyPlantings).save();
 		}
 		logger.warn("POST id="+script.id);
 		ReportsManager.viewReports();		
@@ -154,8 +155,16 @@ public class ReportsManager  extends Controller{
 			}
 			
 			
-			//TODO: consider flag for All Plantings or Active only. Default To Active?
-			List<Plant> plantings = Plant.findAll(); 
+			
+			List<Plant> plantings ; 
+			if(script.activeOnlyPlantings) {
+				logger.warn("Active only Plantings");
+				plantings =  Plant.getActivePlantings(); 
+			}
+			else {
+				logger.warn("ALL Plantings");
+				plantings =  Plant.findAll();
+			}
 			binding.setVariable("sensorData", sensorData);
 			binding.setVariable("plantings", plantings);
 			GroovyShell shell = new GroovyShell(binding);
@@ -171,7 +180,7 @@ public class ReportsManager  extends Controller{
 			}
 		}
 		else {
-			script = new ReportUserScript("InvalidScript","","",null,null,null);
+			script = new ReportUserScript("InvalidScript","","",null,null,null,false);
 			scriptResult = "Sorr, the script was null or invalid, edit the script and try again.";
 		}
 		render(script, scriptResult);

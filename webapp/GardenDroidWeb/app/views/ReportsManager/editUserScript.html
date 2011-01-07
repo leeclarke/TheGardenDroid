@@ -20,6 +20,7 @@ $(document).ready(function() {
 		$('#help-tip3').bt(settings);
 		$('#help-tip4').bt(settings);
 		$('#help-tip5').bt(settings);
+		$('#help-tip6').bt(settings);
 	});
 	
 </script>
@@ -72,6 +73,14 @@ $(document).ready(function() {
 	        &nbsp;<span class="help-tip" id="help-tip4" title="Optional, specify if you want to work with a specific planting.">&nbsp;?&nbsp;</span>
 	    </td>
     </tr>
+    <tr>
+    	<td>
+	        <label for="scientificName">Return Only Active Plantings: </label></td><td>
+	        #{field 'activeOnlyPlantings'}
+	        	<input class="small_field" type="checkbox" name="${field.name}" id="${field.name}"  #{if script?.activeOnlyPlantings} checked="checked" #{/if} />
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip5" title="Limits the Plantings to only active, if uncehcked you will get all past plantings as well as current.">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
     
     <tr>
     	<td valign="top">
@@ -80,7 +89,7 @@ $(document).ready(function() {
         <td valign="top">
 	        #{field 'scriptBody'}
 	        <textarea class="${field.errorClass}" name="${field.name}" id="${field.name}">${script?.script}</textarea>
-	        #{/field}&nbsp;<span class="help-tip" id="help-tip5" title="This should be a groovy script which ends with a return statement. The following objects are available to your script: <ul><li>sensorData - [List]<li>plantings - [List]</ul><br>At this time you should return a string containing display HTML, to display a slick table liek the ones used elsewhere int he app simply include class='display' id='ReportTable' in the table tag. You can also copy the code samples from one of the default reports for guidance. ">&nbsp;?&nbsp;</span>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip6" title="This should be a groovy script which ends with a return statement. The following objects are available to your script: <ul><li>sensorData - [List]<li>plantings - [List]</ul><br>At this time you should return a string containing display HTML, to display a slick table liek the ones used elsewhere int he app simply include class='display' id='ReportTable' in the table tag. You can also copy the code samples from one of the default reports for guidance. ">&nbsp;?&nbsp;</span>
     	</td></tr>
     <tr><td colspan="2">
         <input type="submit" value="Submit Script" />&nbsp;&nbsp;&nbsp;<input id="deleteScript" name="deleteScript" type="submit" value="Delete" /></td>
