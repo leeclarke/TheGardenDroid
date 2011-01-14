@@ -22,8 +22,10 @@ public class ReportUserScript extends Model {
 	public Date endDate;
 	public Plant planting;
 	public boolean activeOnlyPlantings;
+	public ReportType reportType;
+	public String reportField;
 	
-	public ReportUserScript(String name, String description, String script, Date startDate, Date endDate, Plant plant, boolean activeOnly) {
+	public ReportUserScript(String name, String description, String script, Date startDate, Date endDate, Plant plant, boolean activeOnly, ReportType reportType, String reportField) {
 		this.dateCreated = new Date();
 		this.name = name;
 		this.description = description;
@@ -31,6 +33,8 @@ public class ReportUserScript extends Model {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.planting = plant;
+		this.reportType = (reportType == null)? ReportType.SCRIPT:reportType;
+		this.reportField = reportField;
 	}
 	
 	public static List<ReportUserScript> fetchAllScripts() {

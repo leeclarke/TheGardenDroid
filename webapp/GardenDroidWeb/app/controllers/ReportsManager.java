@@ -5,6 +5,7 @@ import groovy.lang.GroovyShell;
 import groovy.lang.MissingPropertyException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import models.ObservationData;
 import models.Plant;
 import models.PlantData;
+import models.ReportType;
 import models.ReportUserScript;
 import models.SensorData;
 import models.SensorType;
@@ -56,16 +58,18 @@ public class ReportsManager  extends Controller{
 	 */
 	public static void editUserScript(Long id) {
 		List<Plant> plantings = Plant.find("isActive = ?", true).fetch();
+		List<ReportType> reportTypes = Arrays.asList(ReportType.values());
 		if(id != null) {
 			ReportUserScript script = ReportUserScript.findById(id);
 			if(script != null)
-				render(plantings,script);
+				render(plantings,script, reportTypes);
 		}
-		render(plantings);
+		
+		render(plantings, reportTypes);
 		
 	}
 	
-	public static void saveUserScript(Long id, @Required(message="Must provide a name.") String name, String description, @Required(message="You need to provide a script!") String scriptBody, Date startDate, Date endDate, Long plantDataId, boolean activeOnlyPlantings) {
+	public static void saveUserScript(Long id, @Required(message="Must provide a name.") String name, String description, @Required(message="You need to provide a script!") String scriptBody, Date startDate, Date endDate, Long plantDataId, boolean activeOnlyPlantings, ReportType reportType, String reportField) {
 		logger.warn("##### ENTER save id="+id);
 		if(params._contains("deleteScript")){
 			logger.warn("##### got DEL req");
@@ -85,17 +89,21 @@ public class ReportsManager  extends Controller{
 				script.script = scriptBody;
 				script.planting = plant;
 				script.activeOnlyPlantings = activeOnlyPlantings;
+				script.reportType = (reportType == null)? ReportType.SCRIPT: reportType;
+				script.reportField = reportField;
+				logger.warn("reportType == "+ reportType);
 				if(startDate != null) script.startDate = startDate;
 				if(endDate != null) script.endDate = endDate;
+				
 				script.save();
 			}
 			else {
-				script = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant, activeOnlyPlantings).save();
+				script = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant, activeOnlyPlantings, reportType, reportField).save();
 			}
 		}
 		else
 		{
-			script  = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant, activeOnlyPlantings).save();
+			script  = new ReportUserScript(name, description, scriptBody, startDate, endDate, plant, activeOnlyPlantings, reportType, reportField).save();
 		}
 		logger.warn("POST id="+script.id);
 		ReportsManager.viewReports();		
@@ -180,7 +188,7 @@ public class ReportsManager  extends Controller{
 			}
 		}
 		else {
-			script = new ReportUserScript("InvalidScript","","",null,null,null,false);
+			script = new ReportUserScript("InvalidScript","","",null,null,null,false, null,null);
 			scriptResult = "Sorr, the script was null or invalid, edit the script and try again.";
 		}
 		render(script, scriptResult);

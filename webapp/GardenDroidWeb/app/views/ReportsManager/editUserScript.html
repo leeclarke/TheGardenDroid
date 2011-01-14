@@ -21,6 +21,7 @@ $(document).ready(function() {
 		$('#help-tip4').bt(settings);
 		$('#help-tip5').bt(settings);
 		$('#help-tip6').bt(settings);
+		$('#help-tip7').bt(settings);
 		
 		//Add resize for textarea
 		$('textarea.resizable:not(.processed)').TextAreaResizer();
@@ -45,6 +46,13 @@ $(document).ready(function() {
         <label for="dateCreated">DateCreated: </label></td><td>
        ${script?.dateCreated ? (script?.dateCreated?.format('yyyy-MM-dd')) : (new Date()).format('yyyy-MM-dd')}
     </td></tr>
+    <tr>
+    	<td>
+	        <label for="plantDataId">Report Type: </label></td><td>
+	        #{reportTypeSelect reportTypes:reportTypes, selected:script?.reportType /}
+	        &nbsp;<span class="help-tip" id="help-tip7" title="Specifies the formatting output of the Report results.">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
     <tr>
     	<td>
 	        <label for="scientificName">Description: </label></td><td>
