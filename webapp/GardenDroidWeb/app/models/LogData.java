@@ -46,10 +46,18 @@ public class LogData extends Model {
 	        this.isError = false;
     }
 
-    public static List getErrors() {
+    public static List getErrors(Integer start, Integer limit) {
     	List<LogData> errList = new ArrayList<LogData>();
-    	errList = LogData.find("isError = ? order by dateTime desc", true).fetch();
+    	if(start != null && limit != null){
+    		errList = LogData.find("isError = ? order by dateTime desc", true).from(start).fetch(limit);
+    	} else 	{
+    		errList = LogData.find("isError = ? order by dateTime desc", true).fetch();
+    	}
     	return errList;
+	}
+    
+    public static List getErrors() {
+    	return getErrors(null,null);
 	}
     
     public static List getLogEntries() {

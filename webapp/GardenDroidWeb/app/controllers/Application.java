@@ -60,17 +60,17 @@ public class Application extends Controller {
      * Gets Sensor data for full view page.
      */
     public static void viewSensors() {
-    	List<SensorData> fullSensorData = SensorData.getSensorData(null, null);
+    	List<SensorData> fullSensorData = SensorData.getSensorData(0, 500);
     	render(fullSensorData);
     }
     
     public static void viewLogs() {
-    	List fullLogs = LogData.getLogEntries();
+    	List fullLogs = LogData.getLogEntries(0,500);
     	render(fullLogs);
 	}
     
     public static void viewErrors() {
-    	List fullLogs = LogData.getErrors();
+    	List fullLogs = LogData.getErrors(0,500);
     	render(fullLogs);
 	}
 }
