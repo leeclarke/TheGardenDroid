@@ -210,7 +210,7 @@ public class ReportsManager  extends Controller{
 		}
 		else {
 			script = new ReportUserScript("InvalidScript","","",null,null,null,false, null,null);
-			scriptResult = "Sorr, the script was null or invalid, edit the script and try again.";
+			scriptResult = "Sorry, the script was null or invalid, edit the script and try again.";
 		}
 		render(script, scriptResult);
 	}
