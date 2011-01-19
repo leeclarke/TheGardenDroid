@@ -29,6 +29,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.log4j.Logger;
 
 import models.Options;
+import models.SensorType;
 import models.UserDataType;
 import play.Play;
 import play.data.validation.Required;
@@ -105,8 +106,8 @@ public class OptionsManager  extends Controller{
 		}
 		
 		//Always get the first one as there shouldn't be multiple entries.
-		if(options == null){
-			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins, snoozeActiveWarnings_hours);
+		if(options == null) {
+			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins, snoozeActiveWarnings_hours );
 		}
 		else {
 			options.email = email;
@@ -144,5 +145,32 @@ public class OptionsManager  extends Controller{
 		}
 		uType.save();
 		OptionsManager.viewOptions();
+	}
+	
+	/**
+	 * Updates the data value for the given SensorType. There is no delete here.
+	 * @param sensorType
+	 * @param value
+	 */
+	public static void putSensorRecordFrequency(SensorType sensorType, @Required(message="Frequency should be an integer value greater then 0.")Integer value){
+		if(value <=0 ){//set to default
+			value = getDefaultSensorRecordFrequency();
+		}
+		//TODO: Finish this!
+		OptionsManager.viewOptions();
+	}
+	
+	/**
+	 * Returns the Default value either set in config or 120 seconds if not configured.
+	 * @return
+	 */
+	public static Integer getDefaultSensorRecordFrequency() {
+		Integer defaultFrequency;
+		try {
+			defaultFrequency = new Integer(Play.configuration.getProperty("droid.default.sensor.frequency"));
+		}catch (Exception e) {
+			defaultFrequency = 120;
+		}
+		return defaultFrequency;
 	}
 }
