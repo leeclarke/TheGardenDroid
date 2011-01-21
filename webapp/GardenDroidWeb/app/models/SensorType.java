@@ -30,15 +30,21 @@ import java.util.Iterator;
  * @author lee Clarke
  */
 public enum SensorType {
-	RTC('R'), TEMPERATURE('T'), MOISTURE('M'), HUMIDITY('H'), AMBIENT_LIGHT('A'), LOG('L'),
-		ERROR('E'), INVALID('X'), GROW_LITE('G'), WATER_IRRIGATION('I'), TEMP_WARNING('W');
+	RTC('R',true), TEMPERATURE('T'), MOISTURE('M'), HUMIDITY('H'), AMBIENT_LIGHT('A'), LOG('L',true),
+		ERROR('E',true), INVALID('X',true), GROW_LITE('G'), WATER_IRRIGATION('I'), TEMP_WARNING('W');
 
 	private char sCode = 'X';
+	private boolean virtual = false;
 
 	SensorType(char code) {
 		sCode = code;
 	}
 
+	SensorType(char code, boolean virtual) {
+		sCode = code;
+		this.virtual = virtual;
+	}
+	
 	public char getCode() {
 		return sCode;
 	}
@@ -82,4 +88,9 @@ public enum SensorType {
 
 		return sb.toString();
 	}
+
+	public boolean isVirtual() {
+		return virtual;
+	}
+
 }

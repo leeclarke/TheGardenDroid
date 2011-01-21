@@ -7,13 +7,15 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
+import org.apache.log4j.Logger;
+
 import play.Play;
 import play.db.jpa.JPABase;
 import play.db.jpa.Model;
 
 @Entity
 public class SensorRecordFrequency extends Model {
-
+	private static Logger logger = Logger.getLogger(SensorRecordFrequency.class);
 	public SensorType sensorType;
 	public Integer frequencySeconds = 0;
 
@@ -30,19 +32,22 @@ public class SensorRecordFrequency extends Model {
 	 * @return
 	 */
 	public static List<SensorRecordFrequency> getInitSettings() {
+		logger.debug("ENTER getInitSettings:");
 		Integer defaultFrequency;
 		try {
 			defaultFrequency = new Integer(Play.configuration.getProperty("droid.default.sensor.frequency"));
 		} catch (Exception e) {
-			defaultFrequency = 120;
+			defaultFrequency = (15*60);//15 mins
 		}
 		List<SensorRecordFrequency> freqs = SensorRecordFrequency.findAll();
 		if(freqs.size()==0) {
 			for (int i = 0; i < SensorType.values().length; i++) {
 				SensorType type = SensorType.values()[i];
-				SensorRecordFrequency newFreq = new SensorRecordFrequency(type, defaultFrequency);
-				newFreq.save();
-				freqs.add(newFreq);
+				if(!type.isVirtual()) {
+					SensorRecordFrequency newFreq = new SensorRecordFrequency(type, defaultFrequency);
+					newFreq.save();
+					freqs.add(newFreq);
+				}
 			}
 		}
 		return freqs;
@@ -65,6 +70,10 @@ public class SensorRecordFrequency extends Model {
 	 */
 	public static List<SensorRecordFrequency> getAllOrdered() {
 		List resp = SensorRecordFrequency.find("order by sensorType desc").fetch();
+		if(resp == null || resp.size()<1) {
+			resp = SensorRecordFrequency.getInitSettings();
+		}
+		
 		Collections.sort(resp,  new SensorRecordFrequencyComparator());
 		return resp;
 	}
