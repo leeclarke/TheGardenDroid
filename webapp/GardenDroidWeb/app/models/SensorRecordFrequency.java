@@ -3,6 +3,7 @@ package models;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ public class SensorRecordFrequency extends Model {
 	private static Logger logger = Logger.getLogger(SensorRecordFrequency.class);
 	public SensorType sensorType;
 	public Integer frequencySeconds = 0;
+	public Long lastPostTime = new Long(0);
 
 	protected SensorRecordFrequency(SensorType sensorType, Integer frequencySeconds) {
 		this.sensorType = (sensorType != null) ? sensorType : sensorType.INVALID;
@@ -61,6 +63,14 @@ public class SensorRecordFrequency extends Model {
 	 */
 	public static SensorRecordFrequency getByType(SensorType type) {
 		return SensorRecordFrequency.find("sensorType = ?", type).first();
+	}
+	
+	public static SensorRecordFrequency checkPosting(String sensorTypeString) {
+		SensorRecordFrequency srf = SensorRecordFrequency.find("sensorType = ?", sensorTypeString).first();
+	//TODO: Finish this!	
+//		System.currentTimeMillis()
+//		if()
+		return srf;
 	}
 
 	/**
