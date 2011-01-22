@@ -82,8 +82,8 @@ void setup()
     //temp.setHighThresh(23);                     // high temp threshold = 80F
     //temp.setLowThresh(20);                     // low temp threshold = 75F
   }
-  glite.setStartTime(20,56);
-  glite.setEndTime(20,58);
+  glite.setStartTime(19,56);
+  glite.setEndTime(7,56);//Set for 12 hrs
 }
 
 //###########
@@ -112,7 +112,7 @@ void loop()
         if(glite.check() == 1)
         {
           int gstatus = glite.checkTime((int)rtc.hour, (int)rtc.minute);
-          if(gstatus > -1) }
+          if(gstatus > -1) {
             transmitData(MSG_LITE, gstatus);
           }
         }
