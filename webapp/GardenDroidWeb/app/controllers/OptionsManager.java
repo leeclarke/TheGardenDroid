@@ -22,6 +22,7 @@
 package controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import jobs.WarningMonitorJob;
 
@@ -29,6 +30,8 @@ import org.apache.commons.mail.EmailException;
 import org.apache.log4j.Logger;
 
 import models.Options;
+import models.SensorRecordFrequency;
+import models.SensorType;
 import models.UserDataType;
 import play.Play;
 import play.data.validation.Required;
@@ -57,7 +60,9 @@ public class OptionsManager  extends Controller{
 		Options options = Options.find("order by id").first();
 		List<UserDataType> userDataFields = UserDataType.find("order by name").fetch();
 		logger.warn("UserDataType count=" + userDataFields.size());
-		render(options, userDataFields);
+		
+		List<SensorRecordFrequency> sensorFrequency = SensorRecordFrequency.getAllOrdered();
+		render(options, userDataFields, sensorFrequency);
 	}
 	
 	/**
@@ -68,7 +73,7 @@ public class OptionsManager  extends Controller{
 		WarningMonitorJob warning = new WarningMonitorJob();
 		boolean emailFailed = false;
 		try {
-			warning.sendNotification(options, "GardenDroid Test Alert", "This is only a test, had it been an actual emergency you most definitely would have been told exactly where to go...  ;)  Oh good news, if your readign this then the notification system is working right!");
+			warning.sendNotification(options, "GardenDroid Test Alert", "This is only a test, had it been an actual emergency you most definitely would have been told exactly where to go...  ;)  Oh good news, if your reading this then the notification system is working right!");
 		} catch(EmailException ee) {
 			emailFailed = true;
 			logger.error("Error sending email: ", ee);
@@ -105,8 +110,8 @@ public class OptionsManager  extends Controller{
 		}
 		
 		//Always get the first one as there shouldn't be multiple entries.
-		if(options == null){
-			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins, snoozeActiveWarnings_hours);
+		if(options == null) {
+			options = new Options(email, enableWarningNotification, enableLowTempWarning, lowTempThreshold, enableHighTempWarning, highTempThreshold, enablePlantedWarnings, remoteAliveCheckMins, snoozeActiveWarnings_hours );
 		}
 		else {
 			options.email = email;
@@ -145,4 +150,59 @@ public class OptionsManager  extends Controller{
 		uType.save();
 		OptionsManager.viewOptions();
 	}
+	
+	/**
+	 * Updates the data value for the given SensorType. There is no delete here.
+	 * @param sensorType
+	 * @param value
+	 */
+	public static void putSensorRecordFrequency(){
+		Map<String, String> submitMap = request.params.allSimple();
+		
+		for (SensorType sensorType : SensorType.values()) {
+			if(!sensorType.isVirtual()) {
+				Integer value = getValidSensorRecordFrequency(submitMap.get(sensorType.toString()));
+				logger.warn(sensorType+" - "+value);
+				SensorRecordFrequency recFreq = SensorRecordFrequency.getByType(sensorType);
+				recFreq.frequencySeconds = value;
+				recFreq.save();
+			}
+		}
+		
+		OptionsManager.viewOptions();
+	}
+	
+	/**
+	 * Ensures that the submitted value is valid.
+	 * @param freqValue
+	 * @return
+	 */
+	private static Integer getValidSensorRecordFrequency(String freqValue) {
+		Integer defaultFrequency;
+		if(freqValue == null || freqValue.equals("")){
+			defaultFrequency = getDefaultSensorRecordFrequency();
+		} else {
+			try {
+				defaultFrequency = new Integer(freqValue);
+			}catch (Exception e) {
+				defaultFrequency = getDefaultSensorRecordFrequency();
+			}
+		}		
+		return defaultFrequency;		
+	}
+	
+	/**
+	 * Returns the Default value either set in config or 900 seconds if not configured.
+	 * @return
+	 */
+	public static Integer getDefaultSensorRecordFrequency() {
+		Integer defaultFrequency;
+		try {
+			defaultFrequency = new Integer(Play.configuration.getProperty("droid.default.sensor.frequency"));
+		}catch (Exception e) {
+			defaultFrequency = 900;
+		}
+		return defaultFrequency;
+	}
+	
 }

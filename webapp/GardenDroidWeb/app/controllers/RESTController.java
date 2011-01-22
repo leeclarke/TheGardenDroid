@@ -50,6 +50,10 @@ import com.google.gson.GsonBuilder;
  */
 public class RESTController extends Controller {
 
+	private static final String LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT = "Failed to convert REST Post. JSON input: ";
+	private static final String STATUS_INVALID_INPUT = "{status:Invalid Input}";
+	private static final String STATUS_OK = "{status:OK}";
+	private static final String STATUS_OK_DUPLACATE = "{status:OK_Dupe_Per_Freq_Config}";
 	static final Logger logger = Logger.getLogger(RESTController.class);
 
 	/**
@@ -63,10 +67,10 @@ public class RESTController extends Controller {
 			Gson gson = new GsonBuilder().create();
 			SensorData sensorData = gson.fromJson(body, SensorData.class);
 			sensorData.save();
-			renderJSON("{status:OK}");
+			renderJSON(STATUS_OK);
 		} catch (Exception e) {
-			logger.warn("Failed to convert REST Post. JSON input: " + body);
-			renderJSON("{status:Invalid Input}");
+			logger.warn(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
+			renderJSON(STATUS_INVALID_INPUT);
 		}
 	}
 
@@ -82,10 +86,10 @@ public class RESTController extends Controller {
 			Gson gson = new GsonBuilder().create();
 			TempSensorData sensorData = gson.fromJson(body, TempSensorData.class);
 			sensorData.save();
-			renderJSON("{status:OK}");
+			renderJSON(STATUS_OK);
 		} catch (Exception e) {
-			logger.warn("Failed to convert REST Post. JSON input: " + body);
-			renderJSON("{status:Invalid Input}");
+			logger.warn(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
+			renderJSON(STATUS_INVALID_INPUT);
 		}
 	}
 

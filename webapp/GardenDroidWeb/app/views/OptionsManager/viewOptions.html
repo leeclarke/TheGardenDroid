@@ -29,6 +29,7 @@
 	   $('#help-tip5').bt(settings);
 	   $('#help-tip6').bt(settings);
 	   $('#help-tip7').bt(settings);
+	   $('#help-tip8').bt(settings);
 	   
 	   $('#help-tip2').bt(settings);
 	   $('#help-tip').bt(settings);
@@ -92,5 +93,33 @@
 </table>
 #{/form}
 <br>
-
+#{form @OptionsManager.putSensorRecordFrequency()}
+<div class="option-dirs">Sensor Recording Frequency<span class="help-tip" id="help-tip8" title="<p>Each Sensor has a Frequency of how often data passed from the Garden Droid hardware is recorded. Due to the cheap but somewhat less then perfect reliability of the RF data teransmission, the Garden Droid is excessivly chatty to ensure that its data is eventually recieved and saved in the database.</p> <p>Because of this the application will only record sensor data at regular intervals. The fields below accept interger values in seconds and those values are defaulted to a general time but should be altered to support your needs. Remember the lower the number the more data that will flood your database!</p>Note: some sensors listed are internal and changing their times will do nothing, this is mostly obvious and in the future I'll filter this out.")>&nbsp;?&nbsp;</span></div>
+<hr>
+<table cellspacing="2" cellpadding="2">
+    		<tbody>
+    			<th></th>
+    			#{if sensorFrequency.size() > 0}
+    				#{list items:sensorFrequency, as:'recFreq'}
+    				#{if recFreq_parity == "odd"}
+		    			<tr>
+		    				
+		    				<td><label for="highTempThreshold">${recFreq.sensorType}</label></td>
+		    				<td><input class="small_field" type="text"  name="${recFreq.sensorType}" id="${recFreq.sensorType}"  value="${recFreq.frequencySeconds}" /></td></td>
+		    				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	    			#{/if}
+	    			#{else}
+		    				<td><label for="highTempThreshold">${recFreq.sensorType}</label></td>
+		    				<td><input class="small_field" type="text"  name="${recFreq.sensorType}" id="${recFreq.sensorType}"  value="${recFreq.frequencySeconds}" /></td></td>
+		    			</tr>
+	    			#{/else}
+    				#{/list}
+    			#{/if}
+    			<tr><td colspan="3">
+			        <input type="submit" value="Save" name="save"/></td>
+			    </tr>
+    		</tbody>
+    	</table>
+#{/form}
+<br>
 #{userFields userFields:userDataFields /}
