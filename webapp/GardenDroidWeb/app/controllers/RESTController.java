@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import models.SensorData;
+import models.SensorRecordFrequency;
 import models.SensorType;
 import models.TempSensorData;
 
@@ -64,10 +65,7 @@ public class RESTController extends Controller {
 		try {
 			logger.debug("REST POSTED Sensor Data Temp");
 			body = streamToString(request.body);
-			Gson gson = new GsonBuilder().create();
-			SensorData sensorData = gson.fromJson(body, SensorData.class);
-			sensorData.save();
-			renderJSON(STATUS_OK);
+			renderJSON(recordDataInput(body));
 		} catch (Exception e) {
 			logger.warn(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
 			renderJSON(STATUS_INVALID_INPUT);
@@ -82,17 +80,39 @@ public class RESTController extends Controller {
 		try {
 			logger.debug("REST POSTED Sensor Data Temp");
 			body = streamToString(request.body);
-
-			Gson gson = new GsonBuilder().create();
-			TempSensorData sensorData = gson.fromJson(body, TempSensorData.class);
-			sensorData.save();
-			renderJSON(STATUS_OK);
+			renderJSON(recordDataInput(body));
 		} catch (Exception e) {
-			logger.warn(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
+			logger.error(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
+			logger.error(e.getMessage(),e);
 			renderJSON(STATUS_INVALID_INPUT);
 		}
 	}
 
+	/**
+	 * Parses input data and converts to an object, then decides to save data based on SensorRecordFrequency. 
+	 * @param requestBody - json posted to service.
+	 * @return - response result of processing
+	 */
+	static String recordDataInput(String requestBody){
+		Gson gson = new GsonBuilder().create();
+		SensorData sensorData = gson.fromJson(requestBody, SensorData.class);
+		SensorRecordFrequency srFreq = SensorRecordFrequency.getByType(sensorData.sensorType);
+		logger.debug("Record Info:  Type:" + srFreq.sensorType + "srFreq.lastPostTime="+srFreq.lastPostTime +"\n\t System.currentTimeMillis()==" + System.currentTimeMillis() + " \n\tsrFreq.lastPostTime+(srFreq.frequencySeconds*1000)=="+(srFreq.lastPostTime+(srFreq.frequencySeconds*1000)) + "\n\tSystem.currentTimeMillis() >  (srFreq.lastPostTime+(srFreq.frequencySeconds*1000)) ==  " +((System.currentTimeMillis() >  (srFreq.lastPostTime+(srFreq.frequencySeconds*1000)))));
+		logger.debug("srFreq.lastPostTime == 0L ==="+(srFreq.lastPostTime == 0L));
+		if(srFreq.lastPostTime == null || srFreq.lastPostTime == 0L || System.currentTimeMillis() > (srFreq.lastPostTime+ (srFreq.frequencySeconds*1000)) ) {
+			srFreq.lastPostTime = System.currentTimeMillis();
+			srFreq.save();
+			sensorData.save();
+			return STATUS_OK;
+		}
+		return STATUS_OK_DUPLACATE;
+	}
+	
+	/**
+	 * Processes request body as input stream and returns a String object containing posted data.
+	 * @param body
+	 * @return
+	 */
 	static String streamToString(InputStream body) {
 		BufferedReader in = new BufferedReader(new InputStreamReader(body));
 		StringBuffer sb = new StringBuffer();
@@ -113,7 +133,6 @@ public class RESTController extends Controller {
 	public static void currentConditions() {
 		HashMap<SensorType, SensorData> conds = SensorData.retrieveLatestSensorData();
 		conds.put(SensorType.TEMPERATURE, TempSensorData.getCurrentReading());
-		// TODO: add in Last Error info as well.
 		renderJSON(conds);
 	}
 

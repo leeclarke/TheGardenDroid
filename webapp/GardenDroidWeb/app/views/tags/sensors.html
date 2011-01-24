@@ -17,7 +17,7 @@
                     </span>
                     <span class="post-author">&nbsp;&nbsp;
                         #{if prevData.sensorType.code == 'T'}
-                        	 value: ${prevData.tempF} F (${prevData.tempC} C) 
+                        	 value: ${prevData.data}*{value: ${prevData?.tempF} F (${prevData?.tempC} C)}* 
                         #{/if}
                         #{elseif prevData.sensorType.code == 'G'}
                         	 value: %{if(prevData.data == 1) out.print('ON'); else out.print('OFF'); }%  

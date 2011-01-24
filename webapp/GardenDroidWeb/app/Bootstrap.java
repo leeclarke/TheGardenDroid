@@ -34,6 +34,7 @@ public class Bootstrap extends Job {
     public void doJob() {
     	//Load Default Observation fields:
         loadObservationFields();
+        initSensorRecordTypes();
         
         // Check if the database is empty
     	if(PlantData.count() == 0) {
@@ -42,6 +43,13 @@ public class Bootstrap extends Job {
         
         
     }
+
+	/**
+	 * Need to ensure that the SensorRecordFrequency has been inserted in the DB 
+	 */
+	private void initSensorRecordTypes() {
+		SensorRecordFrequency.getInitSettings();
+	}
 
 	/**
 	 * There are a couple of "User Defined Fields" that are not user defined but used by the system for alert checking and provide 
