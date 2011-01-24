@@ -17,11 +17,16 @@ public class RestController {
 	static final Logger logger = Logger.getLogger(RestController.class);
 	
 	//TODO: Extract to properties file
-	public static final String sensorURL = "http://localhost:9000/gardenDroidData/saveData";
-	public static final String tempSensorURL = "http://localhost:9000/gardenDroidData/saveTemp";
+	public static final String sensorURL = "http://192.168.1.125:9000/gardenDroidData/saveData";
+	public static final String tempSensorURL = "http://192.168.1.125:9000/gardenDroidData/saveTemp";
+	
+//	public static final String sensorURL = "http://localhost:9080/gardenDroidData/saveData";
+//	public static final String tempSensorURL = "http://localhost:9080/gardenDroidData/saveTemp";
+	
 	
 	/**
 	 * Posts data item collected to the webapp and database though REST call.
+	 * 
 	 * @param gdata
 	 * @throws IOException 
 	 */
