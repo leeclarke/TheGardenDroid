@@ -26,17 +26,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.codehaus.groovy.tools.shell.commands.ShowCommand;
-
 import models.ObservationData;
 import models.Plant;
 import models.PlantData;
 import models.UserDataType;
+
+import org.apache.log4j.Logger;
+
 import play.Play;
 import play.data.validation.Min;
 import play.data.validation.Required;
-import play.db.jpa.JPABase;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -141,18 +140,20 @@ public class PlantLibraryAdmin extends Controller {
 	 * @param harvestYield
 	 * @param plantDataId
 	 */
-	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, @Required(message="Please select a Plant Type.") Long plantDataId){
+	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, @Min(value=0, message="Please select a Plant Type.") Long plantDataId){
 		logger.info("ENTER postPlantedData");
 		if(params._contains("deletePlnt")){
 			logger.debug("##### got DEL req");
 			deletePlanted(Id);
 		}
-		logger.debug("PLant ID = " + plantDataId);
+		logger.warn("Plant ID = " + plantDataId);
+		
 		Plant planted;
-		PlantData plantData = null;
+		PlantData plantDataType = null;
+		
 		if(plantDataId != null && plantDataId >-1) {
-			plantData = PlantData.findById(plantDataId);
-			logger.warn("plantData == "+plantData.name);
+			plantDataType = PlantData.findById(plantDataId);
+			logger.warn("plantDataType == "+plantDataType.name);
 		}
 			
 		if( Id == null || Id == -1) {
@@ -160,25 +161,26 @@ public class PlantLibraryAdmin extends Controller {
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 			planted.plantCount = plantCount;
 			planted.harvestYield = harvestYield;
-			planted.plantData = plantData;
-			if(harvestStart != null) {
-				planted.harvestStart =harvestStart;
-			}
-			else {
-				planted.harvestStart = computeHarvestDate(planted.datePlanted, plantData);
-			}
-			if(harvestEnd != null) {
-				planted.harvestEnd = harvestEnd;
-			}
-			else {
-				planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantData);
-			}
+			planted.plantData = plantDataType;
 			if (validation.hasErrors()) {
 				logger.debug("Got Errors");
 				logger.debug("ERRORS: "+validation.errorsMap());
-				render("@editPlanted", planted);
+				List<PlantData> plantData = PlantData.findAll();
+				render("@editPlanted", planted, plantData);
 		    } else {
-		    	planted.save();
+				if(harvestStart != null ) {
+					planted.harvestStart =harvestStart;
+				}
+				else {
+					planted.harvestStart = computeHarvestDate(planted.datePlanted, plantDataType);
+				}
+				if(harvestEnd != null) {
+					planted.harvestEnd = harvestEnd;
+				}
+				else {
+					planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantDataType);
+				}
+			    planted.save();
 		    }
 		} else {
 			planted = Plant.findById(Id);
@@ -192,22 +194,22 @@ public class PlantLibraryAdmin extends Controller {
 				planted.isDroidFarmed = isDroidFarmed;
 				planted.plantCount = plantCount;
 				planted.harvestYield = harvestYield;
-				if(planted.plantData == null || planted.plantData.id != plantData.id)
+				if(planted.plantData == null || planted.plantData.id != plantDataType.id)
 				{
 					if(harvestStart != null) {
 						planted.harvestStart =harvestStart;
 					}
 					else {
-						planted.harvestStart = computeHarvestDate(planted.datePlanted, plantData);
+						planted.harvestStart = computeHarvestDate(planted.datePlanted, plantDataType);
 					}
 					if(harvestEnd != null) {
 						planted.harvestEnd = harvestEnd;
 					}
 					else {
-						planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantData);
+						planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantDataType);
 					}
 				}
-				planted.plantData = plantData;
+				planted.plantData = plantDataType;
 				logger.debug("harvestStart="+harvestStart );
 				if (validation.hasErrors()) {
 					logger.debug("Got Errors");
@@ -222,7 +224,7 @@ public class PlantLibraryAdmin extends Controller {
 				planted.harvestYield = harvestYield;
 				planted.harvestStart =harvestStart;
 				planted.harvestEnd = harvestEnd;
-				planted.plantData = plantData;
+				planted.plantData = plantDataType;
 				validation.addError("Id", "Invalid ID save the item again to create a new Planting.", "");
 				logger.debug("Got Errors");
 				render("@editPlanted", planted);
