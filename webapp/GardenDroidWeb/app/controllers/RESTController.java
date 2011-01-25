@@ -65,7 +65,7 @@ public class RESTController extends Controller {
 		try {
 			logger.debug("REST POSTED Sensor Data Temp");
 			body = streamToString(request.body);
-			renderJSON(recordDataInput(body));
+			renderJSON(recordDataInput(body,false));
 		} catch (Exception e) {
 			logger.warn(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
 			renderJSON(STATUS_INVALID_INPUT);
@@ -80,7 +80,7 @@ public class RESTController extends Controller {
 		try {
 			logger.debug("REST POSTED Sensor Data Temp");
 			body = streamToString(request.body);
-			renderJSON(recordDataInput(body));
+			renderJSON(recordDataInput(body,true));
 		} catch (Exception e) {
 			logger.error(LOG_MSG_FAILED_TO_CONVERT_REST_POST_JSON_INPUT + body);
 			logger.error(e.getMessage(),e);
@@ -93,9 +93,18 @@ public class RESTController extends Controller {
 	 * @param requestBody - json posted to service.
 	 * @return - response result of processing
 	 */
-	static String recordDataInput(String requestBody){
+	static String recordDataInput(String requestBody, boolean isTemp){
 		Gson gson = new GsonBuilder().create();
-		SensorData sensorData = gson.fromJson(requestBody, SensorData.class);
+		SensorData sensorData;
+		if(isTemp) {
+			if(!requestBody.contains("\"sensorType\":\"TEMPERATURE\""))  //Protect against posting wrong data to temp.
+				return STATUS_INVALID_INPUT;
+			sensorData = gson.fromJson(requestBody, TempSensorData.class);
+		}else {
+			if(requestBody.contains("\"sensorType\":\"TEMPERATURE\""))
+				return STATUS_INVALID_INPUT;
+			sensorData = gson.fromJson(requestBody, SensorData.class);
+		}
 		SensorRecordFrequency srFreq = SensorRecordFrequency.getByType(sensorData.sensorType);
 		logger.debug("Record Info:  Type:" + srFreq.sensorType + "srFreq.lastPostTime="+srFreq.lastPostTime +"\n\t System.currentTimeMillis()==" + System.currentTimeMillis() + " \n\tsrFreq.lastPostTime+(srFreq.frequencySeconds*1000)=="+(srFreq.lastPostTime+(srFreq.frequencySeconds*1000)) + "\n\tSystem.currentTimeMillis() >  (srFreq.lastPostTime+(srFreq.frequencySeconds*1000)) ==  " +((System.currentTimeMillis() >  (srFreq.lastPostTime+(srFreq.frequencySeconds*1000)))));
 		logger.debug("srFreq.lastPostTime == 0L ==="+(srFreq.lastPostTime == 0L));

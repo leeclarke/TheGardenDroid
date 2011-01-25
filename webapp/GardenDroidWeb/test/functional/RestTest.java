@@ -21,8 +21,8 @@ public class RestTest extends FunctionalTest {
 	static final String sensorPath = "/gardenDroidData/saveData";
 	static final String currCondPath = "/gardenDroidData/current";
 	static final String tempHistPath = "/gardenDroidData/tempHistory";
-	static final String tempJsonMessage = "{\"tempF\":46.23,\"tempC\":8.5,\"dateTime\":\"Dec 2, 2010 6:16:12 AM\",\"data\":46.23,\"sensorType\":\"TEMPERATURE\"}"; 
-	static final String sensorJsonMessage = "{\"dateTime\":\"Dec 2, 2010 7:16:12 AM\",\"data\":126,\"sensorType\":\"MOISTURE\"}";
+	static final String tempJsonMessage = "{\"tempF\":46.23,\"tempC\":8.5,\"dateTime\":\"Jan 2, 2011 6:16:12 AM\",\"data\":46.23,\"sensorType\":\"TEMPERATURE\"}"; 
+	static final String sensorJsonMessage = "{\"dateTime\":\"Jan 2, 2011 7:16:12 AM\",\"data\":226,\"sensorType\":\"MOISTURE\"}";
 	
 	@Test
 	public void testTempHistoryRest(){
@@ -65,6 +65,18 @@ public class RestTest extends FunctionalTest {
         assertCharset("utf-8", response);
         assertContentMatch("OK", response);
     }
+
+	/**
+	 * Check for valid data being posted to wrong URL
+	 */
+	@Test
+    public void testPostingOfTempSensorDataToSensor() {
+        Response response = POST(newRequest(), tempPath , jsonContentType , sensorJsonMessage);
+        assertIsOk(response);
+        assertContentType("application/json", response);
+        assertCharset("utf-8", response);
+        assertEquals("", "{status:Invalid Input}", getContent(response));
+    }
 	
 	@Test
     public void testPostingOfSensorData() {
@@ -77,6 +89,20 @@ public class RestTest extends FunctionalTest {
         assertContentMatch("OK", response);
     }
 	
+	/**
+	 * Check for valid data being posted to wrong URL
+	 */
+	@Test
+    public void testPostingOfSensorDataToTemp() {
+        Response response = POST(newRequest(), sensorPath , jsonContentType , tempJsonMessage);
+  
+        assertIsOk(response);
+        assertContentType("application/json", response);
+        assertCharset("utf-8", response);
+        
+        assertEquals("", "{status:Invalid Input}", getContent(response));
+    }
+	
 	@Test
     public void testPostingOfSensorData_Invalid() {
         Response response = POST(newRequest(), sensorPath , jsonContentType , "%$^%#Tsdfafsdf_JUNK%^%^%T");
@@ -86,6 +112,7 @@ public class RestTest extends FunctionalTest {
         assertCharset("utf-8", response);
         assertEquals("", "{status:Invalid Input}", getContent(response));
     }
+	
 	
 	public static void assertContentMatch(String pattern, Response response) {
         Pattern ptn = Pattern.compile(pattern);
