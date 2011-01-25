@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 import play.db.jpa.Model;
 
@@ -37,8 +38,10 @@ public class ReportUserScript extends Model {
 
 	public Date dateCreated;
 	public String name;
-	public String description;
+	public String description;	
+	@Lob
 	public String script;
+
 	public Date startDate;
 	public Date endDate;
 	public Plant planting;
