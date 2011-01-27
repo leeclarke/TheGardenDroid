@@ -2,15 +2,27 @@
 #{set title:'GardenDroid User Report' /}
 <script type="text/javascript">
 $(document).ready(function() {
+	
+	#{if script.reportType.toString() == "CHART"}
+		var d1 = [%{out.print(scriptResult)}%]; 
+		$.plot($("#placeholder"), [ d1 ]);
+	#{/if}
+	#{else}
 	$('#reportTable').dataTable( {
 		"bLengthChange": false,
 		"sPaginationType": "full_numbers"
 	} );
+	#{/else}
 } );
+
 </script>
 <h3><a href="@{ReportsManager.editUserScript(script.id)}" class="clickableText">${script.name}</a></h3>
 <div class="option-dirs">${script.description}</div>
 <hr/>
-%{ out.print(scriptResult)}%
+#{if script.reportType.toString() == "CHART"}
+	<div id="placeholder" style="width:600px;height:300px;"></div>
+#{/if}
+
+%{ if(script.reportType.toString() == "SCRIPT") out.print(scriptResult)}%
 
 
