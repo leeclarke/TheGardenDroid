@@ -89,7 +89,7 @@ $(document).ready(function() {
 	        <label for="scientificName">Return Only Active Plantings: </label></td><td>
 	        #{field 'activeOnlyPlantings'}
 	        	<input class="small_field" type="checkbox" name="${field.name}" id="${field.name}"  #{if script?.activeOnlyPlantings} checked="checked" #{/if} />
-	        #{/field}&nbsp;<span class="help-tip" id="help-tip5" title="Limits the Plantings to only active, if uncehcked you will get all past plantings as well as current.">&nbsp;?&nbsp;</span>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip5" title="Limits the Plantings to only active, if unchecked you will get all past plantings as well as current.">&nbsp;?&nbsp;</span>
 	    </td>
     </tr>
     
@@ -100,7 +100,7 @@ $(document).ready(function() {
         <td valign="top">
 	        #{field 'scriptBody'}
 	        <textarea class="${field.errorClass} resizable" name="${field.name}" id="${field.name}">${script?.script}</textarea>
-	        #{/field}&nbsp;<span class="help-tip" id="help-tip6" title="This should be a groovy script which ends with a return statement. The following objects are available to your script: <ul><li>sensorData - [List]<li>plantings - [List]</ul><br>At this time you should return a string containing display HTML, to display a slick table liek the ones used elsewhere int he app simply include class='display' id='ReportTable' in the table tag. You can also copy the code samples from one of the default reports for guidance. <p>For Charts: you should generate output in a JSON format. The output is an Object with data and options elements. The included example chart probably shows you the best info but the general format looks like this: <br>{&quot;data&quot;:[[valX,valY],[valX,valY]...],&quot;options&quot;:{xaxis: { mode: &quot;time&quot;, timeformat: &quot;%m/%d %h:%M&quot;} , grid:{clickable:true}}}</p>">&nbsp;?&nbsp;</span>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip6" title="This should be a groovy script which ends with a return statement. The following objects are available to your script: <ul><li>sensorData - [List]<li>plantings - [List]</ul><br>At this time you should return a string containing display HTML or JSON(Charts), to display a slick table like the ones used elsewhere in the app simply include class='display' id='ReportTable' in the table tag. You can also copy the code samples from one of the default reports for guidance. <p>For Charts: you should generate output in a JSON format. The output is an Object with data and options elements. The included example chart probably shows you the best info but the general format looks like this: <br>{&quot;data&quot;:[[valX,valY],[valX,valY]...],&quot;options&quot;:{xaxis: { mode: &quot;time&quot;, timeformat: &quot;%m/%d %h:%M&quot;} , grid:{clickable:true}}}</p>">&nbsp;?&nbsp;</span>
     	</td></tr>
     <tr><td colspan="2">
         <input type="submit" value="Submit Script" />&nbsp;&nbsp;&nbsp;<input id="deleteScript" name="deleteScript" type="submit" value="Delete" /></td>
