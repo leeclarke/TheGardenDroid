@@ -28,4 +28,5 @@ except for the  external libraries listed below which have their own licenses.
 - [jQuery.beautytips](http://plugins.jquery.com/project/bt)
 - [jQuery.dataTables](http://datatables.net/index)
 - [jQuery.textarearesizer](http://plugins.jquery.com/project/TextAreaResizer)
+- [jQuery.flot] (http://code.google.com/p/flot/)
 
