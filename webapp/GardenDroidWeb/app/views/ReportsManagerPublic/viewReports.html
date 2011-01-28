@@ -30,7 +30,7 @@ $(document).ready(function() {
 #{if userScripts.size() > 0}
         #{list items:userScripts, as:'uScript'}
             <tr>
-            	<td><center><a href="@{ReportsManager.displayUserReport(uScript.id)}" style="color:transparent; background-color: transparent; border-style: none"><img src="@{'/public/images/open.gif'}" alt="view"/></a></center></td>
+            	<td><center><a href="@{ReportsManagerPublic.displayUserReport(uScript.id)}" style="color:transparent; background-color: transparent; border-style: none"><img src="@{'/public/images/open.gif'}" alt="view"/></a></center></td>
             	<td><a href="@{ReportsManager.editUserScript(uScript.id)}" class="clickableText">${uScript.name}</a></td>
                 <td>${uScript.dateCreated?.format('yyyy-MM-dd')}</td>
                 <td>${uScript.description}</td>
