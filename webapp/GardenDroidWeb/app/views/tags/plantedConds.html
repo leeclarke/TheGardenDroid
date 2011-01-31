@@ -6,7 +6,7 @@
        <div class="post-metadata">
 #{if _planted.size() > 0}      
 	#{list items:_planted, as:'plant'}   	   
-           <a href="@{PlantLibraryAdmin.editPlantData(plant.id)}"><span class="post-time"> ${plant.name}</span></a>
+           <a href="@{PlantLibraryAdmin.editPlanted(plant.id)}"><span class="post-time"> ${plant.name}</span></a>
            <span class="post-date"> planted ${plant.datePlanted.format('dd MMM yyyy')}</span>
            <span class="post-date">,  harvest in %{ 
            		def now = new Date()

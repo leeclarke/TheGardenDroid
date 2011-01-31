@@ -41,6 +41,7 @@ public class ObservationData  extends Model {
 	@ManyToOne
 	public Plant plant;
 	public Date dateCreated;
+	@ManyToOne
 	public UserDataType dataType;
 	public Double dataValue;
 	
