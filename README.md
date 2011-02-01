@@ -1,7 +1,19 @@
 # The Garden Droid, a self monitoring and reporting mini greenhouse.
 
 ## OVERVIEW
-Garden Droid consists of 3 seperate applications running together to produce the Garden Droid mini greenhouse tool. The first application is the Code which powers the Arduino Hardware and is responsible for collecting and reporting the sensor data back to a supporting computer or server. The next application is the Middleware deamon which monitors the USB/RF interface and processes the data logged from the Hardware and records it in the MySQL database. The final application is the web application which is the primary interface for users and what you'll interact with more often then not.
+Garden Droid consists of 3 seperate applications running together to produce the Garden Droid mini greenhouse tool. The first application is the Code which powers the Arduino Hardware and is responsible for collecting and reporting the sensor data back to a supporting computer or server. The next application is the Middleware deamon which monitors the USB/RF interface and processes the data logged from the Hardware and records it in the MySQL database. The final application is the web application which is the primary interface for users and what you'll interact with more often then not. Check out my posts on my blog for pictures and further less code based details <http://lees2bytes.blogspot.com/>.
+
+## FEATURES
+
+- Wireless communication
+- Scheduled functionality such as grow lights, watering etc..
+- PC receives Droids data for logging to a MySQL db
+- Rich web app UI providing
+--Reporting (custom and canned)
+--Monitoring
+--Email notifications
+--Plant reference library.
+--Planting specific observational data
 
 ## SYSTEM REQUIREMENTS
 
