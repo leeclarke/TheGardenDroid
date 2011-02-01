@@ -9,11 +9,11 @@ Garden Droid consists of 3 seperate applications running together to produce the
 - Scheduled functionality such as grow lights, watering etc..
 - PC receives Droids data for logging to a MySQL db
 - Rich web app UI providing
---Reporting (custom and canned)
---Monitoring
---Email notifications
---Plant reference library.
---Planting specific observational data
+    - Reporting (custom and canned)
+    - Monitoring
+    - Email notifications
+    - Plant reference library.
+    - Planting specific observational data
 
 ## SYSTEM REQUIREMENTS
 
