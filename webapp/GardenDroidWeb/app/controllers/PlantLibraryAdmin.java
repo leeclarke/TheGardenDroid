@@ -137,10 +137,9 @@ public class PlantLibraryAdmin extends Controller {
 	 * @param plantCount
 	 * @param harvestStart
 	 * @param harvestEnd
-	 * @param harvestYield
 	 * @param plantDataId
 	 */
-	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, Double harvestYield, @Min(value=0, message="Please select a Plant Type.") Long plantDataId){
+	public static void postPlantedData(Long Id,@Required(message="Name is required.") String name, @Required(message="Date Planted is required.") Date datePlanted, String notes, boolean isActive, boolean isDroidFarmed, Integer plantCount, Date harvestStart, Date harvestEnd, @Min(value=0, message="Please select a Plant Type.") Long plantDataId){
 		logger.info("ENTER postPlantedData");
 		if(params._contains("deletePlnt")){
 			logger.debug("##### got DEL req");
@@ -160,7 +159,6 @@ public class PlantLibraryAdmin extends Controller {
 			if(datePlanted == null) datePlanted = new Date();
 			planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 			planted.plantCount = plantCount;
-			planted.harvestYield = harvestYield;
 			planted.plantData = plantDataType;
 			if (validation.hasErrors()) {
 				logger.debug("Got Errors");
@@ -193,7 +191,6 @@ public class PlantLibraryAdmin extends Controller {
 				planted.isActive = isActive;
 				planted.isDroidFarmed = isDroidFarmed;
 				planted.plantCount = plantCount;
-				planted.harvestYield = harvestYield;
 				if(planted.plantData == null || planted.plantData.id != plantDataType.id)
 				{
 					if(harvestStart != null) {
@@ -221,7 +218,6 @@ public class PlantLibraryAdmin extends Controller {
 			} else {
 				planted = new Plant(datePlanted, name, notes, isActive, isDroidFarmed);
 				planted.plantCount = plantCount;
-				planted.harvestYield = harvestYield;
 				planted.harvestStart =harvestStart;
 				planted.harvestEnd = harvestEnd;
 				planted.plantData = plantDataType;

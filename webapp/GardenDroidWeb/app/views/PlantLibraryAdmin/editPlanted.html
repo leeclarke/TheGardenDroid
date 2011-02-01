@@ -32,7 +32,6 @@
 		   $('#help-tip4').bt(settings);
 		   $('#help-tip5').bt(settings);
 		   $('#help-tip6').bt(settings);
-		   $('#help-tip7').bt(settings);
 		   $('#help-tip8').bt(settings);
 		   $('#help-tip9').bt(settings);
 		});
@@ -85,11 +84,6 @@
         <label for="harvestEnd">Harvest End Date: </label></td><td>
         <input class="med_field"  name="harvestEnd" id="harvestEnd" value="${planted?.harvestEnd?.format('yyyy-MM-dd')}" />
         &nbsp;<span class="help-tip" id="help-tip6" title="Expected date Harvest will end, computed from plant Type if left blank.">&nbsp;?&nbsp;</span>
-    </td></tr>
-    <tr><td>
-        <label for="harvestYield">Harvest Yield (weight): </label></td><td>
-        <input class="small_field" name="harvestYield" id="harvestYield" value="${planted?.harvestYield}" />
-        &nbsp;<span class="help-tip" id="help-tip7" title="Weight of harvested yield in pounds or kilos depending on your flavor.">&nbsp;?&nbsp;</span>
     </td></tr>
     <tr><td>
         <label for="plantDataId">Plant Data Type: </label></td><td>

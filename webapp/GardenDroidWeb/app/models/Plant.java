@@ -38,7 +38,6 @@ public class Plant extends Model {
     public Integer plantCount;
     public Date harvestStart;
     public Date harvestEnd;
-    public Double harvestYield;
 	public boolean isDroidFarmed;
 	@ManyToOne
 	public PlantData plantData;
