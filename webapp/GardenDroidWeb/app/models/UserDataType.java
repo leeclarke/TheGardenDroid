@@ -39,6 +39,8 @@ public class UserDataType extends Model {
 	//public enum DataType {STRING, NUMBER};
 	
 	public static final UserDataType DEFAULT_PLANT_IRRIGATION = new UserDataType("Plant Irrigation", "Event: Plants were watered by hand or by the Droid.");
+	public static final UserDataType DEFAULT_PLANT_YIELD = new UserDataType("Plant Yield", "Weight of harvested crops in local unit of mesurement (lbs).");
+	public static final UserDataType DEFAULT_PLANT_HEIGHT = new UserDataType("Plant Height", "Current avg. height at time of entry.");
 	public String description;
 	public String name;
 	public boolean active;  //when inactive the item wont show up on the input form any longer. Its a reversible form of soft delete. 
