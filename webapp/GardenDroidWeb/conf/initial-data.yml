@@ -81,7 +81,7 @@
     sensorType: MOISTURE
  
  TempSensorData(temp1):
-    dateTime: 2010-12-01 12:44:11
+    dateTime: 2011-02-01 13:30:0
     tempF: 68.65
     tempC: 21.45
     sensorType: TEMPERATURE
@@ -174,6 +174,35 @@
     userName: Lee
     password: password
 
- UserDataType(udt1):
-    name: Plant_DieOff
-    description: test
+ UserDataType(yield):
+    name: Plant Yield
+    description: Yield of harvest for date entered, in lbs.
+
+ UserDataType(ht):
+    name: Plant Height
+    description: Current avg. height at time of entry.
+
+ ObservationData(ob1):
+    dateCreated: 2011-01-28 11:40:00
+    plant: broc1
+    dataType: yield
+    dataValue: 2.5
+
+ ObservationData(ob2):
+    dateCreated: 2011-01-30 11:40:00
+    plant: broc1
+    dataType: yield
+    dataValue: 3.0
+
+ ObservationData(ob3):
+    dateCreated: 2011-02-02 12:40:00
+    plant: broc1
+    dataType: yield
+    dataValue: 5.25
+
+ ObservationData(ob4):
+    dateCreated: 2011-01-26 10:10:00
+    plant: broc1
+    dataType: yield
+    dataValue: 1.75
+    
