@@ -48,7 +48,7 @@ public class ReportUserScript extends Model {
 	public boolean activeOnlyPlantings;
 	public ReportType reportType;
 	public String reportField;
-	
+		
 	public ReportUserScript(String name, String description, String script, Date startDate, Date endDate, Plant plant, boolean activeOnly, ReportType reportType, String reportField) {
 		this.dateCreated = new Date();
 		this.name = name;

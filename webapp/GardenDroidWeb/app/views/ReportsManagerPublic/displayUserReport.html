@@ -38,5 +38,6 @@ $(document).ready(function() {
 #{/if}
 
 %{ if(script.reportType.toString() == "SCRIPT") out.print(scriptResult)}%
+%{ if(script.reportType.toString() == "TABLE") out.print(scriptResult)}%
 
 

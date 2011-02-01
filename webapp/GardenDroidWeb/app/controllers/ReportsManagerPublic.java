@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import models.ObservationData;
 import models.Plant;
+import models.ReportType;
 import models.ReportUserScript;
 import models.SensorData;
 import models.SensorType;
+import models.TableReport;
 import models.TempSensorData;
 
 import org.apache.log4j.Logger;
@@ -93,36 +96,58 @@ public class ReportsManagerPublic   extends Controller{
 					}
 				}
 			}
-			
-			
-			
-			List<Plant> plantings ; 
-			if(script.activeOnlyPlantings) {
-				logger.warn("Active only Plantings");
-				plantings =  Plant.getActivePlantings(); 
+
+			if(script.planting != null) {
+				Plant Planting = Plant.findById(script.planting.id);
+				List<ObservationData> observations = ObservationData.retrieveObservationsForPlanting(Planting);
+				
+				binding.setVariable("planting", Planting);
+				binding.setVariable("ObservationData", observations);
 			}
 			else {
-				logger.warn("ALL Plantings");
-				plantings =  Plant.findAll();
+				List<Plant> plantings ; 
+				if(script.activeOnlyPlantings) {
+					logger.warn("Active only Plantings");
+					plantings =  Plant.getActivePlantings(); 
+				}
+				else {
+					logger.warn("ALL Plantings");
+					plantings =  Plant.findAll();
+				}
+				binding.setVariable("sensorData", sensorData);
+				binding.setVariable("plantings", plantings);
+				List<ObservationData> observations = ObservationData.findAll();
+				binding.setVariable("ObservationData", observations);
+			}			
+			if(script.reportType == ReportType.TABLE){
+				logger.warn("### Report is TableType");
+				binding.setVariable("table", new TableReport());
+				
 			}
-			binding.setVariable("sensorData", sensorData);
-			binding.setVariable("plantings", plantings);
 			GroovyShell shell = new GroovyShell(binding);
 			
 			try {
 				scriptResult = shell.evaluate(script.script);
+				
 			} catch(CompilationFailedException e) {
+				logger.warn("Report CompilationFailedException");
 				scriptResult = e.getMessage();
 			} catch (MissingPropertyException m) {
+				logger.warn("Report MissingPropertyException");
 				scriptResult = m.getMessage();
 			} catch (NullPointerException n) {
-				scriptResult = "Sorr, the script was null or invalid, edit the script and try again.";
+				logger.warn("Report NullPointerException");
+				scriptResult = "Sorry, the script was null or invalid, edit the script and try again.";
+			} catch (Exception e) {
+				logger.warn("Report Exception");
+				scriptResult = "There is an error in your script:"+e.getMessage();
 			}
 		}
 		else {
 			script = new ReportUserScript("InvalidScript","","",null,null,null,false, null,null);
 			scriptResult = "Sorry, the script was null or invalid, edit the script and try again.";
 		}
+		logger.warn("ScriptResult == "+scriptResult);
 		render(script, scriptResult);
 	}
 }

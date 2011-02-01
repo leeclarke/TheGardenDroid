@@ -134,7 +134,32 @@ public class Bootstrap extends Job {
 			
 			new ReportUserScript("Moisture levels over past 2 days", "Chart showing the soil moisture levels over 2 day period.", script2.toString(), null, null, null, false, ReportType.CHART, null).save();
 			
+//			StringBuilder script3 = new StringBuilder();
+//			script3.append("def total = 0.0").append("\r\n");
+			/*
+			 * def total = 0.0
+
+table.title = "<b>Total Yield for $planting.name</b>"
+table.setColumnTitles("Date Created","Type","Value")
+
+for (o in ObservationData) {
+
+    if(!o.dataType.name.contains('Yield')) {
+        break
+    }
+
+    total += o.dataValue  
+    table.addRow(o.dateCreated.toString(), o.dataType.name, o.dataValue.toString())  
+       
+}
+
+table.addRow("","<b>Total</b>",total.toString())
+
+return table.toTable()
+			 * 
+			 */
 			
+//			new ReportUserScript("Plant Yield", "Yield for the selected plant.", script3.toString(), null, null, null, false, ReportType.TABLE, null).save();
 		} 
 	}
 
