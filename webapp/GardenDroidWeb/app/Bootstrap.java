@@ -19,6 +19,8 @@
  * <http://www.gnu.org/licenses/>.
  *
  */
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -83,7 +85,7 @@ public class Bootstrap extends Job {
 	 */
 	private void loadSampleReports() {
 		if (ReportUserScript.fetchAllScripts().size() <= 0) {
-			logger.warn("Loading default reports");
+			logger.info("Loading default reports");
 			StringBuilder script1 = new StringBuilder();
 			script1.append("def now24hrAgo = (new Date())-1;").append("\r\n");
 			script1.append("def out = \"\"").append("\r\n");
@@ -134,33 +136,41 @@ public class Bootstrap extends Job {
 			
 			new ReportUserScript("Moisture levels over past 2 days", "Chart showing the soil moisture levels over 2 day period.", script2.toString(), null, null, null, false, ReportType.CHART, null).save();
 			
-//			StringBuilder script3 = new StringBuilder();
-//			script3.append("def total = 0.0").append("\r\n");
-			/*
-			 * def total = 0.0
-
-table.title = "<b>Total Yield for $planting.name</b>"
-table.setColumnTitles("Date Created","Type","Value")
-
-for (o in ObservationData) {
-
-    if(!o.dataType.name.contains('Yield')) {
-        break
-    }
-
-    total += o.dataValue  
-    table.addRow(o.dateCreated.toString(), o.dataType.name, o.dataValue.toString())  
-       
-}
-
-table.addRow("","<b>Total</b>",total.toString())
-
-return table.toTable()
-			 * 
-			 */
 			
-//			new ReportUserScript("Plant Yield", "Yield for the selected plant.", script3.toString(), null, null, null, false, ReportType.TABLE, null).save();
-		} 
+			StringBuilder script3 = new StringBuilder();
+			script3.append("/* This demonstrates how to use the plantings and work with each").append("\r\n");
+			script3.append(" * plantings observation based data such as yield.*/").append("\r\n");						
+			script3.append("def grndTotal = 0.0").append("\r\n");
+			script3.append("\r\n");
+			script3.append("table.title = \"<b>Total Yield by Plant for 2011</b>\"").append("\r\n");
+			script3.append("table.setColumnTitles(\"Total for\",\"Value\")").append("\r\n");
+			script3.append("for (p in plantings) {").append("\r\n");
+			script3.append(" def total = 0.0").append("\r\n");
+			script3.append(" for (o in p.observations) {").append("\r\n");
+			script3.append("    if(!o.dataType.name.contains('Yield')) {").append("\r\n");
+			script3.append("        continue").append("\r\n");
+			script3.append("    }").append("\r\n");
+			script3.append("    total += o.dataValue").append("\r\n");
+			script3.append(" }").append("\r\n");
+			script3.append(" def title = \"&nbsp;&nbsp;&nbsp;\" + p.name").append("\r\n");
+			script3.append(" def val = \"<center>\" + total.toString()+ \"</center>\"").append("\r\n");
+			script3.append(" table.addRow( title ,val)").append("\r\n");
+			script3.append(" grndTotal += total").append("\r\n");
+			script3.append("}").append("\r\n");
+			script3.append("table.addRow(\"<big>Grand Total</big>\",\"<center><big>\"+grndTotal.toString()+\"</big></center>\")").append("\r\n");
+			script3.append("\r\n");
+			script3.append("return table.toTable()").append("\r\n");
+			
+			
+			Calendar startDate = Calendar.getInstance();
+			startDate.clear();
+			startDate.set(2011,0,1);
+			
+			Calendar endDate = Calendar.getInstance();
+			endDate.clear();
+			endDate.set(2011,11,31);
+			
+			new ReportUserScript("Crop Yield Totals - 2011", "Table populated with crop yield Totals for 2011.", script3.toString(), startDate.getTime(), endDate.getTime(), null, false, ReportType.TABLE, null).save();
+		}
 	}
-
 }
