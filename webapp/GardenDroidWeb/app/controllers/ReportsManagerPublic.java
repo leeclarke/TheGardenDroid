@@ -37,10 +37,8 @@ public class ReportsManagerPublic   extends Controller{
 	 * General landing page for reports.
 	 */
 	public static void viewReports() {
-		String scriptTest = "def now = new Date(); def week = now+foo; return \"Week = \"+week";
-		
 		List<ReportUserScript> userScripts = ReportUserScript.fetchAllScripts();
-		render(scriptTest, userScripts);
+		render( userScripts);
 	}
 	
 	
@@ -51,103 +49,156 @@ public class ReportsManagerPublic   extends Controller{
 	 * 		Plantings - [List]
 	 * 	AND If Planting is Specified:
 	 * 		Planting - object
-	 * 		ObservationData - [List]
 	 * @param id
 	 */
-	public static void displayUserReport(Long id) {
+	public static void displayUserReport(Long id) {//Type, date range, plant, ActiveOnly, retrieve results for Sensor,Plant, observations
 		ReportUserScript script = ReportUserScript.findById(id);
 		Object scriptResult = "";
 		if(script != null) {
 			Binding binding = new Binding();
-			List<SensorData> sensorData;  // Default to last 90 days just to tighten up volume
-			if(script.startDate != null || script.endDate != null){
-				logger.warn("SensorData Limit by Date");
-				StringBuilder query =  new StringBuilder();
-				ArrayList params  = new ArrayList();
-				if(script.startDate != null)
-				{
-					query.append("dateTime > ? ");
-					params.add(script.startDate);
-					if(script.endDate != null)
-						query.append(" AND ");
-				}
-				if(script.endDate != null)
-				{
-					query.append("dateTime < ?");
-					params.add(script.endDate);
-				}
-				query.append(" order by dateTime");
-				logger.warn(query.toString());
-				sensorData = SensorData.find(query.toString(), params.toArray()).fetch();
-			} else {
-				Calendar startDate = Calendar.getInstance();
-				startDate.set(Calendar.HOUR, 0);
-				startDate.set(Calendar.MINUTE, 0);
-				startDate.set(Calendar.SECOND, 0);
-				startDate.set(Calendar.MILLISECOND, 0);
-				
-				startDate.add(Calendar.DATE, -90);
-				sensorData = SensorData.find("dateTime > ? order by dateTime desc", startDate.getTime()).fetch();
-				
-				for (SensorData sd : sensorData) {
-					if(sd.sensorType == SensorType.TEMPERATURE) {
-						
-						sd.data = ((TempSensorData)sd).tempF;
-					}
-				}
-			}
-
-			if(script.planting != null) {
-				Plant Planting = Plant.findById(script.planting.id);
-				List<ObservationData> observations = ObservationData.retrieveObservationsForPlanting(Planting);
-				
-				binding.setVariable("planting", Planting);
-				binding.setVariable("ObservationData", observations);
-			}
-			else {
-				List<Plant> plantings ; 
-				if(script.activeOnlyPlantings) {
-					logger.warn("Active only Plantings");
-					plantings =  Plant.getActivePlantings(); 
-				}
-				else {
-					logger.warn("ALL Plantings");
-					plantings =  Plant.findAll();
-				}
-				binding.setVariable("sensorData", sensorData);
-				binding.setVariable("plantings", plantings);
-				List<ObservationData> observations = ObservationData.findAll();
-				binding.setVariable("ObservationData", observations);
-			}			
-			if(script.reportType == ReportType.TABLE){
-				logger.warn("### Report is TableType");
-				binding.setVariable("table", new TableReport());
-				
-			}
-			GroovyShell shell = new GroovyShell(binding);
 			
-			try {
-				scriptResult = shell.evaluate(script.script);
-				
-			} catch(CompilationFailedException e) {
-				logger.warn("Report CompilationFailedException");
-				scriptResult = e.getMessage();
-			} catch (MissingPropertyException m) {
-				logger.warn("Report MissingPropertyException");
-				scriptResult = m.getMessage();
-			} catch (NullPointerException n) {
-				logger.warn("Report NullPointerException");
-				scriptResult = "Sorry, the script was null or invalid, edit the script and try again.";
-			} catch (Exception e) {
-				logger.warn("Report Exception");
-				scriptResult = "There is an error in your script:"+e.getMessage();
+			List<SensorData> sensorData = getSensorData(script);  
+			fixTemp(sensorData);
+
+			List<Plant> plantings = getPlantings(script); 
+			
+			loadObservations(plantings, script);
+			
+			binding.setVariable("sensorData", sensorData);
+			if(plantings.size() == 1) {
+				binding.setVariable("planting", plantings.get(0));
 			}
+			else{
+				binding.setVariable("plantings", plantings);
+			}
+			
+			if(script.reportType == ReportType.TABLE){
+				binding.setVariable("table", new TableReport());
+			}
+			scriptResult = processScript(script.script, binding);
 		}
 		else {
 			script = new ReportUserScript("InvalidScript","","",null,null,null,false, null,null);
 			scriptResult = "Sorry, the script was null or invalid, edit the script and try again.";
 		}
-		logger.warn("ScriptResult == "+scriptResult);
+		logger.debug("ScriptResult == "+scriptResult);
 		render(script, scriptResult);
+	}
+	
+	/**
+	 * Inserts the Observations in the Plant objects, this should probably be done with Hibernate but this is simple and quick.
+	 * @param plantings
+	 * @param script
+	 */
+	private static void loadObservations(List<Plant> plantings, ReportUserScript script) {
+		plantings.size();
+		for (Plant planting : plantings) {
+			if(script.startDate != null || script.endDate != null){
+				planting.observations = ObservationData.retrieveObservationsForPlanting(planting, script.startDate, script.endDate);
+			} else {
+				planting.observations = ObservationData.retrieveObservationsForPlanting(planting);
+			}
+		}
+	}
+
+	/**
+	 * @param script
+	 * @return
+	 */
+	private static List<Plant> getPlantings(ReportUserScript script) {
+		List<Plant> plantings;
+		if(script.planting != null) {
+			plantings = new ArrayList<Plant>();
+			plantings.add((Plant) Plant.findById(script.planting.id));
+		}
+		else {
+			if(script.activeOnlyPlantings) {
+				plantings =  Plant.getActivePlantings(); 
+			}
+			else {
+				logger.warn("ALL Plantings");
+				plantings =  Plant.findAll();
+			}
+			
+		}	
+		return plantings;
+	}
+
+	/**
+	 * Ensures that the Temp data is set up correctly.
+	 * @param sensorData
+	 */
+	private static void fixTemp(List<SensorData> sensorData) {
+		for (SensorData sd : sensorData) {
+			if(sd.sensorType == SensorType.TEMPERATURE) {
+				
+				sd.data = ((TempSensorData)sd).tempF;
+			}
+		}
+	}
+
+	/**
+	 * Default to last 90 days just to tighten up volume if no date range is specified.
+	 * @param script
+	 * @return
+	 */
+	private static List<SensorData> getSensorData(ReportUserScript script) {
+		if(script.startDate != null || script.endDate != null){
+			logger.warn("SensorData Limit by Date");
+			StringBuilder query =  new StringBuilder();
+			ArrayList params  = new ArrayList();
+			if(script.startDate != null)
+			{
+				query.append("dateTime > ? ");
+				params.add(script.startDate);
+				if(script.endDate != null)
+					query.append(" AND ");
+			}
+			if(script.endDate != null)
+			{
+				query.append("dateTime < ?");
+				params.add(script.endDate);
+			}
+			query.append(" order by dateTime");
+			logger.warn(query.toString());
+			return SensorData.find(query.toString(), params.toArray()).fetch();
+		} else {
+			Calendar startDate = Calendar.getInstance();
+			startDate.set(Calendar.HOUR, 0);
+			startDate.set(Calendar.MINUTE, 0);
+			startDate.set(Calendar.SECOND, 0);
+			startDate.set(Calendar.MILLISECOND, 0);
+			
+			startDate.add(Calendar.DATE, -90);
+			return  SensorData.find("dateTime > ? order by dateTime desc", startDate.getTime()).fetch();
+		}
+	}
+
+	/**
+	 * Just processes the script and handles any resulting errors.
+	 * @param script
+	 * @param binding
+	 * @return  - currently expects just a string.
+	 */
+	private static Object processScript(String script, Binding binding){
+		Object scriptResult = "";
+		GroovyShell shell = new GroovyShell(binding);
+		
+		try {
+			scriptResult = shell.evaluate(script);
+		} catch(CompilationFailedException e) {
+			logger.warn("Report CompilationFailedException");
+			scriptResult = e.getMessage();
+		} catch (MissingPropertyException m) {
+			logger.warn("Report MissingPropertyException");
+			scriptResult = m.getMessage();
+		} catch (NullPointerException n) {
+			logger.warn("Report NullPointerException");
+			scriptResult = "Sorry, the script was null or invalid, edit the script and try again.";
+		} catch (Exception e) {
+			logger.warn("Report Exception");
+			scriptResult = "There is an error in your script:"+e.getMessage();
+		}
+		return scriptResult;
 	}
 }

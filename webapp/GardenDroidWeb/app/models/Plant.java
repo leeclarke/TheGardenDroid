@@ -41,7 +41,9 @@ public class Plant extends Model {
 	public boolean isDroidFarmed;
 	@ManyToOne
 	public PlantData plantData;
-
+	@OneToMany
+	public List<ObservationData> observations;
+	
 	public Plant(){
 		
 	}

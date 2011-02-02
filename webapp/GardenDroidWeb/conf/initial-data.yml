@@ -205,4 +205,10 @@
     plant: broc1
     dataType: yield
     dataValue: 1.75
+ 
+ ObservationData(obs1):
+    dateCreated: 2011-01-26 10:10:00
+    plant: spch1
+    dataType: yield
+    dataValue: 1.75   
     

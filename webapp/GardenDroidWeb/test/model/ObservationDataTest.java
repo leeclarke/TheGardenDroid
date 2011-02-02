@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,5 +39,50 @@ public class ObservationDataTest extends BaseUnitTest {
 		assertNotNull(resp);
 		assertTrue(resp.size() > 0);
 		
+	}
+	
+	@Test
+	public void retrieveObservationsForPlanting_StartEndDate() {
+		Plant plant = Plant.getActivePlantings().get(0);
+		Date startDate = getDateAdjusted(Calendar.DATE,-90);
+		Date endDate = getDateAdjusted(Calendar.DATE,0);
+		List<ObservationData> resp = ObservationData.retrieveObservationsForPlanting(plant, startDate, endDate);
+		assertNotNull(resp);
+		assertTrue(resp.size() > 0);		
+	}
+	
+	
+	@Test
+	public void retrieveObservationsForPlanting_StartDateOnly() {
+		Plant plant = Plant.getActivePlantings().get(0);
+		Date startDate = getDateAdjusted(Calendar.DATE,-90);
+		List<ObservationData> resp = ObservationData.retrieveObservationsForPlanting(plant, startDate, null);
+		assertNotNull(resp);
+		assertTrue(resp.size() > 0);		
+	}
+	
+	@Test
+	public void retrieveObservationsForPlanting_EndDateOnly() {
+		Plant plant = Plant.getActivePlantings().get(0);
+		Date endDate = getDateAdjusted(Calendar.DATE,-2);
+		List<ObservationData> resp = ObservationData.retrieveObservationsForPlanting(plant, null, endDate);
+		assertNotNull(resp);
+		assertTrue(resp.size() > 0);		
+	}
+	
+	/**
+	 * @param field - Calendar field value
+	 * @param adjustBy
+	 * @return
+	 */
+	private Date getDateAdjusted(int field, int adjustBy) {
+		Calendar startDate = Calendar.getInstance();
+		startDate.set(Calendar.HOUR, 0);
+		startDate.set(Calendar.MINUTE, 0);
+		startDate.set(Calendar.SECOND, 0);
+		startDate.set(Calendar.MILLISECOND, 0);
+		
+		startDate.add(field, adjustBy);
+		return startDate.getTime();
 	}
 }

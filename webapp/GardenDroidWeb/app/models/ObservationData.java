@@ -29,14 +29,14 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 import play.db.jpa.Model;
-
+import org.apache.log4j.Logger;
 /**
  * Observation data collected by the user about a given Planting.
  * @author leeclarke
  */
 @Entity
 public class ObservationData  extends Model {
-
+	private static final Logger logger = Logger.getLogger(ObservationData.class);
 	
 	@ManyToOne
 	public Plant plant;
@@ -64,6 +64,40 @@ public class ObservationData  extends Model {
 		List<ObservationData> resp = new ArrayList<ObservationData>();
 		if(planting != null && planting.id != null) {
 			resp = ObservationData.find("plant = ? order by dateCreated desc", planting).fetch();
+		}
+		return resp;
+	}
+	
+	/**
+	 * Gets all observations related to a given plant with-in date range
+	 * @param planting
+	 */
+	public static List<ObservationData> retrieveObservationsForPlanting(Plant planting, Date startDate, Date endDate){
+		List<ObservationData> resp = new ArrayList<ObservationData>();
+		if(planting != null && planting.id != null) {
+			ArrayList params  = new ArrayList();
+			StringBuilder query =  new StringBuilder("plant = ? ");			
+			params.add(planting);
+			
+			if(startDate != null)
+			{
+				query.append(" AND dateCreated >= ? ");
+				params.add(startDate);
+				if(endDate != null)
+					query.append(" AND ");
+			}
+			if(endDate != null)
+			{
+				if(startDate == null)
+					query.append("AND ");
+				query.append("dateCreated <= ? ");
+				params.add(endDate);
+			}
+			query.append(" order by dateCreated");
+			logger.warn("Get ObservationData query = "+query);
+			logger.warn("Get ObservationData params = "+params);
+			
+			resp = ObservationData.find(query.toString(),params.toArray()).fetch();
 		}
 		return resp;
 	}
