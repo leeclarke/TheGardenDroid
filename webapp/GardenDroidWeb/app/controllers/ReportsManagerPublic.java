@@ -31,6 +31,7 @@ public class ReportsManagerPublic   extends Controller{
 	static void addDefaults() {
 	    renderArgs.put("appTitle", Play.configuration.getProperty("droid.title"));
 	    renderArgs.put("appBaseline", Play.configuration.getProperty("droid.baseline"));
+	    renderArgs.put("helpLink", Play.configuration.getProperty("droid.helpLink"));
 	}
 	
 	/**
