@@ -109,9 +109,20 @@ public class RESTClient
         }
     }
     
-    public static void request(boolean quiet, String method, URL url, String username, String password, InputStream body)
+    /**
+     * @param quiet
+     * @param method
+     * @param url
+     * @param username
+     * @param password
+     * @param body
+     * @return - status - 0 if no update, -1 if bad and 1 for OK
+     * @throws IOException
+     */
+    public static int request(boolean quiet, String method, URL url, String username, String password, InputStream body)
     throws IOException
     {
+    	int status = 0;
         // sigh.  openConnection() doesn't actually open the connection,
         // just gives you a URLConnection.  connect() will open the connection.
         if (!quiet)
@@ -179,7 +190,27 @@ public class RESTClient
         }
         
         // dump body
-        logger.debug(responseBody);
+        
+        status = getStatusFromResponse(responseBody);
+        logger.debug("return Status="+status + " serverRps:" + responseBody);
         System.out.flush();
+		return status;
     }
+
+	/**
+	 * inspects the response for status indicator and returns int value indicating OK = 1, Dupe=0, Bad=-1
+	 * @param responseBody
+	 * @return
+	 */
+	private static int getStatusFromResponse(StringBuffer responseBody) {
+		
+		int status = 1;
+		if(responseBody == null || responseBody.indexOf("OK") ==-1) {
+			status = -1;
+		}
+		else if(responseBody.indexOf("Dupe") >-1){
+			status = 0;
+		}		
+		return status;
+	}
 }

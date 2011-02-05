@@ -53,7 +53,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 		}
 
 		if (portId == null) {
-			log.error("Could not find COM port.");
+			log.error("Could not find or open COM port. It is likely to either be in use or not setup correctly.");
 			return;
 		}
 
@@ -94,7 +94,8 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 	 * Handle an event on the serial port. Read the data and print it.
 	 */
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
-		
+		int msgCount = 0;
+		int msgErrCount = 0;
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				Thread.sleep(500);  //wait to get the message
@@ -114,6 +115,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 					else if(b == 0x04 | b == -1)
 					{
 						if(message.length()>0){
+							msgCount++;
 							GardenDroidData gdata = SensorDataFactory.parseGardenData(message.toString());
 							if(log.isDebugEnabled()){
 								log.debug("EOM");
@@ -126,7 +128,11 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 				}
 				
 			} catch (Exception e) {
-				log.error("Error processing message. "+e.toString());
+				msgErrCount++;
+				log.warn("Error processing current message. "+e.toString());
+				if(msgErrCount%10 == 0){
+					log.warn("Message Error Ratio[ totalMsgs="+msgCount + " errMsgs=" + msgErrCount + " Errors=" + ((msgErrCount/msgCount)*100) + "%");
+				}
 				message = new StringBuilder();
 			}
 		}

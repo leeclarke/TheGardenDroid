@@ -78,11 +78,13 @@ int GrowLite::checkTime(int hour, int minute){
     if(reqMins >= startMins || reqMins <= endMins) {
       if(this->status == 0) {
         digitalWrite(this->pin, HIGH);
+        this->status = 1;
         change = 1;
       }
     }
     else if(this->status == 1) {
         digitalWrite(this->pin, LOW);
+        this->status = 0;
         change = 0;
     }
   }
@@ -91,11 +93,13 @@ int GrowLite::checkTime(int hour, int minute){
     {
       if(this->status == 0) {
         digitalWrite(this->pin, HIGH);
+        this->status = 1;
         change = 1;
       }
     }
     else if(this->status == 1) {
       digitalWrite(this->pin, LOW);
+      this->status = 0;
       change = 0;
     }
   }

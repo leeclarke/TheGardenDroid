@@ -82,8 +82,8 @@ void setup()
     //temp.setHighThresh(23);                     // high temp threshold = 80F
     //temp.setLowThresh(20);                     // low temp threshold = 75F
   }
-  glite.setStartTime(19,56);
-  glite.setEndTime(7,56);//Set for 12 hrs
+  glite.setStartTime(20,15);
+  glite.setEndTime(7,56);//Set for abt 12 hrs
 }
 
 //###########

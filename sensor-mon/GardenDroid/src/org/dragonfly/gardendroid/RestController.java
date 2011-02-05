@@ -31,15 +31,20 @@ public class RestController {
 	 * @throws IOException 
 	 */
 	public static void postDataToServer(GardenDroidData gdata) throws IOException{
+		int status = 0;
 		if(gdata != null) {
 			URL url = new URL( (gdata.getSensorType() == SensorType.TEMPERATURE)? tempSensorURL: sensorURL);
 			ByteArrayInputStream stream = new ByteArrayInputStream(gardenDataToJSON(gdata).getBytes("UTF-8"));
 			try {
-				RESTClient.request(logger.isDebugEnabled(), RESTClient.POST, url, "", "",stream);
+				status = RESTClient.request(logger.isDebugEnabled(), RESTClient.POST, url, "", "",stream);
 			} catch (IOException e) {
 				logger.error(e);
 				throw new IOException("Error writing to REST Service",e);
 			}
+		}
+		if(status == 1) {
+			logger.info(gdata);
+			logger.debug("Status:"+status);
 		}
 	}
 	
