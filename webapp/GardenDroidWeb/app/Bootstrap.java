@@ -87,55 +87,39 @@ public class Bootstrap extends Job {
 		if (ReportUserScript.fetchAllScripts().size() <= 0) {
 			logger.info("Loading default reports");
 			StringBuilder script1 = new StringBuilder();
-			script1.append("def now24hrAgo = (new Date())-1;").append("\r\n");
-			script1.append("def out = \"\"").append("\r\n");
-			script1.append("def pass = 0").append("\r\n");
+			script1.append("def now24hrAgo = (new Date())-1").append("\r\n");
 			script1.append("\r\n");
-			script1.append("out += \"{\\\"data\\\":[\"").append("\r\n");
 			script1.append("for (s in sensorData) {").append("\r\n");
 			script1.append("    if(s.dateTime<now24hrAgo) {").append("\r\n");
-			script1.append("        break").append("\r\n");
+			script1.append("        continue").append("\r\n");
 			script1.append("    }").append("\r\n");
-			script1.append("\r\n");
 			script1.append("    if(s.sensorType.toString().contains(\"TEMPERATURE\") ) {").append("\r\n");
-			script1.append("       if(pass != 0){").append("\r\n");
-			script1.append("       	   out += \",\"	").append("\r\n");
-			script1.append("       }").append("\r\n");
-			script1.append("       out += \"[$s.dateTime.time,$s.data]\"").append("\r\n");
+			script1.append("       chart.dataSet1 << chart.getPoint(s.dateTime.time,s.data)").append("\r\n");
 			script1.append("    }").append("\r\n");
-			script1.append("    pass++").append("\r\n");
 			script1.append("}").append("\r\n");
-			script1.append("out += \"],\\\"options\\\":{xaxis: { mode: \\\"time\\\", timeformat: \\\"%m/%d %h:%M\\\"}, grid:{clickable:true}}}\"").append("\r\n");
 			script1.append("\r\n");
-			script1.append("return out").append("\r\n");
+			script1.append("chart.options = [xaxis:[mode:\"time\", timeformat:\"%m/%d %h:%M\"], grid:[clickable:true]]").append("\r\n");
+			script1.append("return chart.toChart()").append("\r\n");
 			
 			new ReportUserScript("24Hr Temp Chart", "Temp readings over last 24 hours", script1.toString(), null, null, null, false, ReportType.CHART, null).save();
 
 			StringBuilder script2 = new StringBuilder();
-			script2.append("def twoDaysAgo = (new Date())-2;").append("\r\n");
-			script2.append("def out = \"\"").append("\r\n");
-			script2.append("def pass = 0").append("\r\n");
+			script2.append("def twoDaysAgo = (new Date())-2").append("\r\n");
 			script2.append("\r\n");
-			script2.append("out += \"{\\\"data\\\":[\"").append("\r\n");
 			script2.append("for (s in sensorData) {").append("\r\n");
 			script2.append("    if(s.dateTime<twoDaysAgo) {").append("\r\n");
-			script2.append("        break").append("\r\n");
+			script2.append("        continue").append("\r\n");
 			script2.append("    }").append("\r\n");
 			script2.append("\r\n");
 			script2.append("    if(s.sensorType.toString().contains(\"MOISTURE\") ) {").append("\r\n");
-			script2.append("       if(pass != 0){").append("\r\n");
-			script2.append("       	   out += \",\"	").append("\r\n");
-			script2.append("       }").append("\r\n");
-			script2.append("       out += \"[$s.dateTime.time,$s.data]\"").append("\r\n");
+			script2.append("       chart.dataSet1 << chart.getPoint(s.dateTime.time,s.data)").append("\r\n");
 			script2.append("    }").append("\r\n");
-			script2.append("    pass++").append("\r\n");
 			script2.append("}").append("\r\n");
-			script2.append("out += \"],\\\"options\\\":{xaxis: { mode: \\\"time\\\", timeformat: \\\"%m/%d %h:%M\\\"}, grid:{clickable:true}}}\"").append("\r\n");
+			script2.append("chart.options = [xaxis:[mode:\"time\", timeformat:\"%m/%d %h:%M\"], grid:[clickable:true]]").append("\r\n");
 			script2.append("\r\n");
-			script2.append("return out").append("\r\n");
+			script2.append("return chart.toChart()").append("\r\n");
 			
 			new ReportUserScript("Moisture levels over past 2 days", "Chart showing the soil moisture levels over 2 day period.", script2.toString(), null, null, null, false, ReportType.CHART, null).save();
-			
 			
 			StringBuilder script3 = new StringBuilder();
 			script3.append("/* This demonstrates how to use the plantings and work with each").append("\r\n");

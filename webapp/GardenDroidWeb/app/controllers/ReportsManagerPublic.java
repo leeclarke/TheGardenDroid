@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import models.ChartReport;
 import models.ObservationData;
 import models.Plant;
 import models.ReportType;
@@ -75,6 +76,9 @@ public class ReportsManagerPublic   extends Controller{
 			
 			if(script.reportType == ReportType.TABLE){
 				binding.setVariable("table", new TableReport());
+			}
+			else if(script.reportType == ReportType.CHART){
+				binding.setVariable("chart", new ChartReport());
 			}
 			scriptResult = processScript(script.script, binding);
 		}

@@ -4,14 +4,14 @@
 $(document).ready(function() {
 	
 	#{if script.reportType.toString() == "CHART"}
-		var d1 = %{out.print(scriptResult)}%; 
-		var options = d1.options;
+		var d1 = %{out.print(scriptResult)}% 
+		var options = (d1.options != null)? d1.options : {}
 		//Add some default styling.
 		if(options.colors == null)
 			options.colors = ["#FFFFFF"]; 
-		options.grid.color = "#B8C569";
+		options.grid = {color:"#B8C569"};
 		options.series = { lines: { show: true, fill: true},points: { show: true, fill: false }};
-		$.plot($("#placeholder"), [ d1.data ], options);
+		$.plot($("#placeholder"),  d1.data , options);
 		
 		//Supports click which displays the data values if clickable:true is set
 		$("#placeholder").bind("plotclick", function (event, pos, item) {
