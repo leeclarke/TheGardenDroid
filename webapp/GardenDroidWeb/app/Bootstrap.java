@@ -99,7 +99,6 @@ public class Bootstrap extends Job {
 			script1.append("}").append("\r\n");
 			script1.append("\r\n");
 			script1.append("chart.options = [xaxis:[mode:\"time\", timeformat:\"%m/%d %h:%M\"], grid:[clickable:true]]").append("\r\n");
-			script1.append("return chart.toChart()").append("\r\n");
 			
 			new ReportUserScript("24Hr Temp Chart", "Temp readings over last 24 hours", script1.toString(), null, null, null, false, ReportType.CHART, null).save();
 
@@ -116,8 +115,6 @@ public class Bootstrap extends Job {
 			script2.append("    }").append("\r\n");
 			script2.append("}").append("\r\n");
 			script2.append("chart.options = [xaxis:[mode:\"time\", timeformat:\"%m/%d %h:%M\"], grid:[clickable:true]]").append("\r\n");
-			script2.append("\r\n");
-			script2.append("return chart.toChart()").append("\r\n");
 			
 			new ReportUserScript("Moisture levels over past 2 days", "Chart showing the soil moisture levels over 2 day period.", script2.toString(), null, null, null, false, ReportType.CHART, null).save();
 			
@@ -142,8 +139,6 @@ public class Bootstrap extends Job {
 			script3.append(" grndTotal += total").append("\r\n");
 			script3.append("}").append("\r\n");
 			script3.append("table.addRow(\"<big>Grand Total</big>\",\"<center><big>\"+grndTotal.toString()+\"</big></center>\")").append("\r\n");
-			script3.append("\r\n");
-			script3.append("return table.toTable()").append("\r\n");
 			
 			
 			Calendar startDate = Calendar.getInstance();

@@ -81,6 +81,13 @@ public class ReportsManagerPublic   extends Controller{
 				binding.setVariable("chart", new ChartReport());
 			}
 			scriptResult = processScript(script.script, binding);
+			if(script.reportType == ReportType.TABLE){
+				TableReport tableRtn = (TableReport) binding.getVariable("table"); 
+				scriptResult = tableRtn.toTable();
+			} else if(script.reportType == ReportType.CHART) {
+				ChartReport chartRtn = (ChartReport) binding.getVariable("chart"); 
+				scriptResult = chartRtn.toChart();
+			}
 		}
 		else {
 			script = new ReportUserScript("InvalidScript","","",null,null,null,false, null,null);
