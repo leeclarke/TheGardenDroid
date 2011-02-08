@@ -80,7 +80,9 @@ public class ReportsManagerPublic   extends Controller{
 			else if(script.reportType == ReportType.CHART){
 				binding.setVariable("chart", new ChartReport());
 			}
+			
 			scriptResult = processScript(script.script, binding);
+			
 			if(script.reportType == ReportType.TABLE){
 				TableReport tableRtn = (TableReport) binding.getVariable("table"); 
 				scriptResult = tableRtn.toTable();
