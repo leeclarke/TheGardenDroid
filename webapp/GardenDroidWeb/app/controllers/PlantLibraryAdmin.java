@@ -170,13 +170,13 @@ public class PlantLibraryAdmin extends Controller {
 					planted.harvestStart =harvestStart;
 				}
 				else {
-					planted.harvestStart = computeHarvestDate(planted.datePlanted, plantDataType);
+					planted.harvestStart = computeHarvestDate(planted.datePlanted, plantDataType.daysTillHarvest);
 				}
 				if(harvestEnd != null) {
 					planted.harvestEnd = harvestEnd;
 				}
 				else {
-					planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantDataType);
+					planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantDataType.daysTillHarvestEnd);
 				}
 			    planted.save();
 		    }
@@ -197,13 +197,13 @@ public class PlantLibraryAdmin extends Controller {
 						planted.harvestStart =harvestStart;
 					}
 					else {
-						planted.harvestStart = computeHarvestDate(planted.datePlanted, plantDataType);
+						planted.harvestStart = computeHarvestDate(planted.datePlanted, plantDataType.daysTillHarvest);
 					}
 					if(harvestEnd != null) {
 						planted.harvestEnd = harvestEnd;
 					}
 					else {
-						planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantDataType);
+						planted.harvestEnd = computeHarvestDate(planted.datePlanted, plantDataType.daysTillHarvestEnd);
 					}
 				}
 				planted.plantData = plantDataType;
@@ -229,10 +229,10 @@ public class PlantLibraryAdmin extends Controller {
 		PlantLibrary.viewPlantData();
 	}
 	
-	protected static Date computeHarvestDate(Date datePlanted, PlantData plantData) {
+	protected static Date computeHarvestDate(Date datePlanted, int daysTilHarvest) {
 		Calendar plantingDate = Calendar.getInstance();
 		plantingDate.setTime(datePlanted);
-		plantingDate.add(Calendar.DATE, plantData.daysTillHarvestEnd);
+		plantingDate.add(Calendar.DATE, daysTilHarvest);
 		return plantingDate.getTime();
 	}
 	
