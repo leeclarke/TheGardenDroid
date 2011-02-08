@@ -60,7 +60,7 @@ public class ChartReport {
 		return sb.toString();
 	}
 
-//	{data:[{...},{...}],options:{}}
+
 	/**
 	 * Writes out options in JS notation.
 	 * @return
@@ -79,11 +79,23 @@ public class ChartReport {
 		return sb.toString();
 	}
 	
+	/**
+	 * Ensure that Defaults get set if there is an absence of the option settings.
+	 */
 	protected void setDefaultOptions(){
-		if (this.options.isEmpty()) {
-			HashMap<String, String> gridDefaultColor = new HashMap<String, String>(); 
+		if (this.options.isEmpty() || !(this.options.containsKey("grid"))) {
+			HashMap<String, Object> gridDefaultColor = new HashMap<String, Object>(); 
 			gridDefaultColor.put("color", "#B8C569");
 			this.options.put("grid", gridDefaultColor);
+		} else if(this.options.containsKey("grid")){
+			try {
+				HashMap<String, Object> grid = (HashMap<String, Object>) this.options.get("grid");
+				if(!grid.containsKey("color")) { //Enforces color default, this might be better done though a css setting..
+					grid.put("color","#B8C569");
+				}}
+			catch (Exception e) {
+				logger.info("Error retrieving grid values, this means the use made soem sort of error in the code but can't pass that up at this time. " + e);
+			}
 		}
 	}
 
@@ -174,10 +186,3 @@ public class ChartReport {
 		}
 	}
 }
-
-/*
- * var d1 =
- * {"data":[[1296733200000,55.4],[1296728400000,51.8],[1296723600000,42.8],[1296721200000,37.4],[1296717600000,30.2
- * ],[1296714000000,30.2],[1296702000000,35.6],[1296697200000,32.0]],"options":{xaxis: { mode: "time", timeformat:
- * "%m/%d %h:%M"}, grid:{clickable:true}}};
- */

@@ -108,8 +108,6 @@ public class ChartReportTest  extends BaseUnitTest {
 	
 	@Test
 	public void testWriteOptions_Mitiple(){
-	//[xaxis:[mode: "time", timeformat: "%m/%d %h:%M"], grid:[clickable:true]]
-//		String expectedOpts = ",options:{xaxis: { mode: \"time\", timeformat: \"%m/%d %h:%M\"}, grid:{clickable:true}}";
 		String expectedOpts = ",options:{xaxis:{timeformat:\"%m/%d %h:%M\",mode:\"time\"},grid:{color:\"#B8C569\",clickable:true}}";
 		ChartReport chart = new ChartReport(); 
 		HashMap<String, Object> grid = new HashMap<String, Object>(); 

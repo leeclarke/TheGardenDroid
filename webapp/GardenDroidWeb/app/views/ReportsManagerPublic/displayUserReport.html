@@ -9,14 +9,13 @@ $(document).ready(function() {
 		//Add some default styling.
 		if(options.colors == null)
 			options.colors = ["#FFFFFF"]; 
-		options.grid = {color:"#B8C569"};
 		options.series = { lines: { show: true, fill: true},points: { show: true, fill: false }};
 		$.plot($("#placeholder"),  d1.data , options);
 		
 		//Supports click which displays the data values if clickable:true is set
 		$("#placeholder").bind("plotclick", function (event, pos, item) {
 	        if (item) {
-	          alert("You hovered a point!" + item.datapoint[1]);
+	          alert("Point: y:" + item.datapoint[0]+ ", x:" + item.datapoint[1]);
 	        }
 	    });
 		
