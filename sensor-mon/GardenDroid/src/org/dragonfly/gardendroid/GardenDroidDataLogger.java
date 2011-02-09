@@ -74,6 +74,7 @@ public class GardenDroidDataLogger implements SerialPortEventListener {
 			// add event listeners
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
+//TODO: Send Message to WebApp LOG, GardenDroid Sensor Monitor is active.			
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
