@@ -4,7 +4,7 @@
   Created by Lee Clarke, Oct 20, 2010.
   Released into the public domain.
 */
-#include "WProgram.h"
+#include "Arduino.h"
 #include "Sensor.h"
 
 Sensor::Sensor(int sensorId, String name, unsigned long pollInterval){

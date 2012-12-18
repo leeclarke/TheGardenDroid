@@ -78,9 +78,9 @@ void TempSensor::startConversion(boolean start)
 {
   Wire.beginTransmission(SLAVE_ID);
   if (start == true)
-    Wire.send(START_CNV);
+    Wire.write(START_CNV);
   else
-    Wire.send(STOP_CNV);
+    Wire.write(STOP_CNV);
   this->sendStatus = Wire.endTransmission();
 }
 
@@ -88,8 +88,8 @@ void TempSensor::startConversion(boolean start)
 void TempSensor::setConfig(byte cfg)
 {
   Wire.beginTransmission(SLAVE_ID);
-  Wire.send(ACCESS_CFG);
-  Wire.send(cfg);
+  Wire.write(ACCESS_CFG);
+  Wire.write(cfg);
   Wire.endTransmission();
   delay(15);                                    // allow EE write time to finish
 }
@@ -98,10 +98,10 @@ void TempSensor::setConfig(byte cfg)
 byte getReg(byte reg)
 {
   Wire.beginTransmission(SLAVE_ID);
-  Wire.send(reg);                               // set register to read
+  Wire.write(reg);                               // set register to read
   Wire.endTransmission();
   Wire.requestFrom(SLAVE_ID, 1);
-  byte regVal = Wire.receive();
+  byte regVal = Wire.read();
   return regVal;
 } 
 
@@ -120,9 +120,9 @@ void TempSensor::setThresh(byte reg, int tC)
 {
   if (reg == ACCESS_TL || reg == ACCESS_TH) {
     Wire.beginTransmission(SLAVE_ID);
-    Wire.send(reg);                             // select temperature reg
-    Wire.send(byte(tC));                        // set threshold
-    Wire.send(0);                               // clear fractional bit
+    Wire.write(reg);                             // select temperature reg
+    Wire.write(byte(tC));                        // set threshold
+    Wire.write(0);                               // clear fractional bit
     Wire.endTransmission();
     delay(15);
   }

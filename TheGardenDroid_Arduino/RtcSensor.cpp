@@ -53,17 +53,17 @@ int RtcSensor::getSensorValue() {
   int resp = 1;
     // Reset the register pointer
     Wire.beginTransmission(RTC_ID);
-    Wire.send(0);
+    Wire.write(0);
     this->sendStatus = Wire.endTransmission();
     Wire.requestFrom(RTC_ID, 7);
     // A few of these need masks because certain bits are control bits
-    this->second     = bcdToDec(Wire.receive() & 0x7f);
-    this->minute     = bcdToDec(Wire.receive());    
-    this->hour       = bcdToDec(Wire.receive() & 0x3f);  // Need to change this if 12 hour am/pm
-    this->dayOfWeek  = bcdToDec(Wire.receive());
-    this->dayOfMonth = bcdToDec(Wire.receive());
-    this->month      = bcdToDec(Wire.receive());
-    this->year = bcdToDec(Wire.receive());
+    this->second     = bcdToDec(Wire.read() & 0x7f);
+    this->minute     = bcdToDec(Wire.read());    
+    this->hour       = bcdToDec(Wire.read() & 0x3f);  // Need to change this if 12 hour am/pm
+    this->dayOfWeek  = bcdToDec(Wire.read());
+    this->dayOfMonth = bcdToDec(Wire.read());
+    this->month      = bcdToDec(Wire.read());
+    this->year       = bcdToDec(Wire.read());
     // Error check, if all values or at least the date bytes are ==0 then read failed.
     if(year == 0 || month == 0 || dayOfMonth == 0)
     {
@@ -100,15 +100,15 @@ void RtcSensor::setDateDs1307(byte second,        // 0-59
                    byte year)          // 0-99
 {
    Wire.beginTransmission(RTC_ID);
-   Wire.send(0);
-   Wire.send(decToBcd(second));    // 0 to bit 7 starts the clock
-   Wire.send(decToBcd(minute));
-   Wire.send(decToBcd(hour));      // If you want 12 hour am/pm you need to set
+   Wire.write(0);
+   Wire.write(decToBcd(second));    // 0 to bit 7 starts the clock
+   Wire.write(decToBcd(minute));
+   Wire.write(decToBcd(hour));      // If you want 12 hour am/pm you need to set
                                    // bit 6 (also need to change readDateDs1307)
-   Wire.send(decToBcd(dayOfWeek));
-   Wire.send(decToBcd(dayOfMonth));
-   Wire.send(decToBcd(month));
-   Wire.send(decToBcd(year));
+   Wire.write(decToBcd(dayOfWeek));
+   Wire.write(decToBcd(dayOfMonth));
+   Wire.write(decToBcd(month));
+   Wire.write(decToBcd(year));
    Wire.endTransmission();
 } 
 

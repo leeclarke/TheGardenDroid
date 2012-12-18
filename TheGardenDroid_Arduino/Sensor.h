@@ -6,7 +6,7 @@
 #ifndef Sensor_h
 #define Sensor_h
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 class Sensor
 {
