@@ -22,7 +22,7 @@ Garden Droid consists of 3 seperate applications running together to produce the
 - [Play Framework](http://www.playframework.org)
 - [MySQL 5](http://mysql.com/)
 - A machine that can run on your home network as a local server, internet viasbility is not required but, nice.
-- [Arduino](http://arduino.cc/) Base for Hardware (See Wiki for build info)
+- [Arduino](http://arduino.cc/) Base for Hardware (See Wiki for build info) Now v1.0 compatable.
 - Basic electronics tools and skills(or a desire to Learn them)
 
 ## Further Info
