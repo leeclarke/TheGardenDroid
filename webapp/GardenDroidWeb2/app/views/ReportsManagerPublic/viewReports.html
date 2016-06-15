@@ -1,0 +1,43 @@
+#{extends 'main.html' /}
+#{set title:'GardenDroid Reports' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#reportsTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+#{ifErrors}
+   #{errors}
+       <li class="error">${error}</li>
+   #{/errors}
+#{/ifErrors}
+<div class="option-dirs">Main landing page for Report data.</div> 
+<div id="libTools"> <b>|</b> <a href="@{ReportsManager.editUserScript(-1)}">Add Report Script</a></div>
+
+<h3>User Reports</h3>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="reportsTable"> 
+	<thead> 
+		<tr>
+			<th width="16px">&nbsp;</th> 
+			<th>Name</th> 
+			<th>Date Created</th> 
+			<th>Description</th>
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if userScripts.size() > 0}
+        #{list items:userScripts, as:'uScript'}
+            <tr>
+            	<td><center><a href="@{ReportsManagerPublic.displayUserReport(uScript.id)}" style="color:transparent; background-color: transparent; border-style: none"><img src="@{'/public/images/open.gif'}" alt="view"/></a></center></td>
+            	<td><a href="@{ReportsManager.editUserScript(uScript.id)}" class="clickableText">${uScript.name}</a></td>
+                <td>${uScript.dateCreated?.format('yyyy-MM-dd')}</td>
+                <td>${uScript.description}</td>
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>

@@ -1,0 +1,34 @@
+@* restDoc Template File *@
+@()
+
+@main("Welcome to the Garden Droid API") {
+    
+    <script src="@routes.Assets.at("javascripts/index.js")"></script>
+
+    <div class="well">
+        <h1>Welcome to the Garden Droid API</h1>
+    </div>
+    
+    API:
+    <ul>
+        <li><b>Save Sensor Data - POST</b>  <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./rest/gardenDroidData/saveData">./rest/gardenDroidData/saveData</a> Used by monitoring systems to report data.<br> &nbsp;&nbsp;&nbsp;&nbsp;POST body example: <pre>{
+"dataValue": 0,
+"sensorType": "TEMPERATURE",
+"tempF": 58.65,
+"tempC": 14.80
+}</pre></pre></li>
+	
+		<li><b>Current Conditions - GET</b><br><a href="./rest/sensor/current">./rest/sensor/current</a> Gets latest readings for each sensor type.</li>
+		
+		<li><b>Temp History - GET</b><br><a href="./rest/sensor/temp-history">/rest/sensor/temp-history</a> Gets previous temp history.</li>
+		
+    </ul>
+    
+    <button id="sse-demo">Connect to Server Sent Event Channel</button>
+    
+    <br/><br/>
+    
+    <button id="websocket-demo">Send WebSocket Message</button>
+    
+
+}

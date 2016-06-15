@@ -1,0 +1,12 @@
+*{ plantSelect - provides a select input with valid report types.
+	Required: 
+		reportTypes - List of Reports
+	Optional:
+		selected - Plant object selected.
+}*
+<select name="reportType" id="reportType" class="large_field" >
+	<option value="-1"> </option>
+	 #{list items:_reportTypes, as:'type'}
+	 	<option value="${type?.name}" #{if type?.name && _selected?.name == type?.name} selected="selected" #{/if}> ${type?.name[0] + type?.name.substring(1).toLowerCase()} </option>
+	 #{/list}
+</select>

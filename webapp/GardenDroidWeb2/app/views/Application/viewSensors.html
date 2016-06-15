@@ -1,0 +1,42 @@
+#{extends 'main.html' /}
+#{set title:'Sensor Data' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#sensorTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers",
+		"aaSorting": [[ 1, "desc" ]]
+	} );
+} );
+</script>
+<a href='#'><h3>Sensor Data</h3></a>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="sensorTable"> 
+	<thead> 
+		<tr> 
+			<th>Type</th> 
+			<th>Date</th> 
+			<th>Data Value</th> 
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if fullSensorData.size() > 0}
+        #{list items:fullSensorData, as:'sensor'}
+            <tr>
+            	<td>${sensor.sensorType}</td>
+                <td>${sensor.dateTime.format('dd MMM yyyy - hh:mm:ss a')}</td>                
+                #{if sensor.sensorType.code == 'T'}
+                	<td>${sensor.tempF} F (${sensor.tempC} C)</td> 
+                #{/if}
+                #{elseif sensor.sensorType.code == 'G'}
+                    <td> %{if(sensor.data == 1) out.print('ON'); else out.print('OFF'); }%</td>  
+                #{/elseif}
+                #{else}
+                	<td>${sensor.data}</td>   
+                #{/else}
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>

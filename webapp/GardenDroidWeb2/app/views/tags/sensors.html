@@ -1,0 +1,35 @@
+*{ Display a post in one of these modes: 'full' or 'home'  }*
+
+*{#{if _as == 'home'}}*
+
+#{if _sensorData.size() > 0}
+    <div class="older-posts">    
+        <a href='/sensors'><h3>Most Recent Sensor Input</h3></a>
+    
+        #{list items:_sensorData, as:'prevData'}
+            <div class="post">
+                <span class="post-title">
+                    <a href="#">${prevData.sensorType}</a>
+                </span>&nbsp;
+                <span class="post-metadata">
+                    <span class="post-date">
+                        [${prevData.dateTime.format('dd MMM yy hh:mm:ss')}]
+                    </span>
+                    <span class="post-author">&nbsp;&nbsp;
+                        #{if prevData.sensorType.code == 'T'}
+                        	 value: ${prevData.data}*{value: ${prevData?.tempF} F (${prevData?.tempC} C)}* 
+                        #{/if}
+                        #{elseif prevData.sensorType.code == 'G'}
+                        	 value: %{if(prevData.data == 1) out.print('ON'); else out.print('OFF'); }%  
+                        #{/elseif}
+                        #{else}
+                        	value: ${prevData.data}   
+                        #{/else}
+                        		
+                    </span>
+                </span>
+            </div>
+        #{/list}
+    </div>
+    
+#{/if}

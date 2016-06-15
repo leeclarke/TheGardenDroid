@@ -1,0 +1,6 @@
+#{extends 'main.html' /}
+#{set title:'Email Sent' /}
+<div class="option-dirs">#{if emailFailed == false}A test email has been sent to the following address: ${options?.email}#{/if}
+#{else}The test email failed to send, please check the system logs for more information. #{/else}
+</div> 
+<hr>

@@ -1,0 +1,70 @@
+<script type="text/javascript">
+	var currConds;
+	var currCondAction = #{jsAction @RESTController.currentConditions() /}
+	var tempHistoryAction = #{jsAction @RESTController.tempHistory() /}
+	//var myvalues = [32,46,56,78,65,59,43,39,34,43];
+	var tempChartConfig = {lineWidth:2 , lineColor:'#F5C2CC', fillColor: '#B8C569', width:'120px', height:'40px', chartRangeMin:'20'};
+	//After Page load set data values.
+	jQuery(window).load(function() {
+		retrieveCurrent();
+	});
+	
+	//updates the diplayed data values
+	function updateCurrData(data) {
+		$('#cond_time').html(data.TEMPERATURE.dateTime);
+		$('#tempF').html(data.TEMPERATURE.tempF)
+		$('#tempC').html(data.TEMPERATURE.tempC)
+		$('#humidity').html(data.HUMIDITY.data)
+		$('#moist').html(data.MOISTURE.data)
+		$('#grow').html(getStatusDesc(data.GROW_LITE.data))
+		$('#ambLite').html(data.AMBIENT_LIGHT.data)
+		if(data.WATER_IRRIGATION) {
+			$('#water').html(getStatusDesc(data.WATER_IRRIGATION.data))
+		} else {
+			$('#water').html(getStatusDesc(0))
+		}
+		if(data.TEMP_WARNING) {
+			$('#warn').html((data.TEMP_WARNING.data = 1)? 'Warning!':'')
+		} else {
+			$('#warn').html('None')
+		}
+	}
+	
+	function getStatusDesc(value) {
+		return (value == null || value == 1)?'ON':'OFF'
+	}
+	
+	//Makes call to REST services for Current and temp history
+	function retrieveCurrent() {
+		$.getJSON(currCondAction(),function(data) {
+			updateCurrData(data);
+		})
+		
+		$.getJSON(tempHistoryAction(),function(data) {
+			$('.tempsparkline').sparkline(data, tempChartConfig); 
+		})
+	}
+	
+	setInterval( "retrieveCurrent()", 60*1000 );
+	
+</script>
+
+ 	<div class="post">
+       <h2 class="post-title">
+           <a href="#">Current Conditions</a>
+       </h2>
+       <div id='cond_time' class="post-time"></div>
+       <div class="post-metadata">
+       	   
+           <span class="post-author"> <span id='tempF'></span> F</span>
+           <span class="post-date"> (<span id='tempC'></span> C)</span>
+           <div class="post-date">Humidity: <span id='humidity'></span></div>
+           <div class="post-date">Soil Moisture: <span id='moist'></span></div>
+           <div class="post-date" >Grow Lite: <span id='grow'></span> </div>
+           <div style="position:relative; float:right; top:4px;	left:150px;	z-index:2;"><span class="tempsparkline" >Loading...</span> <br>Recent Temp Range</div>
+           <div class="post-date" style="float:left">Ambient Light: <span id='ambLite'></span> </div>
+           <div class="post-date">Irrigation: <span id='water'></span> </div>
+           <div class="post-date">Temp Warning: <span id='warn'></span> </div>
+           
+       </div>       
+   </div>

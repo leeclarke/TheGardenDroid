@@ -1,0 +1,36 @@
+*{Displays a pages table of observation data related to a single plant.
+	Required:
+		observations - list of observations tied to given plant.
+		plant - the plant observed.
+}*
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#obserationTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+<h3>Observations for ${_plant?.name}</h3>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="obserationTable"> 
+	<thead> 
+		<tr> 
+			<th>Date Entered</th> 
+			<th>Data Type</th> 
+			<th>Value</th> 
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if _observations && _observations.size() > 0}
+        #{list items:_observations, as:'obs'}
+            <tr>
+                <td>${obs.dateCreated?.format('yyyy-MM-dd')}</td>
+                <td>${obs.dataType?.name}</td>
+                <td>${obs.dataValue}</td>
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>

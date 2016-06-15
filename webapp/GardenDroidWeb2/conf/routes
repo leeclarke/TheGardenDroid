@@ -1,0 +1,31 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET        /                              controllers.Application.index()
+
+GET        /sync-foo                      controllers.Application.syncFoo()
+GET        /async-foo                     controllers.Application.asyncFoo()
+GET        /async-non-blocking-foo        controllers.Application.asyncNonBlockingFoo()
+GET        /reactive-request              controllers.Application.reactiveRequest()
+GET        /reactive-composition          controllers.Application.reactiveComposition()
+
+
+#REST 
+
+GET			/rest							controllers.RESTController.showApiDoc()
+GET			/rest/sensor/temp-history		controllers.RESTController.tempHistory()
+GET			/rest/sensor/current			controllers.RESTController.currentConditions()
+POST		/rest/gardenDroidData/saveData  controllers.RESTController.saveSensorData()
+
+
+
+# Server Sent Events
+GET        /events                        controllers.Application.events()
+
+# WebSocket
+GET        /echo                          controllers.Application.echo()
+
+# Map static resources from the /public folder to the /assets URL path
+GET        /assets/*file                  controllers.Assets.at(path="/public", file)
+GET        /webjars/*file                 controllers.WebJarAssets.at(file)

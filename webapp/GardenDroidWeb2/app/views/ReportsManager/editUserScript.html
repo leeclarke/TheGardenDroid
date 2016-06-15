@@ -1,0 +1,110 @@
+#{extends 'main.html' /}
+#{set title:'GardenDroid Edit User Report' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	var settings = {
+			  padding: 20,
+			  width: 300,
+			  spikeLength: 100,
+			  spikeGirth: 20,
+			  cornerRadius: 30,
+			  fill: '#BAC36E',	
+			  strokeWidth: 2,
+			  strokeStyle: '#3C4313',
+			  cssStyles: {color: '#3C4313', fontWeight: 'bold'},
+			  positions: ['right','left']
+			};
+	
+		$('#help-tip1').bt(settings);
+		$('#help-tip2').bt(settings);
+		$('#help-tip3').bt(settings);
+		$('#help-tip4').bt(settings);
+		$('#help-tip5').bt(settings);
+		$('#help-tip6').bt(settings);
+		$('#help-tip7').bt(settings);
+		
+		//Add resize for textarea
+		$('textarea.resizable:not(.processed)').TextAreaResizer();
+	});
+	
+</script>
+#{form @ReportsManager.saveUserScript(script?.id)}
+#{ifErrors}
+   #{errors}
+       <li class="error">${error}</li>
+   #{/errors}
+#{/ifErrors}
+<table>
+	<tr><td width=340px>
+        <label for="name">Script name: </label></td>
+        <td width=70%>
+        	#{field 'name'}
+        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${script?.name}"/>
+        	#{/field}&nbsp;<span class="help-tip" id="help-tip1" title="The name you want to call this Report.">&nbsp;?&nbsp;</span>
+    	</td></tr>
+   	<tr><td>
+        <label for="dateCreated">DateCreated: </label></td><td>
+       ${script?.dateCreated ? (script?.dateCreated?.format('yyyy-MM-dd')) : (new Date()).format('yyyy-MM-dd')}
+    </td></tr>
+    <tr>
+    	<td>
+	        <label for="plantDataId">Report Type: </label></td><td>
+	        #{reportTypeSelect reportTypes:reportTypes, selected:script?.reportType /}
+	        &nbsp;<span class="help-tip" id="help-tip7" title="Specifies the formatting output of the Report results.">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
+    <tr>
+    	<td>
+	        <label for="scientificName">Description: </label></td><td>
+	        #{field 'description'}
+	        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${script?.description}"/>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip2" title="Just notes to remind you of what this does.">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
+    <tr>
+    	<td>
+	        <label for="scientificName">Start Date: </label></td><td>
+	        #{field 'startDate'}
+	        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${script?.startDate ? (script?.startDate?.format('yyyy-MM-dd')) : ''}"/>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip3" title="Optional, Starting Date Range for Sensor Data in format 'yyyy-MM-dd'">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
+    <tr>
+    	<td>
+	        <label for="scientificName">End Date: </label></td><td>
+	        #{field 'endDate'}
+	        	<input class="large_field ${field.errorClass}" type="text" name="${field.name}" id="${field.name}" value="${script?.endDate ? (script?.endDate?.format('yyyy-MM-dd')) : ''}"/>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip4" title="Optional, Ending Date Range for Sensor Data in format 'yyyy-MM-dd'">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
+    <tr>
+    	<td>
+	        <label for="plantDataId">Planting: </label></td><td>
+	        #{plantingSelect plantData:plantings, planted:script?.planting /}
+	        &nbsp;<span class="help-tip" id="help-tip4" title="Optional, specify if you want to work with a specific planting.">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
+    <tr>
+    	<td>
+	        <label for="scientificName">Return Only Active Plantings: </label></td><td>
+	        #{field 'activeOnlyPlantings'}
+	        	<input class="small_field" type="checkbox" name="${field.name}" id="${field.name}"  #{if script?.activeOnlyPlantings} checked="checked" #{/if} />
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip5" title="Limits the Plantings to only active, if unchecked you will get all past plantings as well as current.">&nbsp;?&nbsp;</span>
+	    </td>
+    </tr>
+    
+    <tr>
+    	<td valign="top">
+        	<label for="notes">Your Script: </label>
+        </td>
+        <td valign="top">
+        	<div id="libTools"><a href="${helpLink}">Script Writing Guide</a></div>
+	        #{field 'scriptBody'}
+	        <textarea class="${field.errorClass} resizable" name="${field.name}" id="${field.name}" rows="10">${script?.script}</textarea>
+	        #{/field}&nbsp;<span class="help-tip" id="help-tip6" title="This should be a groovy script which ends with a return statement. The following objects are available to your script: <ul><li>sensorData - [List]<li>plantings - [List] <li>plantings - [Table only]</ul><br>At this time you should return a string containing display HTML, JSON(for Charts), or table.toTable(). Selecting a type of TABLE will help you display a slick data table like the ones used elsewhere in the app simply used the table object to build the table and the engine will render it for you!<p>For Charts: you should generate output in a JSON format. The output is an Object with data and options elements. The included example chart probably shows you the best info but the general format looks like this: <br>{&quot;data&quot;:[[valX,valY],[valX,valY]...],&quot;options&quot;:{xaxis: { mode: &quot;time&quot;, timeformat: &quot;%m/%d %h:%M&quot;} , grid:{clickable:true}}}</p>">&nbsp;?&nbsp;</span>
+    	</td></tr>
+    <tr><td colspan="2">
+        <input type="submit" value="Submit Script" />&nbsp;&nbsp;&nbsp;<input id="deleteScript" name="deleteScript" type="submit" value="Delete" /></td>
+    </tr>
+</table>
+#{/form}

@@ -1,0 +1,12 @@
+*{ plantSelect - provides a seelct input with valid plants from the Library.
+	Required: 
+		activeUserTypes - List of Active user types
+	Optional:
+		userType - selected user type-optional.
+}*
+<select name="dataTypeId" id="dataTypeId" class="med_field" >
+	<option value="-1"> </option>
+	 #{list items:_activeUserTypes, as:'uType'}
+	 	<option value="${uType.id}" #{if _userType?.id && uType.id ==  _userType?.id}selected="selected" #{/if}> ${uType.name} </option>
+	 #{/list}
+</select>

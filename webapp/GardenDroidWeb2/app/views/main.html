@@ -1,0 +1,61 @@
+*{
+ The GardenDroid, a self monitoring and reporting mini-greenhouse.
+
+ Copyright (c) 2010-2011 Lee Clarke
+
+ LICENSE:
+
+ This file is part of TheGardenDroid (https://github.com/leeclarke/TheGardenDroid).
+
+ TheGardenDroid is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ later version.
+
+ TheGardenDroid is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ details.
+
+ You should have received a copy of the GNU General Public License along with TheGardenDroid.  If not, see
+ <http://www.gnu.org/licenses/>.
+}*
+<!DOCTYPE html >
+<html>
+    <head>
+        <title>Garden Droid - #{get 'title' /}</title>		
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/data_table.css'}" />
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}" />
+	    <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}"></script>
+	    <script src="@{'/public/javascripts/jquery.bt.min.js'}"></script>
+	    <script src="@{'/public/javascripts/jquery.dataTables.min.js'}"></script>
+	    <script src="@{'/public/javascripts/jquery.sparkline.min.js'}"></script>
+	    <script src="@{'/public/javascripts/jquery.flot.js'}"></script>
+	    <script src="@{'/public/javascripts/TextArea_Resizer_1.0.4/jquery.textarearesizer.compressed.js'}"></script>
+	</head>
+    <body>
+        
+        <div id="header">
+            <div id="logo">
+                GardenDroid.
+            </div>
+            <div id="tools"> <a href="@{PlantLibrary.viewPlantData()}">Plant Library</a> | <a href="@{ReportsManagerPublic.viewReports()}">Reports</a> | <a href="@{OptionsManager.viewOptions()}">Options</a></div>
+           
+            <div id="title">
+                <span class="about">about</span>
+                <h1><a href="@{Application.index()}">${appTitle}</a></h1>
+                <h2>${appBaseline}</h2>
+            </div>
+        </div>
+        
+        <div id="main">
+            #{doLayout /} 
+        </div>
+        
+        <p id="footer">
+            GardenDroid Monitoring system helps you manage your droid green house. mee beep werp! Built with <a href="http://www.arduino.cc">Arduino</a> and  
+            <a href="http://www.playframework.org">Play! framework</a>.
+        </p>
+        
+    </body>
+</html>

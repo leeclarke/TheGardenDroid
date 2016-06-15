@@ -1,0 +1,66 @@
+#{extends 'main.html' /}
+#{set title:'Plant Library' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#plantsTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+<div id="libTools"><a href="@{PlantLibraryAdmin.editPlanted(-1)}">Make Planting</a> <b>|</b> <a href="@{PlantLibraryAdmin.editPlantData(-1)}">Add Plant</a></div>
+#{if plantings.size() > 0}
+    <h3>Current Plantings</a> | <a href='@{PlantLibrary.viewAllPlantings()}'>All Plantings</a></h3>
+    <div class="older-posts">    
+        
+    
+        #{list items:plantings, as:'planted'}
+            <div class="post">
+                <span class="post-title">
+                    <a href="@{PlantLibraryAdmin.editPlanted(planted.id)}">${planted.name}</a>
+                </span>&nbsp;
+                <span class="post-metadata">
+                    <span class="post-author">&nbsp;&nbsp; planted on ${planted.datePlanted?.format('dd MMM yyyy')}</span>
+                    <span class="post-text">&nbsp;&nbsp; Projected harvest in %{if(planted.harvestStart != null) {out.print(planted.harvestStart -(new Date())) }else {out.print("?")} }% days.</span>
+                </span>
+            </div>
+        #{/list}
+        
+    </div>
+    
+#{/if}
+<br>
+#{quickObservation plantings:plantings, activeUserTypes:activeUserTypes/}
+<hr>
+<BR>
+<a href='#'><h3>Plant Library Data</h3></a>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="plantsTable"> 
+	<thead> 
+		<tr> 
+			<th>Name</th> 
+			<th>Sci Name</th> 
+			<th>light</th> 
+			<th>Min. Temp</th> 
+			<th>Max Temp</th> 
+			<th>Water Freq</th>
+			<th>Harvest Days</th>
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if plants.size() > 0}
+        #{list items:plants, as:'plant'}
+            <tr>
+            	<td><a href="@{PlantLibraryAdmin.editPlantData(plant.id)}">${plant.name}</a></td>
+                <td>${plant.scientificName}</td>
+                <td>${plant.sunlight}</td>
+                <td><center>${plant.lowTemp}</center></td>
+                <td><center>${plant.highTemp}</center></td>
+                <td><center>${plant.waterFreqDays} days</center></td>
+                <td><center>${plant.daysTillHarvest} - ${plant.daysTillHarvestEnd}</center></td>
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>

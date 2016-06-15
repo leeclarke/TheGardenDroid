@@ -1,0 +1,27 @@
+@(message: String)
+
+@main("Welcome to Play Framework") {
+    
+    <script src="@routes.Assets.at("javascripts/index.js")"></script>
+
+    <div class="well">
+        <h1>@message</h1>
+    </div>
+    
+    Demos:
+    <ul>
+        <li><a href="@routes.Application.syncFoo()">Sync Foo</a></li>
+        <li><a href="@routes.Application.asyncFoo()">Async Foo</a></li>
+        <li><a href="@routes.Application.asyncNonBlockingFoo()">Async Non-Blocking Foo</a></li>
+        <li><a href="@routes.Application.reactiveRequest()">Reactive Request</a></li>
+        <li><a href="@routes.Application.reactiveComposition()">Reactive Composition</a></li>
+    </ul>
+    
+    <button id="sse-demo">Connect to Server Sent Event Channel</button>
+    
+    <br/><br/>
+    
+    <button id="websocket-demo">Send WebSocket Message</button>
+    
+
+}

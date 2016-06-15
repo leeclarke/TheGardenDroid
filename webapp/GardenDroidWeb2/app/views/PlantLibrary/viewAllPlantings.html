@@ -1,0 +1,45 @@
+#{extends 'main.html' /}
+#{set title:'Plant Library' /}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#plantsTable').dataTable( {
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers"
+	} );
+} );
+</script>
+<div id="libTools"><a href="@{PlantLibraryAdmin.editPlanted(-1)}">Make Planting</a> <b></div>
+<BR>
+<a href='#'><h3>All Plantings</h3></a>
+<table cellpadding="4" cellspacing="1" border="0" class="display" id="plantsTable"> 
+	<thead> 
+		<tr> 
+			<th>Name</th> 
+			<th>Date planted</th> 
+			<th>Active</th> 
+			<th>Droid Farmed</th> 
+			<th>Plant Count</th> 
+			<th>Harvest Start</th>
+			<th>Harvest End</th>
+			<th>Plant Type</th>
+		</tr> 
+	</thead> 
+	<tbody> 
+#{if plants.size() > 0}
+        #{list items:plants, as:'plant'}
+            <tr>
+            	<td><a href="@{PlantLibraryAdmin.editPlanted(plant.id)}">${plant.name}</a></td>
+                <td>${plant.datePlanted?.format('yyyy-MM-dd')}</td>
+                <td>${plant.isActive}</td>
+                <td>${plant.isDroidFarmed}</td>
+                <td>${plant.plantCount}</td>
+                <td>${plant.harvestStart?.format('yyyy-MM-dd')}</td>
+                <td>${plant.harvestEnd?.format('yyyy-MM-dd')}</td>
+                <td>${plant?.plantData?.name}</td>
+            </tr>
+        #{/list}
+    </div>
+
+#{/if}
+	</tbody>
+</table>
